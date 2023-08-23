@@ -21,11 +21,11 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: rgb(243, 203, 73);
+  color: rgb(255, 210, 7);
 }
 
 .App-link {
-  color: #fb8061;
+  color: #ff643d;
 }
 
 @keyframes App-logo-spin {

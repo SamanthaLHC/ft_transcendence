@@ -12,7 +12,7 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href="https://api.intra.42.fr/oauth/authorize"
           target="_blank"
           rel="noopener noreferrer"
         >
