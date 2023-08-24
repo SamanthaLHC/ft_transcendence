@@ -12,9 +12,8 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="https://api.intra.42.fr/oauth/authorize"
-          target="_blank"
-          rel="noopener noreferrer"
+          href="https://api.intra.42.fr/oauth/authorize?client_id={REPLACE_ME_CLIENT_ID}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code"
+        //   rel="noopener noreferrer"
         >
           Connexion with 42
         </a>
