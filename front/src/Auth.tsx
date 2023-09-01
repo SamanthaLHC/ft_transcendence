@@ -1,12 +1,20 @@
-import React, {useEffect, useState }  from "react";
+import React, { useEffect, useState } from "react";
 
-let url_str = window.location.search;
-console.log(url_str);
-let strToSearch = new URLSearchParams(url_str);
-let code_param = strToSearch.get("code");
-console.log(code_param);
+function getCode()
+{
+    let url_str = window.location.search;
+    console.log(url_str);
+    let strToSearch = new URLSearchParams(url_str);
+    let code_param = strToSearch.get("code");
+    return code_param;
+}
+
+let codeP = getCode();
+console.log(codeP);
 
 
+    fetch(' https://api.intra.42.fr/oauth/token', {
+        method: "POST",});
 
 
 //TODO traduire en typsecript
