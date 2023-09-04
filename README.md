@@ -16,7 +16,7 @@ ________________________________________________________________________________
 # en cas de push accidentel de credentials voici la procédure d'urgence:
 * 1): se positionner sur ta branche
 * 2): git rebase -i origin/main [meme si tu n'as pas push sur le main, tu vas rebase à partir de ce point là]
-* 3): ça va t'ouvrir un editeur. dans les commit il faut que tu choisisses celui ou ceux qui a introduit les credentials, au lieu de pick tu mets edit
+* 3): ça va t'ouvrir un editeur. dans les commits il faut que tu choisisses celui ou ceux qui a introduit les credentials, au lieu de pick tu mets edit
 * 4): tu sauves et quittes , le rebase va se dérouler jusqu `au commit pour lequel tu as mit edit
 * 5): tu edites le / les fichiers avec les credentials pour les retirer
 * 6): git add du fichier en question
