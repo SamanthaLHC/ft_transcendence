@@ -26,3 +26,5 @@ ________________________________________________________________________________
 > si il y a plusieurs commits les étapes 5 à 8 vont etre répétés pour chaque commit à éditer 
 
 * 9): git push --force
+
+* Si les autres ont récupéré la branche, les autres devront faire un git pull --rebase
