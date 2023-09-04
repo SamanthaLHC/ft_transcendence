@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+// import React, { useEffect, useState } from "react";
+import React from "react";
+
 
 function getCode() {
 	let url_str = window.location.search;
