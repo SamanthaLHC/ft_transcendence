@@ -14,7 +14,8 @@ console.log(codeP);
 
 if (codeP != null )
 {
-	fetch(' https://api.intra.42.fr/../../backend/src/auth/login', {
+	//FIXME fetch sur le service de Nathan
+	fetch('localhost:3300/auth/login', {
 		method: "POST",
 		body: codeP })
 		.then((response) => {
@@ -29,3 +30,4 @@ if (codeP != null )
 //TODO creer des func et composants
 //TODO gestion d'erreurs possibles (impossible de recuperer un code, lien invalide etc)
 //TODO voir quelles protection smettre en place (routes ?)
+//TODO JWT ?
