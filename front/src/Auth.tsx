@@ -12,16 +12,17 @@ let codeP = getCode();
 console.log(codeP);
 
 
-
-fetch(' https://api.intra.42.fr/../../back/oauth/login', {
-	method: "POST",
-	body: codeP
-})
-	.then((response) => {
-		if (!response.ok) {
-			throw new Error('HTTP error! Status: ${response.status}');
-		}
-	});
+if (codeP != null )
+{
+	fetch(' https://api.intra.42.fr/../../back/oauth/login', {
+		method: "POST",
+		body: codeP })
+		// .then((response) => {
+		// 	if (!response.ok) {
+		// 		throw new Error('HTTP error! Status: ${response.status}');
+		// 	}
+		// });
+}
 
 
 //TODO traduire en typsecript
