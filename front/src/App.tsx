@@ -5,11 +5,6 @@ import './App.css';
 
 const clientid = process.env.REACT_APP_CLIENT_ID;
 
-//debugg
-console.log(clientid);
-
-//debugg
-
 function App() {
   return (
     <div className="App">
