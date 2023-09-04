@@ -27,4 +27,4 @@ ________________________________________________________________________________
 
 * 9): git push --force
 
-* Si les autres ont récupéré la branche, les autres devront faire un git pull --rebase
+* Si les autres ont récupéré la branche avec un checkout, les autres devront faire un git pull --rebase
