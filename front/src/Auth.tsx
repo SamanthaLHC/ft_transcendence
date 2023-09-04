@@ -14,14 +14,14 @@ console.log(codeP);
 
 if (codeP != null )
 {
-	fetch(' https://api.intra.42.fr/../../back/oauth/login', {
+	fetch(' https://api.intra.42.fr/../../backend/src/auth/login', {
 		method: "POST",
 		body: codeP })
-		// .then((response) => {
-		// 	if (!response.ok) {
-		// 		throw new Error('HTTP error! Status: ${response.status}');
-		// 	}
-		// });
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error('HTTP error! Status: ${response.status}');
+			}
+		});
 }
 
 
