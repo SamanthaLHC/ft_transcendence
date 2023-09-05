@@ -21,10 +21,11 @@ if (codeP != null )
 	form.append("code", codeP);
 	fetch('http://localhost:3000/auth/login', {
 		method: "POST",
+		mode: "no-cors",
 		body: form
 	}).then((response) => {
 			if (!response.ok) {
-				throw new Error('HTTP error! Status: ${response.status}');
+				throw new Error(JSON.stringify(response.statusText));
 			}
 		}).catch(err => {
 			console.error(`Fetch to backend for authentication failed: ${err}`);
@@ -35,3 +36,5 @@ if (codeP != null )
 //TODO traduire en typsecript
 //TODO gestion d'erreurs possibles (impossible de recuperer un code, lien invalide etc)
 //TODO voir quelles protection smettre en place (routes ?)
+
+
