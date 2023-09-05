@@ -17,19 +17,21 @@ console.log(codeP);
 if (codeP != null )
 {
 	//FIXME fetch sur le service de Nathan
-	fetch('localhost:3300/auth/login', {
+	let form = new FormData();
+	form.append("code", codeP);
+	fetch('http://localhost:3000/auth/login', {
 		method: "POST",
-		body: codeP })
-		.then((response) => {
+		body: form
+	}).then((response) => {
 			if (!response.ok) {
 				throw new Error('HTTP error! Status: ${response.status}');
 			}
+		}).catch(err => {
+			console.error(`Fetch to backend for authentication failed: ${err}`);
 		});
 }
 
 
 //TODO traduire en typsecript
-//TODO creer des func et composants
 //TODO gestion d'erreurs possibles (impossible de recuperer un code, lien invalide etc)
 //TODO voir quelles protection smettre en place (routes ?)
-//TODO JWT ?

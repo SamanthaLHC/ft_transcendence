@@ -15,7 +15,7 @@ function App() {
         </p>
         <a
           className="App-link"
-          href={`https://api.intra.42.fr/oauth/authorize?client_id=${clientid}&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2F&response_type=code`}
+          href={`https://api.intra.42.fr/oauth/authorize?client_id=${clientid}&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code`}
         >
           Connexion with 42
         </a>

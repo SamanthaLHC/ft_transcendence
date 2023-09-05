@@ -13,11 +13,12 @@ export class AuthService {
 
     login(code: any) {
         var TOKEN = "coucou"
+		console.log(code.code)
         var form = new FormData()
         form.append("grant_type", "authorization_code")
         form.append("client_id", "")
         form.append("client_secret", "")
-        form.append("redirect_url", "localhost:3000")
+        form.append("redirect_url", "localhost:8000")
         form.append("code", code.code)
         fetch("https://api.intra.42.fr/v2/oauth/token", {
             method: "POST",
