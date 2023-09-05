@@ -38,9 +38,9 @@ export class AuthService {
             headers: {Authorization: "Bearer " + TOKEN}
         })
             .then(function (raiponce) {
-                return raiponce.json().then(function (json) {
                 console.log("ICICICICICICICI")
                 console.log(json)
+                return raiponce.json().then(function (json) {
                 })})
             })})
     }
