@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import FormData = require('form-data');
 
 const formData = (body: { [key: string]: string }) => {
     const form = new FormData()
@@ -24,7 +25,7 @@ export class AuthService {
         form.append("code", code.code)	
         fetch("https://api.intra.42.fr/v2/oauth/token", {
             method: "POST",
-            body: form,
+            body: JSON.stringify(form),
         })
             .then(function (raiponce) {
                 return raiponce.json().then(function (json) {

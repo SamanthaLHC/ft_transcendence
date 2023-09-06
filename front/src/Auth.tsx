@@ -1,6 +1,6 @@
 // import React, { useEffect, useState } from "react";
 import React from "react";
-
+import FormData from 'form-data';
 
 function getCode() {
 	let url_str = window.location.search;
@@ -17,12 +17,14 @@ console.log(codeP);
 if (codeP != null )
 {
 	//FIXME fetch sur le service de Nathan
+
+//j'appelle une fonction du back pour 'envoyer à Nat
 	let form = new FormData();
 	form.append("code", codeP);
 	fetch('http://localhost:3000/auth/login', {
 		method: "POST",
 		mode: "no-cors",
-		body: form
+		body: JSON.stringify(codeP)
 	}).then((response) => {
 			if (!response.ok) {
 				throw new Error(JSON.stringify(response.statusText));
