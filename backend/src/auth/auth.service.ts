@@ -15,9 +15,9 @@ export class AuthService {
         var TOKEN = "coucou"
         const form = new FormData()
         form.append("grant_type", "authorization_code")
-        form.append("client_id", "")
-        form.append("client_secret", "")
-        form.append("redirect_uri", "http://localhost:8000")
+        form.append("client_id", process.env.API42_ID)
+        form.append("client_secret", process.env.API42_SECRET)
+        form.append("redirect_uri", process.env.API42_URL)
         form.append("code", body.code)
         fetch("https://api.intra.42.fr/v2/oauth/token", {
             method: "POST",
