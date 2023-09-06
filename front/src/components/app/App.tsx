@@ -1,6 +1,6 @@
 import React from 'react';
-import logo from './duck.png';
-import './Auth' 
+import logo from '../../assets/duck.png';
+import '../auth/Auth' 
 import './App.css';
 
 const clientid = process.env.REACT_APP_CLIENT_ID;
