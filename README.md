@@ -3,8 +3,8 @@
 
 
 ### branche front_login_button (sam) (avec récupération de la branche auth_back de Nathan):
-~~* 1): page de log-in avec redirection vers la page d'authentification  (tres basique)~~
-~~* 2): objectif en cours : récuperer la query string code et la transmettre au back~~
+* 1): ~~page de log-in avec redirection vers la page d'authentification  (tres basique)~~
+* 2): ~~objectif en cours : récuperer la query string code et la transmettre au back~~
 * 3): rediriger vers la page de profil utilisateur (récupérer les datas de Nathan) 
 
 ## Pour voir notre avancée: docker compose up puis dans la barre de recherche, taper localhost:8000
