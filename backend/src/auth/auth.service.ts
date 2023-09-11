@@ -16,9 +16,9 @@ export class AuthService {
 		var TOKEN = "coucou"
 		//DEBUGG 
 		console.log(JSON.stringify(body))
-		// console.log(JSON.stringify(process.env.API42_ID))
-		// console.log(JSON.stringify(process.env.API42_SECRET))
-		// console.log(JSON.stringify(process.env.API42_URL))
+		console.log(JSON.stringify(process.env.API42_ID))
+		console.log(JSON.stringify(process.env.API42_SECRET))
+		console.log(JSON.stringify(process.env.API42_URL))
 		const form = new FormData()
 		form.append("grant_type", "authorization_code")
 		form.append("client_id", process.env.API42_ID)
