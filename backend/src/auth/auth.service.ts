@@ -15,6 +15,7 @@ export class AuthService {
 	login(body: any) {
 		var TOKEN = "coucou"
 		//DEBUGG 
+		console.log("body: ")
 		console.log(JSON.stringify(body))
 		console.log(JSON.stringify(process.env.API42_ID))
 		console.log(JSON.stringify(process.env.API42_SECRET))
