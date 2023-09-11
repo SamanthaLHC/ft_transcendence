@@ -3,9 +3,9 @@
 
 
 ### branche front_login_button (sam) (avec récupération de la branche auth_back de Nathan):
-* 1): ~~page de log-in avec redirection vers la page d'authentification  (tres basique)~~
-* 2): ~~objectif en cours : récuperer la query string code et la transmettre au back~~
-* 3): rediriger vers la page de profil utilisateur (récupérer les datas de Nathan) 
+* ~~page de log-in avec redirection vers la page d'authentification  (tres basique)~~
+*  ~~objectif en cours : récuperer la query string code et la transmettre au back~~
+*  rediriger vers la page de profil utilisateur (récupérer les datas de Nathan) 
 
 ## Pour voir notre avancée: docker compose up puis dans la barre de recherche, taper localhost:8000
 __n'oubliez pas de mettre le .env (dispo sur le notion ! ) à la racine du dosser ft_transcendence (à côté du docker-compose.yml)__
