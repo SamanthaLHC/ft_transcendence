@@ -15,33 +15,18 @@ function getCode() {
 
 let codeP = getCode();
 if (codeP != null) {
-	
-	//FIXME fetch sur le service de Nathan
 
-	// const form = new FormData();
-	// form.append("code", codeP);
-	// console.log(`Form has code: ${form.has("code")}: ${form.get("code")}`);
 	const obj = {
-		code : codeP
+		code: codeP
 	};
 	const req = new Request('http://localhost:3000/auth/login', {
 		method: "POST",
-		mode: "no-cors",
+		// mode: "no-cors",
 		headers: {
 			"content-type": "application/json",
 		},
 		body: JSON.stringify(obj),
 	});
-	// fetch('http://localhost:3000/auth/login', {
-	// 	method: "POST",
-	// 	mode: "no-cors",
-	// 	// headers: {
-	// 	// 	"Content-Type": "application/json",
-	// 	// 	// "Content-Length": JSON.stringify(obj).length,
-	// 	// },
-	// 	// code: codeP,
-	// 	// body: JSON.stringify(obj),
-	// 	body: JSON.stringify(form),
 	fetch(req).then((response) => {
 		if (!response.ok) {
 			// throw new Error(JSON.stringify(response.status));

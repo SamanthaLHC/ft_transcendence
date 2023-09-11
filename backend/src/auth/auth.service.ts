@@ -34,7 +34,7 @@ export class AuthService {
 			.then(function (raiponce) {
 				return raiponce.json().then(function (json) {
 					if (raiponce.status != 200) {
-						console.log("nop not a 200")
+						console.log(`status error: ${raiponce.status}`)
 						//DEBUGG
 						// console.log("raiponce return: ")
 						// console.log(raiponce)
