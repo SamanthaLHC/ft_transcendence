@@ -2,14 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { User } from '@prisma/client'
 import { AuthDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { response } from 'express';
 
 const formData = (body: { [key: string]: string }) => {
-    const form = new FormData()
-    for (let key in body) {
-      form.append(key, body[key])
-    }
-    return form
-  }
+	const form = new FormData()
+	for (let key in body) {
+		form.append(key, body[key])
+	}
+	return form
+}
 
 @Injectable()
 export class AuthService {

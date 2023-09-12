@@ -24,6 +24,17 @@ services:
       - 5555:5555 # prisma studio
     depends_on:
       - postgres
+  frontend:
+    container_name: frontend
+    env_file: .env
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    volumes:
+      - .:/front
+    ports:
+      - 8000:8000
 
 networks:
   back:
