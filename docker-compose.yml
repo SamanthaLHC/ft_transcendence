@@ -1,5 +1,13 @@
 version: '3'
 services:
+  postgres:
+    image: postgres:15.4
+    container_name: postgres
+    env_file: .env
+    networks:
+      - back
+    expose:
+      - 5432
   backend:
     container_name: backend
     env_file: .env
@@ -9,5 +17,13 @@ services:
     restart: unless-stopped
     volumes:
       - .:/back
+    networks:
+      - back
     ports:
       - 3000:3000
+      - 5555:5555 # prisma studio
+    depends_on:
+      - postgres
+
+networks:
+  back:

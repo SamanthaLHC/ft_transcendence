@@ -1,4 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { User } from '@prisma/client'
+import { AuthDto } from './dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 const formData = (body: { [key: string]: string }) => {
     const form = new FormData()
@@ -10,8 +13,8 @@ const formData = (body: { [key: string]: string }) => {
 
 @Injectable()
 export class AuthService {
-
-    login(body: any){
+    constructor(private prisma: PrismaService) {}
+    async login(body: AuthDto){
         var TOKEN = "coucou"
         const form = new FormData()
         form.append("grant_type", "authorization_code")
@@ -19,31 +22,43 @@ export class AuthService {
         form.append("client_secret", process.env.API42_SECRET)
         form.append("redirect_uri", process.env.API42_URL)
         form.append("code", body.code)
-        fetch("https://api.intra.42.fr/v2/oauth/token", {
+        const raiponce = await fetch("https://api.intra.42.fr/v2/oauth/token", {
             method: "POST",
             body: form,
         })
-            .then(function (raiponce) {
-                return raiponce.json().then(function (json) {
-                if (raiponce.status != 200) {
-                    console.log("nop")
-                    return "c pas bon";
-                }
-                TOKEN = json["access_token"]
-                fetch("https://api.intra.42.fr/v2/me", {
-                    method: "GET",
-                    headers: {Authorization: "Bearer " + TOKEN}
-                })
-                .then(function (raiponce) {
-                    return raiponce.json().then(function (json) {
-                    if (raiponce.status != 200) {
-                        console.log("nop")
-                        return "c pas bon";
-                    }
-                    console.log("login :" + json["login"])
-                    return json;
-                    })})
-        })})
+        var data = await raiponce.json();
+        if (raiponce.status != 200) {
+            console.log("nop 1")
+            console.log(data)
+            return { msg: "Nop"};
+        }
+        TOKEN = data["access_token"]
+        const raiponce2 = await fetch("https://api.intra.42.fr/v2/me", {
+            method: "GET",
+            headers: {Authorization: "Bearer " + TOKEN}
+        })
+        var data2 = await raiponce2.json()
+        if (raiponce.status != 200) {
+            console.log("nop 2")
+            console.log(data2)
+            return { msg: "Nop"};
+        }
+        // check db if user exist
+        if (TOKEN == "coucou")
+        {
+
+        }
+        else
+        {
+            console.log(data2);
+            const user = await this.prisma.user.create({
+                data: {
+                    login: data2['login'],
+                },
+            });
+            console.log(user)
+            return user;
+        }
     }
 }
 
