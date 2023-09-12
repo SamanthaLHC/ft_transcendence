@@ -44,10 +44,15 @@ export class AuthService {
             console.log(data2)
             return { msg: "Nop"};
         }
-        // check db if user exist
-        if (TOKEN == "coucou")
+        const logine = data2.login
+        const usere = await this.prisma.user.findFirst({
+            where: {
+                login: logine,
+            },
+        })
+        if (usere)
         {
-
+            return usere;
         }
         else
         {
