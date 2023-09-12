@@ -7,9 +7,6 @@ export class AuthController {
 
     @Post('login')
     login(@Body() code: object) {
-		//DEBUGG
-		console.log("code in controller:")
-		console.log(code)
         return this.authService.login(code)
     }
 }

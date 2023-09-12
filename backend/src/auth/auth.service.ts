@@ -14,9 +14,7 @@ export class AuthService {
 
 	login(body: any) {
 		var TOKEN = "coucou"
-		//DEBUGG 
-		console.log("body: ")
-		console.log(JSON.stringify(body))
+		//DEBUGG
 		console.log(JSON.stringify(process.env.API42_ID))
 		console.log(JSON.stringify(process.env.API42_SECRET))
 		console.log(JSON.stringify(process.env.API42_URL))
@@ -35,9 +33,6 @@ export class AuthService {
 				return raiponce.json().then(function (json) {
 					if (raiponce.status != 200) {
 						console.log(`status error: ${raiponce.status}`)
-						//DEBUGG
-						// console.log("raiponce return: ")
-						// console.log(raiponce)
 						return "c pas bon";
 					}
 					TOKEN = json["access_token"]
