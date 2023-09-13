@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - .:/back
+      - ./backend:/back
     networks:
       - back
     ports:
@@ -32,7 +32,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - .:/front
+      - ./frontend:/front
     ports:
       - 8000:8000
 

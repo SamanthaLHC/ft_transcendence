@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -14,6 +14,6 @@ export class UsersService {
         if (user)
             return user;
         else
-            return { "statusCode": 404 }
+            throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
     }
 }

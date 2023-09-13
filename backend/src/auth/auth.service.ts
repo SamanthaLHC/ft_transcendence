@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client'
 import { AuthDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -31,13 +31,11 @@ export class AuthService {
         if (raiponce.status != 200) {
             console.log("nop 1")
             console.log(data)
-            return {
-                "message": [
-                  "Erreur API 42"
-                ],
-                "error": "code_invalid",
-                "statusCode": 401
-              };
+            throw new HttpException({
+                status: 401,
+                error: 'Erreur API 42',
+              }, 401, {
+              });
         }
         TOKEN = data["access_token"]
         const raiponce2 = await fetch("https://api.intra.42.fr/v2/me", {
@@ -48,13 +46,11 @@ export class AuthService {
         if (raiponce.status != 200) {
             console.log("nop 2")
             console.log(data2)
-            return {
-                "message": [
-                  "Erreur API 42"
-                ],
-                "error": "token_fail",
-                "statusCode": 401
-              };
+            throw new HttpException({
+                status: 401,
+                error: 'Erreur API 42',
+              }, 401, {
+              });
         }
         const logine = data2.login
         const usere = await this.prisma.user.findFirst({
