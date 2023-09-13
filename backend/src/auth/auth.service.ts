@@ -31,7 +31,13 @@ export class AuthService {
         if (raiponce.status != 200) {
             console.log("nop 1")
             console.log(data)
-            return { msg: "Nop"};
+            return {
+                "message": [
+                  "Erreur API 42"
+                ],
+                "error": "code_invalid",
+                "statusCode": 401
+              };
         }
         TOKEN = data["access_token"]
         const raiponce2 = await fetch("https://api.intra.42.fr/v2/me", {
@@ -42,7 +48,13 @@ export class AuthService {
         if (raiponce.status != 200) {
             console.log("nop 2")
             console.log(data2)
-            return { msg: "Nop"};
+            return {
+                "message": [
+                  "Erreur API 42"
+                ],
+                "error": "token_fail",
+                "statusCode": 401
+              };
         }
         const logine = data2.login
         const usere = await this.prisma.user.findFirst({
@@ -52,7 +64,10 @@ export class AuthService {
         })
         if (usere)
         {
-            return usere;
+            return {
+                "statusCode": 200,
+                "id": usere.id
+            };
         }
         else
         {
@@ -60,10 +75,15 @@ export class AuthService {
             const user = await this.prisma.user.create({
                 data: {
                     login: data2['login'],
+                    photo: data2['image']['link'],
+                    name:  data2['displayname'],
                 },
             });
             console.log(user)
-            return user;
+            return {
+                "statusCode": 200,
+                "id": user.id
+            };
         }
     }
 }
