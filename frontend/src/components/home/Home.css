@@ -1,0 +1,40 @@
+@font-face {
+    font-family: "earthorbiter";
+    src: local("earthorbiter"),
+        url(../../fonts/earthorbiteracad.ttf);
+}
+
+@font-face {
+    font-family: "earthorbiter3";
+    src: local("earthorbiter3"),
+        url(../../fonts/earthorbiter3dital.ttf);
+}
+
+@font-face {
+    font-family: "Countless";
+    src: local("Countless"),
+        url(../../fonts/Countless.ttf);
+}
+
+@font-face {
+    font-family: "Azonix";
+    src: local("Azonixs"),
+        url(../../fonts/Azonix.otf);
+}
+
+@font-face {
+    font-family: "Geomatrix";
+    src: local("Geomatrix"),
+        url(../../fonts/GeomatrixMedium-1G4Zv.ttf);
+}
+
+@font-face {
+    font-family: "Vensfolk";
+    src: local("Vensfolk"),
+        url(../../fonts/Vensfolk.otf);
+}
+
+body {
+    background-color: #282c34;
+    font-family: 'earthorbiter';
+}

@@ -1,0 +1,20 @@
+.body {
+    /* background-color: rgb(128, 134, 139); */
+    padding: 50px;
+    flex-direction: row;
+    /* justify-content: flex-start; */
+    display: block;
+
+}
+
+.button {
+    background-color: rgb(248, 184, 100);
+    border-color: bisque;
+    font-family: "Vensfolk";
+    font-size: 22px;
+    text-align: center;
+    border-radius: 25%;
+    -webkit-border-radius: 25px;
+    padding: 20px;
+    justify-content: center;
+}

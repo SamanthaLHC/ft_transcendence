@@ -1,0 +1,22 @@
+.banner {
+    text-align: left;
+    background-color: black;
+    padding: 12px;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.title {
+    color: rgb(248, 184, 100);
+    /* padding-left: 52px; */
+    /* padding-right: 52px; */
+}
+
+.giphy {
+    height: 85;
+    width: 65px;
+    /* padding-left: 32px; */
+}
+
