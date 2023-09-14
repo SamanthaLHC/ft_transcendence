@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import './index.css';
-// import App from './App';
-import App from './components/app/App'
+import App from './components/app/App';
 import reportWebVitals from './reportWebVitals';
+import Home from './components/home/Home';
 
 
 const root = ReactDOM.createRoot(
@@ -11,7 +12,13 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Routes>
+        <Route path="/" element={<App />} />
+        <Route path="/home" element={<Home />} />
+      </Routes>
+    </Router>
+
   </React.StrictMode>
 );
 
