@@ -10,13 +10,11 @@
 
 .title {
     color: rgb(248, 184, 100);
-    /* padding-left: 52px; */
-    /* padding-right: 52px; */
 }
 
 .giphy {
+    
     height: 85;
     width: 65px;
-    /* padding-left: 32px; */
 }
 

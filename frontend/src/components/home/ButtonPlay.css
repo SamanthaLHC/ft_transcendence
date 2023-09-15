@@ -1,10 +1,8 @@
 .body {
-    /* background-color: rgb(128, 134, 139); */
-    padding: 50px;
-    flex-direction: row;
-    /* justify-content: flex-start; */
-    display: block;
-
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, 20%); 
 }
 
 .button {
