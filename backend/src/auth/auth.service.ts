@@ -79,9 +79,12 @@ export class AuthService {
             });
             console.log(user)
             const payload = { sub: user.id, username: user.login };
-            return {
+            throw new HttpException({
+                status: 302,
+                url: "localhost:8000/home",
                 access_token: await this.jwtService.signAsync(payload),
-            };
+              }, 302, {
+              });
         }
     }
 }
