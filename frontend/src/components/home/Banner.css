@@ -3,19 +3,21 @@
     background-color: black;
     padding: 12px;
     display: flex;
-    justify-content: flex-start;
+    justify-content:center;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
 }
 
 .title {
     color: rgb(248, 184, 100);
-    font-size: 4vw;
+    justify-content: flex-start;
+
+    font-size: 3vw;
 }
 
 .giphy {
-    
-    height: 85;
-    width: 65px;
+    max-width: 10%;
+    max-height: 10%;
+    /* margin: 0 auto; */
 }
 
