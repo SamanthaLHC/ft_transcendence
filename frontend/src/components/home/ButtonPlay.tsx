@@ -1,11 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
-import Container from '@mui/material/Container';
 
 // Augment the palette to include an ochre color
 declare module '@mui/material/styles' {
@@ -28,15 +23,12 @@ declare module '@mui/material/Button' {
 const theme = createTheme({
 	palette: {
 		ochre: {
-			main: '#E3D026',
-			light: '#E9DB5D',
-			dark: '#A29415',
-			contrastText: '#242105',
+			main: '#ffc107'
 		},
 	},
 
 	typography: {
-		fontFamily: "Vensfolk"
+		fontFamily: "Azonix"
 	}
 });
 
@@ -59,11 +51,8 @@ function ButtonPlay() {
 				>
 					Play this magical game, right now!
 				</Button>
-
 			</Grid>
-
-
-		// </ThemeProvider >
+		</ThemeProvider >
 	);
 }
 

@@ -2,15 +2,13 @@ import './Home.css';
 import Container from "@mui/material/Container"
 // import { createTheme } from '@mui/material/styles';
 import Grid from "@mui/material/Grid"
-import Header from './Header';
+import Header from './header/Header';
 import ButtonPlay from './ButtonPlay';
 
 
 // TODO  : header (barre du haut)
-// TODO  : big button
 // TODO  : friend list 
-
-
+//TODO : add une marre aux cabards en bg
 
 
 function Home() {
@@ -22,7 +20,6 @@ function Home() {
 				<ButtonPlay />
 			</Grid>
 			{/* <Friends/> */}
-			{/* <Chat/> */}
 		</Container>
 	)
 }

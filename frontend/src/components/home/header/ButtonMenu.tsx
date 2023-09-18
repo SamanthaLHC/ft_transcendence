@@ -1,9 +1,6 @@
-import * as React from 'react';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
-import Typography from "@mui/material/Typography";
-import { styled } from '@mui/material/styles';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 
@@ -27,10 +24,7 @@ declare module '@mui/material/Button' {
 const theme = createTheme({
 	palette: {
 		ochre: {
-			main: '#E3D026',
-			light: '#E9DB5D',
-			dark: '#A29415',
-			contrastText: '#242105',
+			main: '#ffc107'
 		},
 	},
 
@@ -49,15 +43,25 @@ export default function ButtonMenu() {
 			}}
 		>
 			<ThemeProvider theme={theme}>
-				<Button
+
+				<ButtonGroup
 					variant="outlined"
-					color='ochre'
+					aria-label="outlined button group"
 				>
-					Settings
-				</Button>
-
+					<Button
+						size='small'
+						color='ochre'
+					>
+						Chat
+					</Button>
+					<Button
+						size='small'
+						color='ochre'
+					>
+						Game
+					</Button>
+				</ButtonGroup>
 			</ThemeProvider>
-
 		</Box >
 	);
 }

@@ -8,8 +8,14 @@ function App() {
 		<Routes>
 			<Route path={"/"} element={<Login />} />
 			<Route path={"/home"} element={<Home />} />
+			{/* <Route path={"/chat"} element={<Chat />} /> */}
+			{/* <Route path={"/game"} element={<Game />} /> */}
 		</Routes>
 	)
 }
 
 export default App
+
+//TODO securiser les routes avec l'authent
+//TODO gestion d'erreurs possibles (impossible de recuperer un code, lien invalide etc)
+//TODO voir quelles protection smettre en place (routes ?)

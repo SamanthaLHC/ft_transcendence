@@ -35,7 +35,6 @@ if (codeP != null) {
 
 
 //TODO traduire en typsecript
-//TODO gestion d'erreurs possibles (impossible de recuperer un code, lien invalide etc)
-//TODO voir quelles protection smettre en place (routes ?)
+
 
 
