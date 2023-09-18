@@ -56,7 +56,6 @@ function ButtonPlay() {
 					variant="contained"
 					size='large'
 					color="ochre"
-
 				>
 					Play this magical game, right now!
 				</Button>

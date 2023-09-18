@@ -49,23 +49,13 @@ export default function ButtonMenu() {
 			}}
 		>
 			<ThemeProvider theme={theme}>
-
-				<ButtonGroup
+				<Button
 					variant="outlined"
-					aria-label="outlined button group"
-				// color='ochre'
+					color='ochre'
 				>
-					<Button
-						color='ochre'
-					>
-						Chat
-					</Button>
-					<Button
-						color='ochre'
-					>
-						Game
-					</Button>
-				</ButtonGroup>
+					Settings
+				</Button>
+
 			</ThemeProvider>
 
 		</Box >

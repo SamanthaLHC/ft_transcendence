@@ -9,6 +9,8 @@ import IconButton from '@mui/material/IconButton';
 import ButtonPlay from './ButtonPlay';
 import ButtonMenu from './ButtonMenu';
 import { ThemeProvider } from '@emotion/react';
+import SettingsButton from './SettingsButton'
+
 
 //TODO 4 seg in header => cluster button (redirect on click)
 //TODO  => title with giphy duck
@@ -78,15 +80,7 @@ export default function Header() {
 
 				{/* img giphy */}
 
-
-				<Button
-					variant="outlined"
-					size="small"
-				// color='ochre'
-				>
-					Settings
-				</Button>
-
+				<SettingsButton />
 			</Toolbar>
 			{/* <ProfilButton /> */}
 		</React.Fragment >
