@@ -1,37 +1,37 @@
 @font-face {
     font-family: "earthorbiter";
     src: local("earthorbiter"),
-        url(../../fonts/earthorbiteracad.ttf);
+        url(../../assets/fonts/earthorbiteracad.ttf);
 }
 
 @font-face {
     font-family: "earthorbiter3";
     src: local("earthorbiter3"),
-        url(../../fonts/earthorbiter3dital.ttf);
+        url(../../assets/fonts/earthorbiter3dital.ttf);
 }
 
 @font-face {
     font-family: "Countless";
     src: local("Countless"),
-        url(../../fonts/Countless.ttf);
+        url(../../assets/fonts/Countless.ttf);
 }
 
 @font-face {
     font-family: "Azonix";
     src: local("Azonixs"),
-        url(../../fonts/Azonix.otf);
+        url(../../assets/fonts/Azonix.otf);
 }
 
 @font-face {
     font-family: "Geomatrix";
     src: local("Geomatrix"),
-        url(../../fonts/GeomatrixMedium-1G4Zv.ttf);
+        url(../../assets/fonts/GeomatrixMedium-1G4Zv.ttf);
 }
 
 @font-face {
     font-family: "Vensfolk";
     src: local("Vensfolk"),
-        url(../../fonts/Vensfolk.otf);
+        url(../../assets/fonts/Vensfolk.otf);
 }
 
 body {
