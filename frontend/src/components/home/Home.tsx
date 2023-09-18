@@ -1,25 +1,30 @@
-import React, { useState } from 'react' 
 import './Home.css';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import Banner from './Banner';
+import Container from "@mui/material/Container"
+// import { createTheme } from '@mui/material/styles';
+import Grid from "@mui/material/Grid"
+import Header from './Header';
 import ButtonPlay from './ButtonPlay';
 
 
-function Home()
-{
-    const [modal, setModal] = useState(false);
+// TODO  : header (barre du haut)
+// TODO  : big button
+// TODO  : friend list 
 
-    const toggle = () => setModal(!modal);
-    return (
-        <div>
-            <Banner/>
-            {/* <PersonnalSpace/> */}
-            {/* </> */}
-            {/* <Friends/> */}
-            <ButtonPlay/>
-            {/* <Chat/> */}
-        </div>
-    )
+
+
+
+function Home() {
+
+	return (
+		<Container>
+			<Header />
+			<Grid sx={{ mt: 20 }}>
+				<ButtonPlay />
+			</Grid>
+			{/* <Friends/> */}
+			{/* <Chat/> */}
+		</Container>
+	)
 }
 
 export default Home
