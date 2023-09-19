@@ -38,24 +38,17 @@ function ButtonPlay() {
 
 
 		<ThemeProvider theme={theme}>
-			<Grid
-				container spacing={2}
-				justifyContent={"center"}
-				alignItems={"center"}
+			<Button
+				sx={{ width: 200, height: 90 }}
+				variant="contained"
+				size='large'
+				color="ochre"
 			>
-				<Button
-					sx={{ width: 200, height: 90 }}
-					variant="contained"
-					size='large'
-					color="ochre"
-				>
-					Play this magical game, right now!
-				</Button>
-			</Grid>
+				Play this magical game, right now!
+			</Button>
 		</ThemeProvider >
 	);
 }
 
 export default ButtonPlay
 
-// TODO onclick()

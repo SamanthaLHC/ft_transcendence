@@ -13,3 +13,7 @@ export default function SettingsButton() {
 		</IconButton>
 	);
 }
+
+//TODO menu déroulant: 
+//TODO switch pour activer 2fa
+//TODO edit pour changer name et pp
