@@ -18,3 +18,12 @@ model User {
   photo String
   name String
 }
+
+model GameHistory {
+  gameId Int @id @default(autoincrement())
+  at DateTime @default(now())
+  gagnantId Int
+  perdantId Int
+  scoreGagnant Int
+  scorePerdant Int
+}

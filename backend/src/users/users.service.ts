@@ -16,4 +16,24 @@ export class UsersService {
         else
             throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
     }
+
+    async getHistoFromId(id: string) {
+        var id_num:number = +id
+        const hist = await this.prisma.gameHistory.findMany({
+            where: {
+                OR: [
+                    {
+                        gagnantId : id_num
+                    },
+                    {
+                        perdantId: id_num
+                    }
+                ]
+            },
+        })
+        if (hist)
+            return hist;
+        else
+            throw new NotFoundException(`Aucun user avec l'id ${id_num} ou aucun match effectue`)
+    }
 }
