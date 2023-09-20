@@ -29,6 +29,7 @@ import SearchBar from './SearchBar';
 //TODO selection highlight with mouse
 //TODO connexion light (red or green)
 
+//TODO voir rubrique avatar with badge material ui
 
 
 //HERE get id 

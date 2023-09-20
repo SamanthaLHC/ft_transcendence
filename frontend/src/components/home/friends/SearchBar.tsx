@@ -27,9 +27,12 @@ export default function SearchBar() {
                 // value={searchText}
                 // onChange={handleSearchChange}
                 InputProps={{
-
+                    style: { color: '#ffc107' }, // Set the background color to #ffc107 (yellow)
                     endAdornment: (
-                        <IconButton onClick={handleSearch} >
+                        <IconButton 
+                        style={{ color: '#ffc107' }}
+                        onClick={handleSearch}
+                        >
                             <SearchIcon />
                         </IconButton>
                     ),
