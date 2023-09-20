@@ -42,12 +42,16 @@ export default function Friends() {
     return (
         <React.Fragment>
             <Card
-                variant='outlined'
-                sx={{ maxWidth: 200, height: 500, backgroundColor: "#282c34" }}
+                variant='outlined' 
+                sx={{ borderBottom: 4, 
+                    borderColor: 'ActiveBorder',  
+                    maxWidth: 200, 
+                    height: 600, 
+                    backgroundColor: "#080d17", 
+                    borderRadius: 0 }}
             >
                 <Typography
-                    variant="h5" sx={{ p: 2, pb: 0 }}
-                    // sx={{color: '#ffc107'}}
+                    variant="h5" sx={{ p: 2, pb: 0, color: '#ffc107'}}
                     color={"burlywood"}
                 >
                     Friends

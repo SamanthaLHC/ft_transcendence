@@ -19,13 +19,14 @@ const handleSearch = () => {
 export default function SearchBar() {
 
     return (
-        <div>
+        <div >
             <TextField
                 label="Search"
                 variant="outlined"
                 fullWidth
                 // value={searchText}
                 // onChange={handleSearchChange}
+                style={{ backgroundColor: '#42464f' }}
                 InputProps={{
                     style: { color: '#ffc107' }, // Set the background color to #ffc107 (yellow)
                     endAdornment: (
