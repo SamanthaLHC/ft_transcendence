@@ -7,6 +7,7 @@ export default function SettingsButton() {
 
 		<IconButton>
 			<SettingsIcon
+				style={{ color: '#ffc107' }}
 				display={"flex-end"}
 			/>
 		</IconButton>
