@@ -67,13 +67,13 @@ export class AuthService {
             throw new HttpException({
                 status: 302,
                 clientId: usere.id,
-                url: "localhost:8000/2fa",
+                url: "http://localhost:8000/2fa",
               }, 302, {
               }); 
             const payload = { sub: usere.id, username: usere.login };
             throw new HttpException({
                 status: 302,
-                url: "localhost:8000/home",
+                url: "http://localhost:8000/home",
                 access_token: await this.jwtService.signAsync(payload),
               }, 302, {
               });
@@ -92,7 +92,7 @@ export class AuthService {
             const payload = { sub: user.id, username: user.login };
             throw new HttpException({
                 status: 302,
-                url: "localhost:8000/home",
+                url: "http://localhost:8000/home",
                 access_token: await this.jwtService.signAsync(payload),
               }, 302, {
               });
@@ -114,7 +114,7 @@ export class AuthService {
         const payload = { sub: user.id, username: user.login };
         throw new HttpException({
             status: 302,
-            url: "localhost:8000/home",
+            url: "http://localhost:8000/home",
             access_token: await this.jwtService.signAsync(payload),
           }, 302, {
           });

@@ -26,9 +26,13 @@ if (codeP != null) {
 	});
 	const response = await fetch(req)
 	var datas = await response.json()
-	if (response.status === 302) {
+	console.log("response status: ")
+	console.log(response.status)
+	if (datas.status === 302) {
 		const newUrl = datas.url
-		console.log(response.status)
+		console.log("valu in data.url")
+		console.log(datas.url)
+		console.log("url: ")
 		console.log(newUrl)
 		window.location.href = newUrl;
 	}
