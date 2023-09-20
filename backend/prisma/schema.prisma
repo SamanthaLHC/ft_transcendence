@@ -17,6 +17,8 @@ model User {
   login String
   photo String
   name String
+  deuxfa Boolean @default(false)
+  deuxfasecret String?
 }
 
 model GameHistory {
