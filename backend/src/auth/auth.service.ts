@@ -3,6 +3,7 @@ import { User } from '@prisma/client'
 import { AuthDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { response } from 'express';
+import { JwtService } from '@nestjs/jwt';
 
 const formData = (body: { [key: string]: string }) => {
 	const form = new FormData()
@@ -14,7 +15,8 @@ const formData = (body: { [key: string]: string }) => {
 
 @Injectable()
 export class AuthService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService, 
+        private jwtService: JwtService) {}
     async login(body: AuthDto){
         var TOKEN = "coucou"
         const form = new FormData()
@@ -60,9 +62,9 @@ export class AuthService {
         })
         if (usere)
         {
+            const payload = { sub: usere.id, username: usere.login };
             return {
-                "statusCode": 200,
-                "id": usere.id
+                access_token: await this.jwtService.signAsync(payload),
             };
         }
         else
@@ -76,10 +78,13 @@ export class AuthService {
                 },
             });
             console.log(user)
-            return {
-                "statusCode": 200,
-                "id": user.id
-            };
+            const payload = { sub: user.id, username: user.login };
+            throw new HttpException({
+                status: 302,
+                url: "localhost:8000/home",
+                access_token: await this.jwtService.signAsync(payload),
+              }, 302, {
+              });
         }
     }
 }
