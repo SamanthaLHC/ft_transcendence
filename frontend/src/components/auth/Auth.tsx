@@ -11,6 +11,7 @@ function getCode() {
 }
 
 let codeP = getCode();
+
 if (codeP != null) {
 
 	const obj = {
@@ -23,7 +24,7 @@ if (codeP != null) {
 		},
 		body: JSON.stringify(obj),
 	});
-	fetch(req).then((response) => response.json()).then((data) => {
+	await fetch(req).then((response) => response.json()).then((data) => {
 		console.log('URL: ', data.url);
 		// if (response.status === 302){
 
