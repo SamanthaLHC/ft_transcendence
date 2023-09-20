@@ -46,7 +46,7 @@ export class AuthService {
             headers: {Authorization: "Bearer " + TOKEN}
         })
         var data2 = await raiponce2.json()
-        if (raiponce.status != 200) {
+        if (raiponce2.status != 200) {
             console.log("nop 2")
             console.log(data2)
             throw new HttpException({

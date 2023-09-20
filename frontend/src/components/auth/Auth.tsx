@@ -24,14 +24,36 @@ if (codeP != null) {
 		},
 		body: JSON.stringify(obj),
 	});
-	await fetch(req).then((response) => response.json()).then((data) => {
-		console.log('URL: ', data.url);
+	const response = await fetch(req)
+	var datas = await response.json()
+	if (response.status === 302) {
+		const newUrl = datas.url
+		console.log(response.status)
+		console.log(newUrl)
+		window.location.href = newUrl;
+	}
+	var bearertok = process.env.REACT_APP_BEARER_TOKEN 
+	bearertok = datas.access_token
+	console.log("datas in response body: ")
+	console.log(datas)
+	console.log("bearer token = ")
+	console.log(bearertok)
+
+
+
+
+
+
+
+	//TOFIX
+	// .then((response) => response.json()).then((data) => {
+	// 	console.log('URL: ', data.url);
 		// if (response.status === 302){
 
 		// }
-	}).catch(err => {
-		console.log("err in catch: ")
-		console.log(err)
+	// }).catch(err => {
+	// 	console.log("err in catch: ")
+	// 	console.log(err)
 
 		// )
 		// 	if (response.status === 302) {
@@ -42,7 +64,7 @@ if (codeP != null) {
 		// }).catch(err => {
 		// 	console.log("err in catch: ")
 		// 	console.log(err)
-	});
+	// });
 }
 
 
