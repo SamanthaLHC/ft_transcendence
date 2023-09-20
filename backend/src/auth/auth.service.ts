@@ -1,9 +1,10 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from '@prisma/client'
-import { AuthDto } from './dto';
+import { AuthDto, Auth2faDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { response } from 'express';
 import { JwtService } from '@nestjs/jwt';
+import { authenticator } from 'otplib';
 
 const formData = (body: { [key: string]: string }) => {
 	const form = new FormData()
@@ -62,10 +63,20 @@ export class AuthService {
         })
         if (usere)
         {
+            if (usere.deuxfa)
+            throw new HttpException({
+                status: 302,
+                clientId: usere.id,
+                url: "localhost:8000/2fa",
+              }, 302, {
+              }); 
             const payload = { sub: usere.id, username: usere.login };
-            return {
+            throw new HttpException({
+                status: 302,
+                url: "localhost:8000/home",
                 access_token: await this.jwtService.signAsync(payload),
-            };
+              }, 302, {
+              });
         }
         else
         {
@@ -87,6 +98,37 @@ export class AuthService {
               });
         }
     }
+
+    async login2fa(body: Auth2faDto){
+        const user = await this.prisma.user.findFirst({
+            where: {
+                id: body.id,
+            },
+        })
+        const isCodeValid = this.isTwoFactorAuthenticationCodeValid(
+            body.code,
+            user.deuxfasecret,
+          );
+        if (!isCodeValid)
+            throw new UnauthorizedException();
+        const payload = { sub: user.id, username: user.login };
+        throw new HttpException({
+            status: 302,
+            url: "localhost:8000/home",
+            access_token: await this.jwtService.signAsync(payload),
+          }, 302, {
+          });
+    }
+      
+
+    isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, secret: string) {
+        return authenticator.verify({
+          token: twoFactorAuthenticationCode,
+          secret: secret,
+        });
+      }
+
+      
 }
 
 

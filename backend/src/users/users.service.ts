@@ -1,5 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { toDataURL } from 'qrcode';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +15,10 @@ export class UsersService {
             },
         })
         if (user)
-            return user;
+        {
+            const { deuxfasecret: _, ...userWithoutPassword } = user
+            return userWithoutPassword;
+        }
         else
             throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
     }
@@ -36,4 +42,41 @@ export class UsersService {
         else
             throw new NotFoundException(`Aucun user avec l'id ${id_num} ou aucun match effectue`)
     }
+
+    async turnOnTwoFactorAuthentication(userId: number) {
+        const user = await this.prisma.user.findFirst({
+            where: { id: userId}
+        })
+        return await this.generateTwoFactorAuthenticationSecret(user.login, userId)
+    }
+
+
+    async turnOffTwoFactorAuthentication(userId: number) {
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: { deuxfa: false,
+                    deuxfasecret: null },
+          })
+      }
+
+    async generateTwoFactorAuthenticationSecret(userLogin: string, userId: number) {
+        const secret = authenticator.generateSecret();
+    
+        const otpauthUrl = authenticator.keyuri(userLogin, 'ft_transcendence', secret);
+    
+        await this.prisma.user.update({
+            where: { id: userId },
+            data: { deuxfa: true, deuxfasecret: secret },
+          })
+    
+        return {
+          secret,
+          otpauthUrl
+        }
+      }
+
+      async generateQrCodeDataURL(otpAuthUrl: string) {
+        return toDataURL(otpAuthUrl);
+      }
 }
+

@@ -1,6 +1,7 @@
-import { Controller, Get, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -14,7 +15,7 @@ export class UsersController {
 
     @UseGuards(AuthGuard)
     @Get('me')
-    findme(@Request() req) {
+    findme(@Req() req) {
         return this.usersService.getUserFromId(req.user.sub);
     }
 
@@ -22,5 +23,21 @@ export class UsersController {
     @Get('gameHistorique/:id')
     gethisto(@Param('id') id: string) {
         return this.usersService.getHistoFromId(id);
+    }
+
+    @Post('2fa/turn-on')
+    @UseGuards(AuthGuard)
+    async turnOnTwoFactorAuthentication(@Req() req) {
+        const ret = await this.usersService.turnOnTwoFactorAuthentication(req.user.sub);
+        console.log(ret.otpauthUrl);
+        return {
+            otpAuthUrl: await this.usersService.generateQrCodeDataURL(ret.otpauthUrl),
+          };
+    }
+
+    @Post('2fa/turn-off')
+    @UseGuards(AuthGuard)
+    async turnOffTwoFactorAuthentication(@Req() req){
+        this.usersService.turnOffTwoFactorAuthentication(req.user.sub)
     }
 }
