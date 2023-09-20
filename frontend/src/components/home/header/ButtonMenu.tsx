@@ -65,3 +65,6 @@ export default function ButtonMenu() {
 		</Box >
 	);
 }
+
+// TODO redirect chat
+// TODO redirect home avec bouton game (ou lancer directement une partie)

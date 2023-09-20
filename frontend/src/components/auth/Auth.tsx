@@ -23,18 +23,30 @@ if (codeP != null) {
 		},
 		body: JSON.stringify(obj),
 	});
-	fetch(req).then((response) => {
-		if (!response.ok) {
-			console.log(response)
-		}
+	fetch(req).then((response) => response.json()).then((data) => {
+		console.log('URL: ', data.url);
+		// if (response.status === 302){
+
+		// }
 	}).catch(err => {
 		console.log("err in catch: ")
 		console.log(err)
+
+		// )
+		// 	if (response.status === 302) {
+
+		// 	} else {
+		// 		console.log(response.status)
+		// 	}
+		// }).catch(err => {
+		// 	console.log("err in catch: ")
+		// 	console.log(err)
 	});
 }
 
 
+
+
+
 //TODO traduire en typsecript
-
-
 

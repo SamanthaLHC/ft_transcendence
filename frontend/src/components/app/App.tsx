@@ -16,5 +16,6 @@ function App() {
 
 export default App
 
-//TODO securiser les routes avec l'authent
-//TODO gestion d'erreurs possibles (impossible de recuperer un code, lien invalide etc)
+
+// TODO add route 2fa
+// TODO add route error 400

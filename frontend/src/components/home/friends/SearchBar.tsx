@@ -44,3 +44,4 @@ export default function SearchBar() {
 }
 
 
+// TODO gerer les query pour les recherches

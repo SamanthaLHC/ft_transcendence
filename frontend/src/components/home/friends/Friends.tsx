@@ -68,3 +68,6 @@ export default function Friends() {
         </React.Fragment >
     );
 }
+
+//TODO on click friends: ajouter les options 
+//TODO ajouter la diode de connexion

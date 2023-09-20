@@ -10,9 +10,11 @@ export default function ProfilSpace() {
             <Typography
                 color={"beige"}
             >
-
                 coin-coin
             </Typography>
         </Stack>
     );
 }
+
+
+// TODO redirect rpofil page
