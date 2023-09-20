@@ -5,9 +5,8 @@ import SettingsIcon from '@mui/icons-material/Settings';
 export default function SettingsButton() {
 	return (
 
-		<IconButton>
+		<IconButton style={{ color: '#ffc107' }}>
 			<SettingsIcon
-				style={{ color: '#ffc107' }}
 				display={"flex-end"}
 			/>
 		</IconButton>
