@@ -12,13 +12,12 @@ import Friends from './friends/Friends';
 //TODO profil space
 //TODO : add une marre aux canards en bg
 
-
 export default function Home() {
 	return (
 		<React.Fragment>
 			< Box sx={{ flexGrow: 1, height: '100vh' }}>
 				<Grid>
-					<Header />
+					<Header/>
 				</Grid>
 				<Grid container spacing={-1}
 					justifyContent={"flex-start"}

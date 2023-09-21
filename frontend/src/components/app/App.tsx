@@ -9,6 +9,7 @@ function App() {
 			<Route path={"/home"} element={<Home />} />
 			{/* <Route path={"/chat"} element={<Chat />} /> */}
 			{/* <Route path={"/game"} element={<Game />} /> */}
+			{/* <Route path={"/profil"} element={<Profil />} /> */}
 		</Routes>
 	)
 }
