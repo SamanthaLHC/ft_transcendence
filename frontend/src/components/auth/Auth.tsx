@@ -12,7 +12,10 @@ function getCode() {
 
 let codeP = getCode();
 
-if (codeP != null) {
+
+
+const authProcess = async () => {
+
 
 	const obj = {
 		code: codeP
@@ -37,6 +40,8 @@ if (codeP != null) {
 	// var bearertok = process.env.REACT_APP_BEARER_TOKEN;
 	// bearertok = datas.access_token;
 }
+
+authProcess();
 
 
 //TODO traduire en typsecript
