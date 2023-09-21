@@ -10,6 +10,10 @@ all: up
 up: build
 	docker compose -f ${DOCKER_COMPOSE} up
 
+.PHONY: detach
+detach: build
+	docker compose -f ${DOCKER_COMPOSE} up -d
+
 .PHONY: stop
 stop:
 	docker compose -f ${DOCKER_COMPOSE} stop
