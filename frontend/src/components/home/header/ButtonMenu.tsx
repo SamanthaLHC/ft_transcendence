@@ -46,8 +46,7 @@ export default function ButtonMenu() {
 
 				<ButtonGroup
 					variant="outlined"
-					aria-label="outlined button group"
-				>
+					aria-label="outlined button group">
 					<Button
 						size='small'
 						color='ochre'

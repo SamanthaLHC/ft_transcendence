@@ -1,8 +1,8 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import ButtonBase from '@mui/material/ButtonBase';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import coin from '../../assets/Rubber_Duck_in_Parramatta_Park.jpg'
 

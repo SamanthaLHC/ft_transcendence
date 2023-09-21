@@ -22,7 +22,6 @@ export default function TestingModule() {
 				style={{ color: '#ffc107' }}
 				display={"flex"}
 				alignItems={"center"}
-				// paddingLeft={"12vw"}
 				paddingLeft={"15%"}
 				noWrap
 				sx={{ flex: 1 }}
