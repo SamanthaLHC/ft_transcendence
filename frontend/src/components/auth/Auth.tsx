@@ -42,7 +42,9 @@ const authProcess = async () => {
 	// bearertok = datas.access_token;
 }
 
-authProcess();
+if (codeP != null) {
+	authProcess();
+}
 
 
 //TODO traduire en typsecript
