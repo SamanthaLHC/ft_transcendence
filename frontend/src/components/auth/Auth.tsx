@@ -24,56 +24,21 @@ if (codeP != null) {
 		},
 		body: JSON.stringify(obj),
 	});
-	const response = await fetch(req)
-	var datas = await response.json()
-	console.log("response status: ")
-	console.log(response.status)
+	const response = await fetch(req);
+	var datas = await response.json();
+	console.log("response status: ");
+	console.log(response.status);
 	if (datas.status === 302) {
-		const newUrl = datas.url
-		console.log("valu in data.url")
-		console.log(datas.url)
-		console.log("url: ")
-		console.log(newUrl)
+		const newUrl = datas.url;
 		window.location.href = newUrl;
 	}
-	var bearertok = process.env.REACT_APP_BEARER_TOKEN 
-	bearertok = datas.access_token
-	console.log("datas in response body: ")
-	console.log(datas)
-	console.log("bearer token = ")
-	console.log(bearertok)
 
-
-
-
-
-
-
-	//TOFIX
-	// .then((response) => response.json()).then((data) => {
-	// 	console.log('URL: ', data.url);
-		// if (response.status === 302){
-
-		// }
-	// }).catch(err => {
-	// 	console.log("err in catch: ")
-	// 	console.log(err)
-
-		// )
-		// 	if (response.status === 302) {
-
-		// 	} else {
-		// 		console.log(response.status)
-		// 	}
-		// }).catch(err => {
-		// 	console.log("err in catch: ")
-		// 	console.log(err)
-	// });
+	// FIXME :
+	// var bearertok = process.env.REACT_APP_BEARER_TOKEN;
+	// bearertok = datas.access_token;
 }
-
-
-
 
 
 //TODO traduire en typsecript
 
+//TODO gestion d'erreurs possibles
