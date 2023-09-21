@@ -36,16 +36,11 @@ const authProcess = async () => {
 		window.location.href = newUrl;
 		console.log("bearer token: ", datas.access_token);
 	}
-
-	// FIXME :
-	// var bearertok = process.env.REACT_APP_BEARER_TOKEN;
-	// bearertok = datas.access_token;
 }
 
 if (codeP != null) {
 	authProcess();
 }
-
 
 //TODO traduire en typsecript
 
