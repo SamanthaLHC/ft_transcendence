@@ -17,7 +17,7 @@ export default function Home() {
 		<React.Fragment>
 			< Box sx={{ flexGrow: 1, height: '100vh' }}>
 				<Grid>
-					<Header/>
+					<Header />
 				</Grid>
 				<Grid container spacing={-1}
 					justifyContent={"flex-start"}

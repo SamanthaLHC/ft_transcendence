@@ -14,7 +14,6 @@ export default function TestingModule() {
 
 	return (
 		<ThemeProvider theme={theme}>
-
 			<Typography
 				component="h1"
 				variant="h4"
@@ -22,7 +21,7 @@ export default function TestingModule() {
 				style={{ color: '#ffc107' }}
 				display={"flex"}
 				alignItems={"center"}
-				paddingLeft={"15%"}
+				paddingLeft={"10%"}
 				noWrap
 				sx={{ flex: 1 }}
 			>
@@ -31,7 +30,5 @@ export default function TestingModule() {
 				<img src={giphy} className='giphy' alt="gif"/>
 			</Typography>
 		</ThemeProvider>
-
-
 	)
 }
