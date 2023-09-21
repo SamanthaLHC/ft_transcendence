@@ -11,6 +11,7 @@ function getCode() {
 }
 
 let codeP = getCode();
+
 if (codeP != null) {
 
 	const obj = {
@@ -23,18 +24,21 @@ if (codeP != null) {
 		},
 		body: JSON.stringify(obj),
 	});
-	fetch(req).then((response) => {
-		if (!response.ok) {
-			console.log(response)
-		}
-	}).catch(err => {
-		console.log("err in catch: ")
-		console.log(err)
-	});
+	const response = await fetch(req);
+	var datas = await response.json();
+	console.log("response status: ");
+	console.log(response.status);
+	if (datas.status === 302) {
+		const newUrl = datas.url;
+		window.location.href = newUrl;
+	}
+
+	// FIXME :
+	// var bearertok = process.env.REACT_APP_BEARER_TOKEN;
+	// bearertok = datas.access_token;
 }
 
 
 //TODO traduire en typsecript
 
-
-
+//TODO gestion d'erreurs possibles

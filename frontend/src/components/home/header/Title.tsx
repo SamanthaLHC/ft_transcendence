@@ -22,13 +22,13 @@ export default function TestingModule() {
 				style={{ color: '#ffc107' }}
 				display={"flex"}
 				alignItems={"center"}
-				align="center"
+				paddingLeft={"15%"}
 				noWrap
 				sx={{ flex: 1 }}
 			>
-				<img src={giphy} className='giphy' />
+				<img src={giphy} className='giphy' alt="gif" />
 				~Magical ducky pong~
-				<img src={giphy} className='giphy' />
+				<img src={giphy} className='giphy' alt="gif"/>
 			</Typography>
 		</ThemeProvider>
 

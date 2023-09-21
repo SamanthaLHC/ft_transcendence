@@ -46,8 +46,7 @@ export default function ButtonMenu() {
 
 				<ButtonGroup
 					variant="outlined"
-					aria-label="outlined button group"
-				>
+					aria-label="outlined button group">
 					<Button
 						size='small'
 						color='ochre'
@@ -65,3 +64,6 @@ export default function ButtonMenu() {
 		</Box >
 	);
 }
+
+// TODO redirect chat
+// TODO redirect home avec bouton game (ou lancer directement une partie)
