@@ -26,9 +26,9 @@ export default function TestingModule() {
 				noWrap
 				sx={{ flex: 1 }}
 			>
-				<img src={giphy} className='giphy' />
+				<img src={giphy} className='giphy' alt="gif" />
 				~Magical ducky pong~
-				<img src={giphy} className='giphy' />
+				<img src={giphy} className='giphy' alt="gif"/>
 			</Typography>
 		</ThemeProvider>
 
