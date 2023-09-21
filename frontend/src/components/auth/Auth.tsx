@@ -34,6 +34,7 @@ const authProcess = async () => {
 	if (datas.status === 302) {
 		const newUrl = datas.url;
 		window.location.href = newUrl;
+		console.log("bearer token: ", datas.access_token);
 	}
 
 	// FIXME :
