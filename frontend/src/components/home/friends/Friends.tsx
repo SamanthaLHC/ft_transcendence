@@ -24,6 +24,7 @@ import Menu from '@mui/material/Menu';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import rubber from '../../../assets/Rubber_Duck_in_Parramatta_Park.jpg'
 import SearchBar from './SearchBar';
+import { relative } from 'path';
 //TODO search bar
 //TODO list avatar + name
 //TODO selection highlight with mouse
@@ -45,8 +46,8 @@ export default function Friends() {
                 variant='outlined' 
                 sx={{ borderBottom: 4, 
                     borderColor: 'ActiveBorder',  
-                    maxWidth: 200, 
-                    height: 600, 
+                    maxWidth: 200,
+                    minHeight: '90vh',
                     backgroundColor: "#080d17", 
                     borderRadius: 0 }}
             >

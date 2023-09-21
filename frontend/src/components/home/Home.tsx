@@ -21,7 +21,7 @@ import Friends from './friends/Friends';
 export default function Home() {
 	return (
 		<React.Fragment>
-			< Box sx={{ flexGrow: 1 }}>
+			< Box sx={{ flexGrow: 1, height: '100vh' }}>
 				<Grid>
 					<Header />
 				</Grid>
@@ -31,14 +31,17 @@ export default function Home() {
 					<Grid>
 						<Friends />
 					</Grid>
-					<Grid paddingLeft={15}>
-						<ButtonPlay />
+					<Grid sx={{ display: 'flex', justifyContent: 'center', width: '70%' }}>
+						<Grid sx={{ display: 'flex', justifyContent: 'center' }}>
+							<ButtonPlay />
+						</Grid>
 					</Grid>
 				</Grid>
 			</Box >
 		</React.Fragment>
 	)
 }
+
 
 
 
