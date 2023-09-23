@@ -21,7 +21,7 @@ export default function Header() {
 
 		<React.Fragment>
 			{/* <Toolbar sx={{ borderBottom: 4, borderColor: 'ActiveBorder' }}> */}
-			<Toolbar sx={headerStyle}>
+			<Toolbar id="header" sx={headerStyle}>
 				<ButtonMenu />
 				<Title />
 				<Divider orientation="vertical" flexItem>
