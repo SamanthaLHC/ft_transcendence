@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import { Typography } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import { useNavigate } from "react-router";
 
 //ONGOING //FIXME : multiple appels de ProfileSpace menant à des bad queries
@@ -42,9 +42,11 @@ export default function ProfilSpace() {
 			<Stack direction="row" spacing={2}>
 				<button className='profil-button' onClick={changeToProfil}>
 					<Avatar alt="profil picture" src={userInfos['photo']} />
+					<Divider>
 					<Typography>
 						{userInfos['login']}
 					</Typography>
+					</Divider>
 				</button>
 			</Stack>
 		);

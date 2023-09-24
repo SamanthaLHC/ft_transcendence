@@ -181,11 +181,14 @@ body {
 	width: calc(85% - 2px);
 }
 
-.profil-button{
-	background: black;
+.profil-button {
+	background: #080d17;
 	color: #ffc107;
 	border: black;
-	display: 'inline-flex';
-	/* justify-content: center; */
-	width: 150px;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	width: 100px;
+	cursor: auto;
+	cursor: pointer;
 }
