@@ -39,11 +39,6 @@ export default function AuthProcess() {
 					console.log("bearer token: ", datas.access_token);
 					setCookie("access_token", datas.access_token, { path: "/"}); //autorise les pages qui commencent par /
 				}
-				else
-				{
-					//TODO handle this pb (redirection) (useState setError?)
-					console.log("BAD FETCH POST ERROR CAUGH IN RESPONSE")
-				}
 			}
 		}
 		getTok();

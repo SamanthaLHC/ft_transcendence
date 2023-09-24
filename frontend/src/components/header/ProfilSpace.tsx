@@ -33,23 +33,20 @@ export default function ProfilSpace() {
 		getUserInfo();
 	}, []);
 
-	if (userInfos === null) {
+	if (userInfos != null) {
+		return (
+			<Stack direction="row" spacing={2}>
+				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Typography
+					color={"beige"}>
+					{userInfos['login']}
+				</Typography>
+			</Stack>
+		);
+	}
+	else
+	{
 		console.log("recup des datas impossible");
 		return <div> no user </div>;
 	}
-
-	return (
-		<Stack direction="row" spacing={2}>
-			<Avatar alt="profil picture" src={userInfos['photo']} />
-			<Typography
-				color={"beige"}>
-				{userInfos['login']}
-			</Typography>
-		</Stack>
-	);
 }
-
-
-// 	//TODO gerer le cas d erreur et la redirection
-// TODO redirect rpofil page
-// TODO cookie provider dans app et passer des param à tous les composanta ? 
