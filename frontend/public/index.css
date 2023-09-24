@@ -168,6 +168,15 @@ body {
 
 .image-center{
 	text-align: center;
-	margin: 200px;
+	margin: auto;
 	color: #ffc107;
+	display: block;
+	align-items: center;
+	justify-content: center;
+	/* flex-grow: 1; */
+	position: absolute;
+	right: 0;
+	top: 80px;
+	bottom: 0;
+	width: calc(85% - 2px);
 }

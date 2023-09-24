@@ -43,7 +43,7 @@ export default function ButtonMenu() {
 
 	let navToGame = useNavigate();
 	const changeToGame = () => {
-		let pathGame = '/game';
+		let pathGame = '/home';
 		navToGame(pathGame);
 	}
 

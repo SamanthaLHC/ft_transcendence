@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
-import React from "react";
 import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Typography } from '@mui/material';
-import Login from '../auth/Login';
-
+import { useNavigate } from "react-router";
 
 //ONGOING //FIXME : multiple appels de ProfileSpace menant à des bad queries
 
 export default function ProfilSpace() {
+
+	let navToProfil = useNavigate();
+	const changeToProfil = () => {
+		let pathProfil = '/profil';
+		navToProfil(pathProfil);
+	}
 
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
@@ -36,7 +40,7 @@ export default function ProfilSpace() {
 	if (userInfos != null) {
 		return (
 			<Stack direction="row" spacing={2}>
-				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Avatar alt="profil picture" src={userInfos['photo']}/>
 				<Typography
 					color={"beige"}>
 					{userInfos['login']}
