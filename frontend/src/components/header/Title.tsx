@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { createTheme } from "@mui/material/styles"
 import { ThemeProvider } from '@emotion/react';
-import giphy from '../../../assets/giphy.gif'
+import giphy from '../../assets/giphy.gif'
 
 const theme = createTheme({
 	typography: {

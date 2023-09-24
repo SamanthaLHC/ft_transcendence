@@ -1,11 +1,10 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
-import rubber from '../../../assets/Rubber_Duck_in_Parramatta_Park.jpg'
+// import rubber from '../../../assets/duck_in_lake.png'
+import rubber from '../../assets/duck_in_lake.png'
 import SearchBar from './SearchBar';
 
 //TODO search bar

@@ -17,20 +17,22 @@ export default function Header() {
 		borderBottom: 4,
 		borderColor: 'ActiveBorder',
 	};
+	console.log("PRINT BEFORE HEADER'S RETUN");
 	return (
-
-		<React.Fragment>
-			{/* <Toolbar sx={{ borderBottom: 4, borderColor: 'ActiveBorder' }}> */}
-			<Toolbar id="header" sx={headerStyle}>
-				<ButtonMenu />
-				<Title />
-				<Divider orientation="vertical" flexItem>
-					<ProfilSpace />
-				</Divider>
-				<Divider orientation="vertical" flexItem>
-					<SettingsButton />
-				</Divider>
-			</Toolbar>
-		</React.Fragment >
+		<Toolbar sx={headerStyle}>
+			<ButtonMenu />
+			<Title />
+			<Divider orientation="vertical" flexItem>
+				<ProfilSpace />
+			</Divider>
+			<Divider orientation="vertical" flexItem>
+				<SettingsButton />
+			</Divider>
+		</Toolbar>
 	)
 }
+
+
+
+//HERE j'ai enlevé reactfragments à voir s'il faiut le remettre
+{/* <Toolbar sx={{ borderBottom: 4, borderColor: 'ActiveBorder' }}> */ }

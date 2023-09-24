@@ -9,11 +9,11 @@ function getCode() {
 	return code_param;
 }
 
-
-
+//renderless component
 export default function AuthProcess() {
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
+
 	useEffect(() => {
 		async function getTok() {
 
@@ -38,6 +38,11 @@ export default function AuthProcess() {
 					window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
 					console.log("bearer token: ", datas.access_token);
 					setCookie("access_token", datas.access_token, { path: "/"}); //autorise les pages qui commencent par /
+				}
+				else
+				{
+					//TODO handle this pb (redirection) (useState setError?)
+					console.log("BAD FETCH POST ERROR CAUGH IN RESPONSE")
 				}
 			}
 		}

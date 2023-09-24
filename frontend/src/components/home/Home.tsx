@@ -1,9 +1,7 @@
 import React from 'react';
-import Grid from "@mui/material/Grid"
-import Box from "@mui/material/Box"
-import Header from './header/Header';
-import ButtonPlay from './ButtonPlay';
-import Friends from './friends/Friends';
+import Header from '../header/Header';
+import LaunchButton from './LaunchButton';
+import Friends from '../friends/Friends';
 
 
 // TODO  : header (barre du haut)
@@ -15,10 +13,9 @@ export default function Home() {
 	return (
 		<React.Fragment>
 			<Header />
-
 			<div id="container">
 				<Friends />
-				<ButtonPlay />
+				<LaunchButton />
 			</div>
 		</React.Fragment>
 	)
