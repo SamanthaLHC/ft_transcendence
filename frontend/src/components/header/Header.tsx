@@ -6,10 +6,6 @@ import SettingsButton from './SettingsButton'
 import Title from './Title';
 import ProfilSpace from './ProfilSpace';
 
-//TODO 4 seg in header => cluster button (redirect on click)
-//TODO  => Profil user with request
-
-
 export default function Header() {
 	const headerStyle = {
 		display: 'flex',
