@@ -32,7 +32,7 @@ export default function AuthProcess() {
 				const response = await fetch(req);
 				var datas = await response.json();
 				console.log("response status: ");
-				console.log(response.status);
+				console.log(datas.status);
 				if (datas.status === 302) {
 					const newUrl = datas.url;
 					window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 

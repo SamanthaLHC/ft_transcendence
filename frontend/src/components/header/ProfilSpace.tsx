@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import React from "react";
 import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
@@ -12,50 +13,31 @@ export default function ProfilSpace() {
 
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
-	const [firstFetch, setFirstFetch] = useState(true);
-	const [error, setError] = useState(null);
-
 
 	useEffect(() => {
 		async function getUserInfo() {
+			const req = new Request('http://localhost:3000/users/me', {
+				method: "GET",
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+			});
 
-			if (userInfos === null && firstFetch === true) {
-				setFirstFetch(false);
-
-				console.log("=====================FETCH GET user info call====================== ");
-				const req = new Request('http://localhost:3000/users/me', {
-					method: "GET",
-					headers: {
-						"Authorization": `Bearer ${cookies.access_token}`,
-					},
-				});
-
-				const response = await fetch(req);
-				var datas = await response.json();
-				console.log("response status: ", response.status);
-				if (response.status === 200 || response.status === 304) {
-					setUserInfos(datas);
-				}
-			}
-			else
-			{
-				console.log("FETCH DEJA LANCÉ");
+			const response = await fetch(req);
+			var datas = await response.json();
+			if (response.status === 200 || response.status === 304) {
+				console.log(response.status);
+				setUserInfos(datas);
 			}
 		}
-		if (userInfos === null) {
-			console.log("COIN COIN COUCOU");
-			getUserInfo();
-		}
+		getUserInfo();
 	}, []);
 
 	if (userInfos === null) {
-
-		console.log("setUserInfos did not work propwerly (in if userInfos === null in Profil SPace)");
-		console.log("return id no datas");
-		// setError(error);
+		console.log("recup des datas impossible");
 		return <div> no user </div>;
 	}
-	console.log("before return with datas");
+
 	return (
 		<Stack direction="row" spacing={2}>
 			<Avatar alt="profil picture" src={userInfos['photo']} />

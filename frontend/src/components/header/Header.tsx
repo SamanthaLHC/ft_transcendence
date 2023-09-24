@@ -13,7 +13,6 @@ export default function Header() {
 		borderBottom: 4,
 		borderColor: 'ActiveBorder',
 	};
-	console.log("PRINT BEFORE HEADER'S RETUN");
 	return (
 		<Toolbar sx={headerStyle}>
 			<ButtonMenu />
