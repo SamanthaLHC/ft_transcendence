@@ -166,3 +166,8 @@ body {
 	text-decoration: none;
 }
 
+.image-center{
+	text-align: center;
+	margin: 200px;
+	color: #ffc107;
+}

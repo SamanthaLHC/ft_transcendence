@@ -2,7 +2,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Box from '@mui/material/Box';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { Outlet, Link } from 'react-router-dom'
+import { useNavigate} from 'react-router-dom'
 
 
 declare module '@mui/material/styles' {
@@ -35,6 +35,18 @@ const theme = createTheme({
 });
 
 export default function ButtonMenu() {
+	let navToChat = useNavigate();
+	const changeToChat = () => {
+		let pathChat = '/chat';
+		navToChat(pathChat);
+	}
+
+	let navToGame = useNavigate();
+	const changeToGame = () => {
+		let pathGame = '/game';
+		navToGame(pathGame);
+	}
+
 	return (
 		<Box
 			sx={{
@@ -51,12 +63,14 @@ export default function ButtonMenu() {
 					<Button
 						size='small'
 						color='ochre'
+						onClick={changeToChat}
 					>
 						Chat
 					</Button>
 					<Button
 						size='small'
 						color='ochre'
+						onClick={changeToGame}
 					>
 						Game
 					</Button>
@@ -68,3 +82,4 @@ export default function ButtonMenu() {
 
 // TODO redirect chat
 // TODO redirect home avec bouton game (ou lancer directement une partie)
+//TODO better css without theme provider
