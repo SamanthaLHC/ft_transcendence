@@ -40,13 +40,11 @@ export default function ProfilSpace() {
 	if (userInfos != null) {
 		return (
 			<Stack direction="row" spacing={2}>
-				<button onClick={changeToProfil}>
+				<button className='profil-button' onClick={changeToProfil}>
 					<Avatar alt="profil picture" src={userInfos['photo']} />
-					<Typography
-						color={"beige"}>
+					<Typography>
 						{userInfos['login']}
 					</Typography>
-
 				</button>
 			</Stack>
 		);

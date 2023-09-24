@@ -180,3 +180,12 @@ body {
 	bottom: 0;
 	width: calc(85% - 2px);
 }
+
+.profil-button{
+	background: black;
+	color: #ffc107;
+	border: black;
+	display: 'inline-flex';
+	/* justify-content: center; */
+	width: 150px;
+}
