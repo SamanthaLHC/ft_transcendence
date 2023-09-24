@@ -5,6 +5,7 @@ import Home from "../home/Home";
 import Chat from "../chat/Chat";
 import Game from "../game/Game";
 import Settings from "../settings/Settings";
+import Profil from "../profil/Profil"
 
 function App() {
 	return (
@@ -15,7 +16,7 @@ function App() {
 				<Route path={"/chat"} element={<Chat />} />
 				<Route path={"/game"} element={<Game />} />
 				<Route path={"/settings"} element={<Settings/>} />
-				{/* <Route path={"/profil"} element={<Profil />}  */}
+				<Route path={"/profil"} element={<Profil />} />
 			</Routes>
 		</React.StrictMode>
 	)

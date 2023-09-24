@@ -40,16 +40,18 @@ export default function ProfilSpace() {
 	if (userInfos != null) {
 		return (
 			<Stack direction="row" spacing={2}>
-				<Avatar alt="profil picture" src={userInfos['photo']}/>
-				<Typography
-					color={"beige"}>
-					{userInfos['login']}
-				</Typography>
+				<button onClick={changeToProfil}>
+					<Avatar alt="profil picture" src={userInfos['photo']} />
+					<Typography
+						color={"beige"}>
+						{userInfos['login']}
+					</Typography>
+
+				</button>
 			</Stack>
 		);
 	}
-	else
-	{
+	else {
 		console.log("recup des datas impossible");
 		return <div> no user </div>;
 	}
