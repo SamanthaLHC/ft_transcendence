@@ -1,5 +1,5 @@
 import React from 'react'
-import ducky from '../../assets/under_construction.png'
+import ducky from '../../assets/duck_worker.png'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
