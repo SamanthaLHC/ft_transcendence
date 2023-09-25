@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
@@ -5,7 +6,6 @@ import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
 import { useNavigate } from "react-router";
 
-//ONGOING //FIXME : multiple appels de ProfileSpace menant à des bad queries
 
 export default function ProfilSpace() {
 
@@ -13,6 +13,13 @@ export default function ProfilSpace() {
 	const changeToProfil = () => {
 		let pathProfil = '/profil';
 		navToProfil(pathProfil);
+	}
+
+
+	let navToLogin = useNavigate();
+	const changeToLogin = () => {
+		let pathLogin = '/';
+		navToLogin(pathLogin);
 	}
 
 	const [cookies] = useCookies(["access_token"]);
@@ -33,6 +40,11 @@ export default function ProfilSpace() {
 				console.log(response.status);
 				setUserInfos(datas);
 			}
+			else if(response.status === 401)
+			{
+				console.log("response status is 401 ----> ", response.status);
+				changeToLogin();
+			}
 		}
 		getUserInfo();
 	}, []);
@@ -51,8 +63,5 @@ export default function ProfilSpace() {
 			</Stack>
 		);
 	}
-	else {
-		console.log("recup des datas impossible");
-		return <div> no user </div>;
-	}
+	return<React.Fragment/>
 }

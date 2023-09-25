@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate, Navigate } from "react-router-dom";
 
 
 function getCode() {
@@ -12,7 +13,9 @@ function getCode() {
 //renderless component
 export default function AuthProcess() {
 
+
 	const [cookies, setCookie] = useCookies(["access_token"]);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		async function getTok() {
@@ -31,19 +34,17 @@ export default function AuthProcess() {
 				});
 				const response = await fetch(req);
 				var datas = await response.json();
-				console.log("response status: ");
-				console.log(datas.status);
+				console.log("response status: ", datas.status);
 				if (datas.status === 302) {
 					const newUrl = datas.url;
 					window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
-					console.log("bearer token: ", datas.access_token);
-					setCookie("access_token", datas.access_token, { path: "/"}); //autorise les pages qui commencent par /
+					setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
 				}
 			}
 		}
 		getTok();
 	}, []);
-	return (<React.Fragment/>); //workaround renvoie un frag vide
+	return (<React.Fragment />); //workaround renvoie un frag vide
 }
 
 

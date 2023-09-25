@@ -13,10 +13,10 @@ export default function SettingsButton() {
 
 	return (
 
-		<IconButton style={{ color: '#ffc107' }}>
+		<IconButton style={{ color: '#ffc107' }} onClick={changeToSettings}>
 			<SettingsIcon
 				display={"flex-end"}
-				onClick={changeToSettings}
+				
 			/>
 		</IconButton>
 	);
