@@ -27,7 +27,5 @@ export default function Header() {
 	)
 }
 
-
-
 //HERE j'ai enlevé reactfragments à voir s'il faiut le remettre
 {/* <Toolbar sx={{ borderBottom: 4, borderColor: 'ActiveBorder' }}> */ }

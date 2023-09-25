@@ -16,6 +16,5 @@ export default function LauncButton() {
 					Play this magical game, right now !
 				</button>
 			</div>	
-
 	);
 }
