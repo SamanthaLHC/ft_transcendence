@@ -33,8 +33,7 @@ export default function AuthProcess() {
 					body: JSON.stringify(obj),
 				});
 				const response = await fetch(req);
-				var datas = await response.json();
-				console.log("response status: ", datas.status);
+				const datas = await response.json();
 				if (datas.status === 302) {
 					const newUrl = datas.url;
 					window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
@@ -43,7 +42,7 @@ export default function AuthProcess() {
 			}
 		}
 		getTok();
-	}, []);
+	}, [cookies]);
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
 

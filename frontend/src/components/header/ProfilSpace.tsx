@@ -35,19 +35,17 @@ export default function ProfilSpace() {
 			});
 
 			const response = await fetch(req);
-			var datas = await response.json();
+			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
-				console.log(response.status);
 				setUserInfos(datas);
 			}
 			else if(response.status === 401)
 			{
-				console.log("response status is 401 ----> ", response.status);
 				changeToLogin();
 			}
 		}
 		getUserInfo();
-	}, []);
+	}, [userInfos, cookies]);
 
 	if (userInfos != null) {
 		return (
