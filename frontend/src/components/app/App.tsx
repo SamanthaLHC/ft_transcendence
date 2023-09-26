@@ -7,7 +7,7 @@ import Game from "../game/Game";
 import Settings from "../settings/Settings";
 import Profil from "../profil/Profil"
 import FriendPage from "../friends/FriendPage"
-import Friends from "../friends/Friends";
+import Error from "../error/Error";
 
 function App() {
 	return (
@@ -20,6 +20,7 @@ function App() {
 				<Route path={"/settings"} element={<Settings/>} />
 				<Route path={"/profil"} element={<Profil />} />
 				<Route path={"/friend"} element={<FriendPage />} />
+				<Route path={"*"} element={<Error/>} />
 			</Routes>
 		</React.StrictMode>
 	)

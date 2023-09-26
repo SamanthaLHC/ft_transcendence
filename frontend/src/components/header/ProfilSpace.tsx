@@ -39,27 +39,27 @@ export default function ProfilSpace() {
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
 			}
-			else if(response.status === 401)
-			{
+			// else if(response.status === 401)		
+			else {
 				changeToLogin();
 			}
 		}
 		getUserInfo();
-	}, [userInfos, cookies]);
+	}, [cookies]);
 
-	if (userInfos != null) {
-		return (
-			<Stack direction="row" spacing={2}>
-				<button className='profil-button' onClick={changeToProfil}>
-					<Avatar alt="profil picture" src={userInfos['photo']} />
-					<Divider>
+	if (!userInfos)
+		return null;
+
+	return (
+		<Stack direction="row" spacing={2}>
+			<button className='profil-button' onClick={changeToProfil}>
+				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Divider>
 					<Typography>
 						{userInfos['login']}
 					</Typography>
-					</Divider>
-				</button>
-			</Stack>
-		);
-	}
-	return<React.Fragment/>
+				</Divider>
+			</button>
+		</Stack>
+	);
 }
