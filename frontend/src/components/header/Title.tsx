@@ -1,8 +1,7 @@
 import Typography from "@mui/material/Typography";
 import { createTheme } from "@mui/material/styles"
 import { ThemeProvider } from '@emotion/react';
-import giphy from '../../../assets/giphy.gif'
-import './giphy.css'
+import giphy from '../../assets/giphy.gif'
 
 const theme = createTheme({
 	typography: {
@@ -14,7 +13,6 @@ export default function TestingModule() {
 
 	return (
 		<ThemeProvider theme={theme}>
-
 			<Typography
 				component="h1"
 				variant="h4"
@@ -22,7 +20,7 @@ export default function TestingModule() {
 				style={{ color: '#ffc107' }}
 				display={"flex"}
 				alignItems={"center"}
-				paddingLeft={"15%"}
+				paddingLeft={"10%"}
 				noWrap
 				sx={{ flex: 1 }}
 			>
@@ -31,7 +29,5 @@ export default function TestingModule() {
 				<img src={giphy} className='giphy' alt="gif"/>
 			</Typography>
 		</ThemeProvider>
-
-
 	)
 }

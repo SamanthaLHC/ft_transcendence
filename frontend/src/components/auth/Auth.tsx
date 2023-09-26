@@ -1,7 +1,6 @@
-// import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
-// eslint-disable-next-line
-import React from "react";
 
 function getCode() {
 	let url_str = window.location.search;
@@ -10,41 +9,44 @@ function getCode() {
 	return code_param;
 }
 
-let codeP = getCode();
+//renderless component
+export default function AuthProcess() {
 
+	const [cookies, setCookie] = useCookies(["access_token"]);
 
+	useEffect(() => {
+		async function getTok() {
 
-const authProcess = async () => {
-
-
-	const obj = {
-		code: codeP
-	};
-	const req = new Request('http://localhost:3000/auth/login', {
-		method: "POST",
-		headers: {
-			"content-type": "application/json",
-		},
-		body: JSON.stringify(obj),
-	});
-	const response = await fetch(req);
-	var datas = await response.json();
-	console.log("response status: ");
-	console.log(response.status);
-	if (datas.status === 302) {
-		const newUrl = datas.url;
-		window.location.href = newUrl;
-		console.log("bearer token: ", datas.access_token);
-	}
-
-	// FIXME :
-	// var bearertok = process.env.REACT_APP_BEARER_TOKEN;
-	// bearertok = datas.access_token;
+			let codeP = getCode();
+			if (codeP != null) {
+				const obj = {
+					code: codeP
+				};
+				const req = new Request('http://localhost:3000/auth/login', {
+					method: "POST",
+					headers: {
+						"content-type": "application/json",
+					},
+					body: JSON.stringify(obj),
+				});
+				const response = await fetch(req);
+				var datas = await response.json();
+				console.log("response status: ");
+				console.log(datas.status);
+				if (datas.status === 302) {
+					const newUrl = datas.url;
+					window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
+					console.log("bearer token: ", datas.access_token);
+					setCookie("access_token", datas.access_token, { path: "/"}); //autorise les pages qui commencent par /
+				}
+			}
+		}
+		getTok();
+	}, []);
+	return (<React.Fragment/>); //workaround renvoie un frag vide
 }
 
-if (codeP != null) {
-	authProcess();
-}
+
 
 
 //TODO traduire en typsecript
