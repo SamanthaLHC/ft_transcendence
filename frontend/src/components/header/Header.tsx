@@ -2,9 +2,8 @@ import * as React from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Divider from '@mui/material/Divider';
 import ButtonMenu from './ButtonMenu';
-import SettingsButton from './SettingsButton'
 import Title from './Title';
-import ProfilSpace from './ProfilSpace';
+import ProfilButton from './ProfilButton';
 
 export default function Header() {
 	const headerStyle = {
@@ -18,14 +17,8 @@ export default function Header() {
 			<ButtonMenu />
 			<Title />
 			<Divider orientation="vertical" flexItem>
-				<ProfilSpace />
-			</Divider>
-			<Divider orientation="vertical" flexItem>
-				<SettingsButton />
+				<ProfilButton />
 			</Divider>
 		</Toolbar>
 	)
 }
-
-//HERE j'ai enlevé reactfragments à voir s'il faiut le remettre
-{/* <Toolbar sx={{ borderBottom: 4, borderColor: 'ActiveBorder' }}> */ }

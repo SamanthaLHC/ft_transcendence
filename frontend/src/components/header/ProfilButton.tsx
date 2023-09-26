@@ -4,10 +4,25 @@ import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
-import { useNavigate } from "react-router";
+import { Link , useNavigate } from "react-router-dom";
 
 
-export default function ProfilSpace() {
+const options = [
+	{
+		title: "view my profil",
+		url: "/profil",
+	},
+	{
+		title: "settings",
+		url: "/settings",
+	},
+	{
+		title: "logout",
+		// url: "/profil",
+	},
+];
+
+export default function ProfilButton() {
 
 	let navToProfil = useNavigate();
 	const changeToProfil = () => {
@@ -24,6 +39,11 @@ export default function ProfilSpace() {
 
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
+	const [isOpen, setIsOpen] = useState(false);
+
+	const toggleDropdown = () => {
+		setIsOpen(!isOpen);
+	};
 
 	useEffect(() => {
 		async function getUserInfo() {
@@ -39,7 +59,6 @@ export default function ProfilSpace() {
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
 			}
-			// else if(response.status === 401)		
 			else {
 				changeToLogin();
 			}
@@ -52,14 +71,25 @@ export default function ProfilSpace() {
 
 	return (
 		<Stack direction="row" spacing={2}>
-			<button className='profil-button' onClick={changeToProfil}>
-				<Avatar alt="profil picture" src={userInfos['photo']} />
-				<Divider>
-					<Typography>
-						{userInfos['login']}
-					</Typography>
-				</Divider>
-			</button>
+			<div className="dropdown">
+				<button className='profil-button' onClick={toggleDropdown}>
+					<Avatar alt="profil picture" src={userInfos['photo']} />
+					<Divider>
+						<Typography>
+							{userInfos['login']}
+						</Typography>
+					</Divider>
+				</button>
+				{isOpen && (
+					<ul className="dropdown-options">
+						{options.map((option) => (
+							<li key={option.url}>
+								< Link to={option.url}>{option.title}</Link>
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
 		</Stack>
 	);
 }

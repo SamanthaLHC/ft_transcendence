@@ -194,6 +194,8 @@ body {
 	cursor: pointer;
 }
 
+
+/* tmp friend button */
 .button {
 	background: #080d17;
 	border: black;
@@ -201,3 +203,17 @@ body {
 	cursor: pointer;
 }
 
+.profil-button:hover,
+.profil-button:focus {
+	background-color: #454b4f;
+}
+
+.dropdown {
+	position: relative;
+	display: inline-block;
+}
+
+.dropdown-options {
+	position: absolute;
+	color: white;
+}
