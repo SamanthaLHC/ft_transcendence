@@ -11,18 +11,16 @@ import Error from "../error/Error";
 
 function App() {
 	return (
-		<React.StrictMode>
-			<Routes>
-				<Route path={"/"} element={<Login />} />
-				<Route path={"/home"} element={<Home />} />
-				<Route path={"/chat"} element={<Chat />} />
-				<Route path={"/game"} element={<Game />} />
-				<Route path={"/settings"} element={<Settings/>} />
-				<Route path={"/profil"} element={<Profil />} />
-				<Route path={"/friend"} element={<FriendPage />} />
-				<Route path={"*"} element={<Error/>} />
-			</Routes>
-		</React.StrictMode>
+		<Routes>
+			<Route path={"/"} element={<Login />} />
+			<Route path={"/home"} element={<Home />} />
+			<Route path={"/chat"} element={<Chat />} />
+			<Route path={"/game"} element={<Game />} />
+			<Route path={"/settings"} element={<Settings/>} />
+			<Route path={"/profil"} element={<Profil />} />
+			<Route path={"/friend"} element={<FriendPage />} />
+			<Route path={"*"} element={<Error/>} />
+		</Routes>
 	)
 }
 
