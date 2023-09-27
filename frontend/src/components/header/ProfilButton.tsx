@@ -4,23 +4,12 @@ import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
-import { Link , useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 
-const options = [
-	{
-		title: "view my profil",
-		url: "/profil",
-	},
-	{
-		title: "settings",
-		url: "/settings",
-	},
-	{
-		title: "logout",
-		// url: "/profil",
-	},
-];
+
 
 export default function ProfilButton() {
 
@@ -37,13 +26,25 @@ export default function ProfilButton() {
 		navToLogin(pathLogin);
 	}
 
+
+	let navToSettings = useNavigate();
+	const changeToSettings = () => {
+		let pathSettings = '/settings';
+		navToSettings(pathSettings);
+	}
+	
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		setAnchorEl(event.currentTarget);
+	};
+	const handleClose = () => {
+		setAnchorEl(null);
+	};
+
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
-	const [isOpen, setIsOpen] = useState(false);
 
-	const toggleDropdown = () => {
-		setIsOpen(!isOpen);
-	};
 
 	useEffect(() => {
 		async function getUserInfo() {
@@ -71,25 +72,30 @@ export default function ProfilButton() {
 
 	return (
 		<Stack direction="row" spacing={2}>
-			<div className="dropdown">
-				<button className='profil-button' onClick={toggleDropdown}>
-					<Avatar alt="profil picture" src={userInfos['photo']} />
-					<Divider>
-						<Typography>
-							{userInfos['login']}
-						</Typography>
-					</Divider>
-				</button>
-				{isOpen && (
-					<ul className="dropdown-options">
-						{options.map((option) => (
-							<li key={option.url}>
-								< Link to={option.url}>{option.title}</Link>
-							</li>
-						))}
-					</ul>
-				)}
-			</div>
+			<button id="basic-button"
+				aria-controls={open ? 'basic-menu' : undefined}
+				aria-haspopup="true"
+				aria-expanded={open ? 'true' : undefined}
+				onClick={handleClick}>
+				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Divider>
+					<Typography>
+						{userInfos['login']}
+					</Typography>
+				</Divider>
+			</button>
+			<Menu
+				id="basic-menu"
+				anchorEl={anchorEl}
+				open={open}
+				onClose={handleClose}
+				MenuListProps={{
+					'aria-labelledby': 'basic-button',
+				}}>
+				<MenuItem onClick={changeToProfil}> View my profile </MenuItem>
+				<MenuItem onClick={changeToSettings}> Settings </MenuItem>
+				<MenuItem onClick={handleClose}> Logout </MenuItem>
+			</Menu>
 		</Stack>
 	);
 }
