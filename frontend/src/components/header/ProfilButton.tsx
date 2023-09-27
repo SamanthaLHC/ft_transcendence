@@ -5,13 +5,14 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
 import { useNavigate } from "react-router-dom";
+// import Menu, { MenuProps } from '@mui/material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 
-
-
 export default function ProfilButton() {
+
+	//redirect on click_______________________________________________
 
 	let navToProfil = useNavigate();
 	const changeToProfil = () => {
@@ -19,32 +20,36 @@ export default function ProfilButton() {
 		navToProfil(pathProfil);
 	}
 
-
 	let navToLogin = useNavigate();
 	const changeToLogin = () => {
 		let pathLogin = '/';
 		navToLogin(pathLogin);
 	}
 
-
 	let navToSettings = useNavigate();
 	const changeToSettings = () => {
 		let pathSettings = '/settings';
 		navToSettings(pathSettings);
 	}
-	
+
+	// handle dropdown menu _________________________________________
+
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
+
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
+
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
 
+
+	// handle bearer token cookie and set user datas__________________
+
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
-
 
 	useEffect(() => {
 		async function getUserInfo() {
@@ -72,7 +77,7 @@ export default function ProfilButton() {
 
 	return (
 		<Stack direction="row" spacing={2}>
-			<button id="basic-button"
+			<button className="profil-button" id="basic-button"
 				aria-controls={open ? 'basic-menu' : undefined}
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
@@ -95,6 +100,7 @@ export default function ProfilButton() {
 				<MenuItem onClick={changeToProfil}> View my profile </MenuItem>
 				<MenuItem onClick={changeToSettings}> Settings </MenuItem>
 				<MenuItem onClick={handleClose}> Logout </MenuItem>
+
 			</Menu>
 		</Stack>
 	);

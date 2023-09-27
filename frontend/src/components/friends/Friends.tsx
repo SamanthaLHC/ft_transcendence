@@ -2,6 +2,7 @@ import * as React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
+import { Divider } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Avatar from '@mui/material/Avatar';
 // import rubber from '../../../assets/duck_in_lake.png'
@@ -74,12 +75,14 @@ export default function Friends() {
 							{users.map(((user) => (
 								<ListItem className='yellow' key={user.name}>
 									<ListItemAvatar>
-										<button className='button' onClick={changeToFriendProfil}>
+										<button className='profil-button' onClick={changeToFriendProfil}>
 											<Avatar alt="Profile Picture" src={rubber} />
+											<Divider>
+												<ListItemText />
+												{user.name}
+											</Divider>
 										</button>
 									</ListItemAvatar>
-									<ListItemText />
-									{user.name}
 								</ListItem>
 							)))}
 						</ul>

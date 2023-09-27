@@ -184,21 +184,14 @@ body {
 
 .profil-button {
 	background: #080d17;
+	font-weight: bold;
+	font-family: Azonix;
 	color: #ffc107;
 	border: black;
 	display: flex;
 	align-content: center;
 	align-items: center;
-	width: 100px;
-	cursor: auto;
-	cursor: pointer;
-}
-
-
-/* tmp friend button */
-.button {
-	background: #080d17;
-	border: black;
+	width: auto;
 	cursor: auto;
 	cursor: pointer;
 }
@@ -208,12 +201,7 @@ body {
 	background-color: #454b4f;
 }
 
-.dropdown {
-	position: relative;
-	display: inline-block;
-}
-
-.dropdown-options {
-	position: absolute;
-	color: white;
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+	color: #fec400 !important;
+	background-color: rgb(8, 13, 23) !important;
 }
