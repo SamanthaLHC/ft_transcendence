@@ -35,9 +35,10 @@ export default function AuthProcess() {
 				try {
 
 					const response = await fetch(req);
+					if (!response.ok)
+						throw new Error('HTTP error! status: ${response.status}');
 					const datas = await response.json();
 					if (datas.status === 302) {
-						console.log("datas status", datas.status)
 						const newUrl = datas.url;
 						window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
 						setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
