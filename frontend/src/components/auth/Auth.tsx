@@ -35,8 +35,6 @@ export default function AuthProcess() {
 				try {
 
 					const response = await fetch(req);
-					if (!response.ok)
-						throw new Error('HTTP error! status: ${response.status}');
 					const datas = await response.json();
 					if (datas.status === 302) {
 						const newUrl = datas.url;
