@@ -1,3 +1,7 @@
+/*_______________________________________________________________________________________*/
+/*                        body and general style                                         */
+/*_______________________________________________________________________________________*/
+
 @font-face {
 	font-family: "earthorbiter";
 	src: local("earthorbiter"),
@@ -48,6 +52,29 @@ body {
 	font-family: 'earthorbiter';
 }
 
+.yellow {
+	color: #ffc107;
+}
+
+/*_______________________________________________________________________________________*/
+/*                        structure page                                                 */
+/*_______________________________________________________________________________________*/
+
+#header {
+	height: 78px;
+}
+
+#container {
+	width: 100%;
+	height: calc(100vh - 83px);
+	display: block;
+	position: relative;
+}
+
+/*_______________________________________________________________________________________*/
+/*                              login page style                                         */
+/*_______________________________________________________________________________________*/
+
 .giphy {
 	padding: 2px;
 	height: 70px;
@@ -94,6 +121,10 @@ body {
 	}
 }
 
+/*_______________________________________________________________________________________*/
+/*                              friend component style                                   */
+/*_______________________________________________________________________________________*/
+
 .friends {
 	color: black;
 	border-bottom: 4px;
@@ -112,24 +143,17 @@ body {
 .typo-friends {
 	width: 100%;
 	text-align: center;
-	font-size: 1.2em;
+	font-size: 1.5em;
 	margin: 10px 0;
 }
 
-.yellow {
-	color: #ffc107;
+.list {
+	padding: 15px;
 }
 
-#header {
-	height: 78px;
-}
-
-#container {
-	width: 100%;
-	height: calc(100vh - 83px);
-	display: block;
-	position: relative;
-}
+/*_______________________________________________________________________________________*/
+/*                              button component style                                   */
+/*_______________________________________________________________________________________*/
 
 .launch-game {
 	background-size: cover;
@@ -167,20 +191,9 @@ body {
 	text-decoration: none;
 }
 
-.image-center {
-	text-align: center;
-	margin: auto;
-	color: #ffc107;
-	display: block;
-	align-items: center;
-	justify-content: center;
-	/* flex-grow: 1; */
-	position: absolute;
-	right: 0;
-	top: 80px;
-	bottom: 0;
-	width: calc(85% - 2px);
-}
+/*_______________________________________________________________________________________*/
+/*                              profil button component                                  */
+/*_______________________________________________________________________________________*/
 
 .profil-button {
 	background: #080d17;
@@ -204,4 +217,64 @@ body {
 .css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
 	color: #fec400 !important;
 	background-color: rgb(8, 13, 23) !important;
+}
+
+
+/*_______________________________________________________________________________________*/
+/*                                    channel component                                  */
+/*_______________________________________________________________________________________*/
+
+.channels {
+	color: black;
+	border-bottom: 4px;
+	border: 1px solid rgb(66, 70, 79);
+	background-color: #080d17;
+	border-radius: 0;
+	height: calc(100% - 1px);
+	/* overflow-y: scroll; */
+	position: absolute;
+	top: 0;
+	left: 15%;
+	bottom: 0;
+	width: 20%;
+}
+
+
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+	color: rgb(236, 155, 33) !important;
+	padding: 0px 10px !important;
+}
+
+
+.typo-channel {
+	width: 100%;
+	/* text-align: center; */
+	font-size: 1.5em;
+	margin: 10px 10px;
+}
+
+.typo {
+	width: 100%;
+	font-size: 0.5em;
+	text-align: center;
+	margin: 20 0;
+}
+
+/*_______________________________________________________________________________________*/
+/*                              page under construction component (TMP)                  */
+/*_______________________________________________________________________________________*/
+
+.image-center {
+	text-align: center;
+	margin: auto;
+	color: #ffc107;
+	display: block;
+	align-items: center;
+	justify-content: center;
+	/* flex-grow: 1; */
+	position: absolute;
+	right: 0;
+	top: 80px;
+	bottom: 0;
+	width: calc(85% - 2px);
 }

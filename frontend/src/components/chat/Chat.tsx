@@ -1,7 +1,8 @@
 import React from 'react'
-import ducky from '../../assets/under_construction.png'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
+import Channels from './Channels'
+import { Divider } from '@mui/material'
 
 export default function Chat() {
 
@@ -10,10 +11,9 @@ export default function Chat() {
 			<Header />
 			<div id="container">
 				<Friends />
-				<div className='image-center'>
-					<h2> /!\ --CHAT-- PAGE UNDER CONSTRUCTION /!\ </h2>
-					<img src={ducky} alt='lol'></img>
-				</div>
+				<Divider>
+					<Channels />
+				</Divider>
 			</div>
 		</React.Fragment>
 
