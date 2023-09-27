@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Privacy } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
+import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 
 @Injectable()
 export class ChatService {
@@ -9,12 +10,10 @@ export class ChatService {
 	
 	async getAllChannels() {
 		const channels = await this.prisma.channels.findMany({
-			select: {
-				name: true,
-			},
+			// select: {
+			// 	name: true,
+			// },
 		});
-		// if (!channels)
-		// 	throw new NotFoundException('No channels found');
 		return channels;
 	}
 
@@ -29,14 +28,18 @@ export class ChatService {
 		return channel;
 	}
 
-	async createChannel(channelName: string, privacy: Privacy, ownerId: number) {
-		const channel = await this.prisma.channels.create({
-			data: {
-				name: channelName,
-				privacy: privacy,
-				ownerId: ownerId,
-			}
-		});
-		return channel;
+
+	async createChannel(newChannel : CreateChannelDto) {
+		// return newChannel;
+		try {
+			const channel = await this.prisma.channels.create({
+				data: newChannel
+			});
+			return channel;
+		}
+		catch (err) {
+			Logger.error(err);
+			return err;
+		}
 	}
 }
