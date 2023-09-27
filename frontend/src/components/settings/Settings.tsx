@@ -1,9 +1,9 @@
 import React from 'react'
-import ducky from '../../assets/fire.gif'
+import ducky from '../../assets/duck_worker.png'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
-export default function Game() {
+export default function Settings() {
 
 	return (
 		<React.Fragment>
@@ -11,7 +11,8 @@ export default function Game() {
 			<div id="container">
 				<Friends />
 				<div className='image-center'>
-					<h2> /!\ -- GAME -- UNDER CONSTRUCTION /!\ </h2>
+
+					<h2> /!\ --SETTINGS-- PAGE UNDER CONSTRUCTION /!\ </h2>
 					<img src={ducky} alt='lol'>
 					</img>
 				</div>

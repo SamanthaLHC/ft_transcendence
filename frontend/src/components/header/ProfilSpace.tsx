@@ -1,15 +1,26 @@
-import { useEffect, useState } from "react";
 import React from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import { Typography } from '@mui/material';
-import Login from '../auth/Login';
+import { Divider, Typography } from '@mui/material';
+import { useNavigate } from "react-router";
 
-
-//ONGOING //FIXME : multiple appels de ProfileSpace menant à des bad queries
 
 export default function ProfilSpace() {
+
+	let navToProfil = useNavigate();
+	const changeToProfil = () => {
+		let pathProfil = '/profil';
+		navToProfil(pathProfil);
+	}
+
+
+	let navToLogin = useNavigate();
+	const changeToLogin = () => {
+		let pathLogin = '/';
+		navToLogin(pathLogin);
+	}
 
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
@@ -24,29 +35,31 @@ export default function ProfilSpace() {
 			});
 
 			const response = await fetch(req);
-			var datas = await response.json();
+			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
-				console.log(response.status);
 				setUserInfos(datas);
+			}
+			// else if(response.status === 401)		
+			else {
+				changeToLogin();
 			}
 		}
 		getUserInfo();
-	}, []);
+	}, [cookies]);
 
-	if (userInfos != null) {
-		return (
-			<Stack direction="row" spacing={2}>
+	if (!userInfos)
+		return null;
+
+	return (
+		<Stack direction="row" spacing={2}>
+			<button className='profil-button' onClick={changeToProfil}>
 				<Avatar alt="profil picture" src={userInfos['photo']} />
-				<Typography
-					color={"beige"}>
-					{userInfos['login']}
-				</Typography>
-			</Stack>
-		);
-	}
-	else
-	{
-		console.log("recup des datas impossible");
-		return <div> no user </div>;
-	}
+				<Divider>
+					<Typography>
+						{userInfos['login']}
+					</Typography>
+				</Divider>
+			</button>
+		</Stack>
+	);
 }

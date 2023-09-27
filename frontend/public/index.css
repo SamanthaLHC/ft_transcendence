@@ -60,7 +60,7 @@ body {
 
 .Login-logo {
 	height: 10vmin;
-	pointer-events: none;
+	margin: 10px
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -146,13 +146,13 @@ body {
 
 .launch-game button {
 
-	background-image: linear-gradient(to right, #020101 0%, #740a0a  51%, #dbcc45  100%);
+	background-image: linear-gradient(to right, #020101 0%, #740a0a 51%, #dbcc45 100%);
 	margin: 10px;
 	padding: 15px 45px;
 	text-align: center;
 	transition: 0.5s;
 	background-size: 200% auto;
-	color: #ffc107;            
+	color: #ffc107;
 	box-shadow: 0 0 20px #080606;
 	border-radius: 10px;
 	display: block;
@@ -161,8 +161,43 @@ body {
 }
 
 .launch-game button:hover {
-	background-position: right center; /* change the direction of the change here */
+	background-position: right center;
+	/* change the direction of the change here */
 	color: black;
 	text-decoration: none;
+}
+
+.image-center {
+	text-align: center;
+	margin: auto;
+	color: #ffc107;
+	display: block;
+	align-items: center;
+	justify-content: center;
+	/* flex-grow: 1; */
+	position: absolute;
+	right: 0;
+	top: 80px;
+	bottom: 0;
+	width: calc(85% - 2px);
+}
+
+.profil-button {
+	background: #080d17;
+	color: #ffc107;
+	border: black;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	width: 100px;
+	cursor: auto;
+	cursor: pointer;
+}
+
+.button {
+	background: #080d17;
+	border: black;
+	cursor: auto;
+	cursor: pointer;
 }
 
