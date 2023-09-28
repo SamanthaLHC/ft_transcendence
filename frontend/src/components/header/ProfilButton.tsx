@@ -5,7 +5,6 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
 import { useNavigate } from "react-router-dom";
-// import Menu, { MenuProps } from '@mui/material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -70,7 +69,7 @@ export default function ProfilButton() {
 			}
 		}
 		getUserInfo();
-	}, [cookies]);
+	}, []);
 
 	if (!userInfos)
 		return null;
