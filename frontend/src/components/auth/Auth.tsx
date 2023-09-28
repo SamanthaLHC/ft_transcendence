@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate, Navigate } from "react-router-dom";
-
 
 function getCode() {
 	let url_str = window.location.search;
@@ -15,7 +13,6 @@ export default function AuthProcess() {
 
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		async function getTok() {
@@ -48,7 +45,7 @@ export default function AuthProcess() {
 			}
 		}
 		getTok();
-	}, [cookies]);
+	});
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
 
