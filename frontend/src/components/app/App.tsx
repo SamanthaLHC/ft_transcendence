@@ -11,7 +11,6 @@ import Error from "../error/Error";
 
 function App() {
 	return (
-		<React.StrictMode>
 			<Routes>
 				<Route path={"/"} element={<Login />} />
 				<Route path={"/home"} element={<Home />} />
@@ -22,7 +21,6 @@ function App() {
 				<Route path={"/friend"} element={<FriendPage />} />
 				<Route path={"*"} element={<Error/>} />
 			</Routes>
-		</React.StrictMode>
 	)
 }
 
