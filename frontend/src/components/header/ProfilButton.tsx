@@ -9,25 +9,25 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 
-export default function ProfilButton() {
+const ProfilButton: React.FC = () => {
 
 	//redirect on click_______________________________________________
 
-	let navToProfil = useNavigate();
+	const navToProfil = useNavigate();
 	const changeToProfil = () => {
-		let pathProfil = '/profil';
+		let pathProfil: string = '/profil';
 		navToProfil(pathProfil);
 	}
 
-	let navToLogin = useNavigate();
+	const navToLogin = useNavigate();
 	const changeToLogin = () => {
-		let pathLogin = '/';
+		let pathLogin: string = '/';
 		navToLogin(pathLogin);
 	}
 
-	let navToSettings = useNavigate();
+	const navToSettings = useNavigate();
 	const changeToSettings = () => {
-		let pathSettings = '/settings';
+		let pathSettings: string = '/settings';
 		navToSettings(pathSettings);
 	}
 
@@ -52,7 +52,7 @@ export default function ProfilButton() {
 
 	useEffect(() => {
 		async function getUserInfo() {
-			const req = new Request('http://localhost:3000/users/me', {
+			const req : Request = new Request('http://localhost:3000/users/me', {
 				method: "GET",
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
@@ -104,3 +104,5 @@ export default function ProfilButton() {
 		</Stack>
 	);
 }
+
+export default ProfilButton;

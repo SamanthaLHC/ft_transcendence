@@ -1,23 +1,22 @@
 import React, { useEffect } from "react";
 import { useCookies } from "react-cookie";
 
-function getCode() {
-	let url_str = window.location.search;
-	let strToSearch = new URLSearchParams(url_str);
-	let code_param = strToSearch.get("code");
+function getCode(): string | null {
+	let url_str: string = window.location.search;
+	let strToSearch: URLSearchParams = new URLSearchParams(url_str);
+	let code_param: string | null = strToSearch.get("code");
 	return code_param;
 }
 
 //renderless component
-export default function AuthProcess() {
-
+const AuthProcess: React.FC = () => {
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
 
 	useEffect(() => {
-		async function getTok() {
+		async function getTok(): Promise<void> {
 
-			let codeP = getCode();
+			const codeP: string | null = getCode();
 			if (codeP != null) {
 				const obj = {
 					code: codeP
@@ -45,13 +44,7 @@ export default function AuthProcess() {
 			}
 		}
 		getTok();
-	});
+	}, []);
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
-
-
-
-
-//TODO traduire en typsecript
-
-//TODO gestion d'erreurs possibles
+export default AuthProcess;

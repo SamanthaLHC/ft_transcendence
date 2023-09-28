@@ -4,7 +4,7 @@ import AuthProcess from './Auth';
 
 const clientid = process.env.REACT_APP_CLIENT_ID;
 
-function Login() {
+const Login: React.FC = () => {
 	return (
 	    <React.Fragment>
 			<AuthProcess />

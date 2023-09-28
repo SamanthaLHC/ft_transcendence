@@ -9,7 +9,7 @@ import Profil from "../profil/Profil"
 import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
 
-function App() {
+const App: React.FC = () => {
 	return (
 			<Routes>
 				<Route path={"/"} element={<Login />} />

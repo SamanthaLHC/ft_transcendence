@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router';
 
 
 
-export default function LauncButton() {
-	let navToGame = useNavigate();
+const LauncButton: React.FC = () => {
+
+	const navToGame = useNavigate();
 	const changeToGame = () => {
-		let pathGame = '/game';
+		let pathGame: string = '/game';
 		navToGame(pathGame);
 	}
 	return (
@@ -18,3 +19,5 @@ export default function LauncButton() {
 			</div>	
 	);
 }
+
+export default LauncButton;

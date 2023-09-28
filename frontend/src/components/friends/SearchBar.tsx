@@ -6,17 +6,13 @@ import SearchIcon from '@mui/icons-material/Search';
 // function Search() {
 // 	const [searchText, setSearchText] = useState('');
 
-// 	// const handleSearchChange = (e) => {
-// 	//     setSearchText(e.target.value);
-// };
-
 const handleSearch = () => {
 	// Implement your search logic here
 	// console.log(`Searching for: ${searchText}`);
 };
 
 
-export default function SearchBar() {
+const SearchBar: React.FC = () => {
 	return (
 		<div>
 			<TextField
@@ -42,5 +38,6 @@ export default function SearchBar() {
 	);
 }
 
+export default SearchBar;
 
 // TODO gerer les query pour les recherches

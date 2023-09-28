@@ -4,7 +4,7 @@ import Friends from '../friends/Friends'
 import Channels from './Channels'
 import { Divider } from '@mui/material'
 
-export default function Chat() {
+const Chat: React.FC = () => {
 
 	return (
 		<React.Fragment>
@@ -19,3 +19,5 @@ export default function Chat() {
 
 	)
 }
+
+export default Chat;

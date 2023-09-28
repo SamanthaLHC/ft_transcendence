@@ -3,7 +3,7 @@ import Header from '../header/Header';
 import LaunchButton from './LaunchButton';
 import Friends from '../friends/Friends';
 
-export default function Home() {
+const Home: React.FC = () => {
 	return (
 		<React.Fragment>
 			<Header />
@@ -15,6 +15,7 @@ export default function Home() {
 	)
 }
 
+export default Home;
 
 
 

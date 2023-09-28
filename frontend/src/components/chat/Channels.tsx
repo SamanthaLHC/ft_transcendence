@@ -7,9 +7,14 @@ import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
 
 
-export default function Channels() {
+interface Channel {
+	name: string;
+  }
 
-    const chan = [
+
+ const Channels: React.FC = () => {
+
+    const chan: Channel[] = [
         {
             'name': "chan 1",
         },
@@ -51,3 +56,4 @@ export default function Channels() {
         </React.Fragment >
     );
 }
+export default Channels;
