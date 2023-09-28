@@ -3,6 +3,7 @@ import { User } from '@prisma/client';
 import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { toDataURL } from 'qrcode';
+import { SearchDto } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -41,6 +42,38 @@ export class UsersService {
             return hist;
         else
             throw new NotFoundException(`Aucun user avec l'id ${id_num} ou aucun match effectue`)
+    }
+
+    async searchUser(dto: SearchDto) {
+        const userlist = await this.prisma.user.findMany({
+            where: {
+                OR: [
+                    {
+                        login : {
+                            startsWith: dto.search,
+                          },
+                    },
+                    {
+                        name : {
+                            contains: dto.search,
+                          },
+                    }
+                ]
+            },
+            select: {
+                id: true,
+                login: true,
+                name: true,
+                photo: true
+            }
+        })
+        if (userlist[0])
+        {
+            
+            return userlist;
+        }
+        else
+            throw new NotFoundException(`Aucun user`)
     }
 
     async turnOnTwoFactorAuthentication(userId: number) {

@@ -1,7 +1,8 @@
-import { Controller, Get, Param, UseGuards, Post, Req } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req, Body } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { response } from 'express';
+import { SearchDto } from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -40,4 +41,11 @@ export class UsersController {
     async turnOffTwoFactorAuthentication(@Req() req){
         this.usersService.turnOffTwoFactorAuthentication(req.user.sub)
     }
+
+    @Get('search')
+    @UseGuards(AuthGuard)
+    async SearchUser(@Body() dto: SearchDto) {
+        return this.usersService.searchUser(dto)
+    }
+
 }
