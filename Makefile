@@ -22,10 +22,6 @@ stop:
 down:
 	docker compose -f ${DOCKER_COMPOSE} down
 
-.PHONY: rm
-rm: stop
-	docker compose -f ${DOCKER_COMPOSE} rm
-
 .PHONY: build
 build:
 	docker compose -f ${DOCKER_COMPOSE} build
@@ -42,7 +38,7 @@ clean_volumes: down
 	fi
 
 .PHONY: fclean
-fclean: rm clean_images clean_volumes
+fclean: clean_images clean_volumes
 
 .PHONY: re
 re: fclean
