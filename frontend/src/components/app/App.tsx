@@ -28,4 +28,3 @@ export default App
 
 
 // TODO add route 2fa
-// TODO add route error 400

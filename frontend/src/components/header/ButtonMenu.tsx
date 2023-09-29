@@ -82,7 +82,3 @@ const ButtonMenu: React.FC = () => {
 }
 
 export default ButtonMenu;
-
-// TODO redirect chat
-// TODO redirect home avec bouton game (ou lancer directement une partie)
-//TODO better css without theme provider

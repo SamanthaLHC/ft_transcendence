@@ -4,10 +4,9 @@ import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
 
 const ProfilButton: React.FC = () => {
 
@@ -44,15 +43,21 @@ const ProfilButton: React.FC = () => {
 		setAnchorEl(null);
 	};
 
+	// handle log out __________________________________________________
 
-	// handle bearer token cookie and set user datas__________________
+	const LogOut = () => {
+		//TODO clear datas ? 
+		changeToLogin();
+	}
+
+	// handle bearer token cookie and set user datas______________________
 
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
 
 	useEffect(() => {
 		async function getUserInfo() {
-			const req : Request = new Request('http://localhost:3000/users/me', {
+			const req: Request = new Request('http://localhost:3000/users/me', {
 				method: "GET",
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
@@ -69,7 +74,7 @@ const ProfilButton: React.FC = () => {
 			}
 		}
 		getUserInfo();
-	}, []);
+	});
 
 	if (!userInfos)
 		return null;
@@ -98,8 +103,7 @@ const ProfilButton: React.FC = () => {
 				}}>
 				<MenuItem onClick={changeToProfil}> View my profile </MenuItem>
 				<MenuItem onClick={changeToSettings}> Settings </MenuItem>
-				<MenuItem onClick={handleClose}> Logout </MenuItem>
-
+				<MenuItem onClick={LogOut}> Logout </MenuItem>
 			</Menu>
 		</Stack>
 	);

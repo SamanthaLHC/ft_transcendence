@@ -40,11 +40,12 @@ const AuthProcess: React.FC = () => {
 				} catch (error) {
 					console.error(error);
 					window.location.href = "/"; //problematique ? ça ne reste pas ça va recharger la page 
+
 				}
 			}
 		}
 		getTok();
-	}, []);
+	});
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
 export default AuthProcess;
