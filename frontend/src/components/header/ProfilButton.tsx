@@ -46,7 +46,7 @@ const ProfilButton: React.FC = () => {
 	// handle log out __________________________________________________
 
 	const LogOut = () => {
-		//TODO clear datas ? 
+		//TODO clear datas !
 		changeToLogin();
 	}
 
@@ -57,6 +57,7 @@ const ProfilButton: React.FC = () => {
 
 	useEffect(() => {
 		async function getUserInfo() {
+
 			const req: Request = new Request('http://localhost:3000/users/me', {
 				method: "GET",
 				headers: {

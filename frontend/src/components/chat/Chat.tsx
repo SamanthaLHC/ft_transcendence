@@ -1,8 +1,10 @@
 import React from 'react'
+import { Divider } from '@mui/material'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import Channels from './Channels'
-import { Divider } from '@mui/material'
+import WindowChat from './WindowChat';
+
 
 const Chat: React.FC = () => {
 
@@ -14,8 +16,9 @@ const Chat: React.FC = () => {
 				<Divider>
 					<Channels />
 				</Divider>
+				<WindowChat />
 			</div>
-		</React.Fragment>
+		</React.Fragment >
 
 	)
 }

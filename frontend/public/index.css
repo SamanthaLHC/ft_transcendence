@@ -221,7 +221,7 @@ body {
 
 
 /*_______________________________________________________________________________________*/
-/*                                    channel component                                  */
+/*                                    channel side bar component                         */
 /*_______________________________________________________________________________________*/
 
 .channels {
@@ -261,6 +261,87 @@ body {
 }
 
 /*_______________________________________________________________________________________*/
+/*                                    window chat component                              */
+/*_______________________________________________________________________________________*/
+
+.chat-content {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+	background-color: #080d17;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(65% - 2px);
+}
+
+.chat-header {
+	background-color: #3fda73;
+	padding: 15px;
+	border-radius: 20px 20px 0 0;
+	color: #fff;
+	font-size: 20px;
+}
+
+.chat-box{
+	
+}
+
+
+
+.message-area {
+
+}
+
+
+ .footer {
+
+}
+
+textarea {
+	position: absolute;
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	box-sizing: border-box;
+	border: none;
+	background-color: #23272e;
+	color: #ebebeb;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*_______________________________________________________________________________________*/
 /*                              page under construction component (TMP)                  */
 /*_______________________________________________________________________________________*/
 
@@ -271,7 +352,6 @@ body {
 	display: block;
 	align-items: center;
 	justify-content: center;
-	/* flex-grow: 1; */
 	position: absolute;
 	right: 0;
 	top: 80px;
