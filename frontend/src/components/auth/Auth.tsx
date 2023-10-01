@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router";
 
 function getCode(): string | null {
 	let url_str: string = window.location.search;
@@ -12,6 +13,8 @@ function getCode(): string | null {
 const AuthProcess: React.FC = () => {
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
+	const [authDone, setAuthDone] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		async function getTok(): Promise<void> {
@@ -34,18 +37,19 @@ const AuthProcess: React.FC = () => {
 					const datas = await response.json();
 					if (datas.status === 302) {
 						const newUrl = datas.url;
-						window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
 						setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
+						setAuthDone(true);
+						const tmp = new URL(datas.url);
+						navigate(tmp.pathname);
 					}
 				} catch (error) {
 					console.error(error);
-					window.location.href = "/"; //problematique ? ça ne reste pas ça va recharger la page 
-
+					navigate("/");
 				}
 			}
 		}
 		getTok();
-	});
+	}, [navigate, authDone]);
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
 export default AuthProcess;
