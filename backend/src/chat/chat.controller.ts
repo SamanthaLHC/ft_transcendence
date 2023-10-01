@@ -1,35 +1,36 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
-import { Privacy } from '@prisma/client';
+import { PrismaPromise, Privacy } from '@prisma/client';
 
 
 @Public()
 @Controller('chat')
 export class ChatController {
 	constructor(private readonly chatService: ChatService) {}
-
-	testChannel : CreateChannelDto =
-	{
-		"name" : "tdfhdfghf",
-		"privacy" : Privacy.PUBLIC,
-		"ownerId" : 1
-	}
-		
-	@Get()
-	async getAllChannels() {
-		return await this.chatService.getAllChannels();
+	
+	@Get('channels')
+	// GET /chat/channel (return all channels)
+	async findAllChannels() {
+		return await this.chatService.findAllChannels();
 	}
 
-	@Get(':channelName')
-	async getChannelByName(@Param('channelName') channelName: string) {
+	@Get('channel/:channelName')
+	// GET /chat/channel/[CHANNEL_NAME]
+	async getChannelByName(@Param('channelName') channelName: string) :Promise<PrismaPromise<any>>{
 		return await this.chatService.getChannelByName(channelName);
 	}
 
-	@Post()
-	async createChannel(@Body() newChannel : CreateChannelDto ) {
-		return await this.chatService.createChannel(newChannel);
+	@Get('channel')
+	// GET /chat/channel?search=[SEARCH_TERM]
+	async findChannelBySearch(@Query('search') searchTerm: string) {
+		return await this.chatService.findChannelBySearch(searchTerm);
 	}
 
+	@Post('channel/create')
+	// POST /chat/channel/create (Body: {name: string, privacy: Privacy, ownerId: number})
+	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto ) {
+		return await this.chatService.createChannelIfNotExists(newChannel);
+	}
 }
