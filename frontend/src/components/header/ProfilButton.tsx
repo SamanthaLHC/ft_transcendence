@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 const ProfilButton: React.FC = () => {
 
+	console.log("Profil button call");
 	//redirect on click_______________________________________________
 
 	const navToProfil = useNavigate();
@@ -55,6 +56,7 @@ const ProfilButton: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
 
+	console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
 		async function getUserInfo() {
 
@@ -70,12 +72,9 @@ const ProfilButton: React.FC = () => {
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
 			}
-			else {
-				changeToLogin();
-			}
 		}
 		getUserInfo();
-	});
+	}, [cookies.access_token]);
 
 	if (!userInfos)
 		return null;
