@@ -1,9 +1,4 @@
 import React from 'react'
-import Header from '../header/Header'
-import Friends from '../friends/Friends'
-import Channels from './Channels'
-
-
 
 const WindowChat: React.FC = () => {
 

@@ -36,7 +36,6 @@ const AuthProcess: React.FC = () => {
 					const response = await fetch(req);
 					const datas = await response.json();
 					if (datas.status === 302) {
-						const newUrl = datas.url;
 						setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
 						setAuthDone(true);
 						const tmp = new URL(datas.url);
@@ -49,7 +48,7 @@ const AuthProcess: React.FC = () => {
 			}
 		}
 		getTok();
-	}, [navigate, authDone]);
+	}, [navigate, authDone, cookies.access_token, setCookie]);
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
 export default AuthProcess;
