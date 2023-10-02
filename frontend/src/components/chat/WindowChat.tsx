@@ -1,14 +1,18 @@
-import React from 'react'
+// import React, { useState, useEffect } from 'react'
+
+
 
 const WindowChat: React.FC = () => {
 
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				TEST
+				Chan name (wip)
 			</div>
-			<div className='messages-area yellow'>	{/* the conv space */}
-				wesh alors
+			<div className='messages-area'>	{/* the conv space */}
+				<ul>
+					{/* here, the messages sent */}
+				</ul>
 			</div>
 			<div>
 				<textarea />
