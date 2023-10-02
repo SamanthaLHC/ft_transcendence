@@ -5,14 +5,15 @@ const WindowChat: React.FC = () => {
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-			TEST
+				TEST
 			</div>
 			<div className='messages-area yellow'>	{/* the conv space */}
-			wesh alors
+				wesh alors
 			</div>
 			<div>
 				<textarea />
 			</div>
+			<button> SEND </button>
 		</div>
 	)
 }

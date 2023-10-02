@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 const ProfilButton: React.FC = () => {
 
 	console.log("Profil button call");
+
 	//redirect on click_______________________________________________
 
 	const navToProfil = useNavigate();
