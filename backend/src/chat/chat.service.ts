@@ -16,6 +16,18 @@ export class ChatService {
 		return channels;
 	}
 
+	async findAllJoinedChannels(userId: number) : Promise<PrismaPromise<any>> {
+		const channels = await this.prisma.userChannelMap.findMany({
+			where: {
+				userId: userId,
+			},
+			select: {
+				channel: true
+			}
+		});
+		return channels;
+	}
+
 	async getChannelByName(channelName: string) : Promise<PrismaPromise<any>> {
 		const channel = await this.prisma.channels.findUnique({
 			where: {
@@ -60,8 +72,30 @@ export class ChatService {
 			});
 			return channel;
 		});
-		Logger.log(`Channel	[${channel.name}] created`, "ChatService");
+		Logger.log(`Channel [${channel.name}] created`, "ChatService");
+		this.joinChannel(channel.id, newChannel.ownerId);
 		return channel;
 	}
 
+	async joinChannel(channelId: number, userId: number){
+		const ret = await this.prisma.userChannelMap.create({
+			data: {
+				channelId: channelId,
+				userId: userId,
+			}
+		});
+		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
+	}
+
+	async leaveChannel(channelId: number, userId: number){
+		const ret = await this.prisma.userChannelMap.delete({
+			where: {
+				channelId_userId: {
+					channelId: channelId,
+					userId: userId,
+				}
+			}
+		});
+		Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
+	}
 }
