@@ -60,6 +60,12 @@ export class UsersController {
         return this.usersService.getstatusrelation(dto, req.user.sub);
     }
 
+    @Get('get_friend')
+    @UseGuards(AuthGuard)
+    async getlistfriend(@Req() req){
+        return this.usersService.getlistfriend(req.user.sub);
+    }
+
     @Delete('rm_relation')
     @UseGuards(AuthGuard)
     async rmfriend(@Body() dto: rmRelationDto, @Req() req){

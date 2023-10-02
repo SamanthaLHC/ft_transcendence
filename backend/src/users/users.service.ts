@@ -13,12 +13,15 @@ export class UsersService {
             where: {
                 id: id_num,
             },
+            select: {
+                id: true,
+                login: true,
+                name: true,
+                photo: true
+            }
         })
         if (user)
-        {
-            const { deuxfasecret: _, ...userWithoutPassword } = user
-            return userWithoutPassword;
-        }
+            return (user)
         else
             throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
     }
@@ -140,6 +143,29 @@ export class UsersService {
           })
         if (relation)
           return ({ status: relation.status})
+        else
+          throw new NotFoundException("aucune relation avec ces ids");
+    }
+
+    async getlistfriend(source_id:number)
+    {
+        const relation = await this.prisma.relationships.findMany({
+            where: { 
+                AND: [
+                    {
+                        userId : source_id
+                    },
+                    {
+                        status: "FRIEND"
+                    }
+                ]
+             },
+            select: {
+                targetId: true
+            }
+          })
+        if (relation[0])
+          return (relation)
         else
           throw new NotFoundException("aucune relation avec ces ids");
     }
