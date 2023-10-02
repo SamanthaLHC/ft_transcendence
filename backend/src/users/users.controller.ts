@@ -1,8 +1,8 @@
-import { Controller, Get, Param, UseGuards, Post, Req, Body } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { response } from 'express';
-import { SearchDto } from './dto';
+import { SearchDto, addRelationDto, rmRelationDto } from './dto';
 
 @Controller('users')
 export class UsersController {
@@ -46,6 +46,24 @@ export class UsersController {
     @UseGuards(AuthGuard)
     async SearchUser(@Body() dto: SearchDto) {
         return this.usersService.searchUser(dto)
+    }
+
+    @Post('addup_relation')
+    @UseGuards(AuthGuard)
+    async addefriend(@Body() dto: addRelationDto, @Req() req){
+        return this.usersService.addrelation(dto, req.user.sub);
+    }
+
+    @Get('status_relation')
+    @UseGuards(AuthGuard)
+    async getstatusfriend(@Body() dto: rmRelationDto, @Req() req){
+        return this.usersService.getstatusrelation(dto, req.user.sub);
+    }
+
+    @Delete('rm_relation')
+    @UseGuards(AuthGuard)
+    async rmfriend(@Body() dto: rmRelationDto, @Req() req){
+        return this.usersService.deleterelation(dto, req.user.sub);
     }
 
 }

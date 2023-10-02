@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { toDataURL } from 'qrcode';
-import { SearchDto } from './dto';
+import { SearchDto, addRelationDto, rmRelationDto } from './dto';
 
 @Injectable()
 export class UsersService {
@@ -76,13 +75,81 @@ export class UsersService {
             throw new NotFoundException(`Aucun user`)
     }
 
+    async deleterelation(dto: rmRelationDto, source_id: number) {
+        if (source_id === dto.target_id)
+            throw new BadRequestException("source_id et target_id sont identique");
+        const source = await this.prisma.user.findFirst({
+            where: { id: source_id}
+        })
+        const target = await this.prisma.user.findFirst({
+            where: { id: dto.target_id}
+        })
+        if (!source || !target)
+            throw new NotFoundException("user non trouve")
+        await this.prisma.relationships.deleteMany({
+            where: { 
+                AND: [
+                    {
+                        userId : source.id
+                    },
+                    {
+                        targetId: target.id
+                    }
+                ]
+             },
+          })
+    }
+
+    async addrelation(dto: addRelationDto, source_id: number) { 
+        if (source_id === dto.target_id)
+            throw new BadRequestException("source_id et target_id sont identique");
+        if(dto.status != "FRIEND" && dto.status != "BLOCKED")
+            throw new BadRequestException("status doit etre FRIEND ou BLOCKED");
+        const source = await this.prisma.user.findFirst({
+            where: { id: source_id}
+        })
+        const target = await this.prisma.user.findFirst({
+            where: { id: dto.target_id}
+        })
+        if (!source || !target)
+            throw new NotFoundException("user non trouve")
+        await this.prisma.relationships.upsert({
+            where: { id: {userId: source.id, targetId: target.id} },
+            create: {
+                userId: source.id,
+                targetId: target.id,
+                status: dto.status
+            },
+            update: { status: dto.status}
+        });
+    }
+
+    async getstatusrelation(dto: rmRelationDto, source_id:number)
+    {
+        const relation = await this.prisma.relationships.findFirst({
+            where: { 
+                AND: [
+                    {
+                        userId : source_id
+                    },
+                    {
+                        targetId: dto.target_id
+                    }
+                ]
+             },
+          })
+        if (relation)
+          return ({ status: relation.status})
+        else
+          throw new NotFoundException("aucune relation avec ces ids");
+    }
+
     async turnOnTwoFactorAuthentication(userId: number) {
         const user = await this.prisma.user.findFirst({
             where: { id: userId}
         })
         return await this.generateTwoFactorAuthenticationSecret(user.login, userId)
     }
-
 
     async turnOffTwoFactorAuthentication(userId: number) {
         await this.prisma.user.update({

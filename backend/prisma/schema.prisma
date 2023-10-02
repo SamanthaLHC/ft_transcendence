@@ -71,7 +71,7 @@ model Messages {
 }
 
 model Relationships {
-    id        Int      @id @default(autoincrement())
+    @@id([userId, targetId], name: "id")
     user      User     @relation("UserRelationships", fields: [userId], references: [id])
     userId    Int
     target    User     @relation("TargetRelationships", fields: [targetId], references: [id])
