@@ -49,11 +49,12 @@ model Channels {
 }
 
 model UserChannelMap {
-    id        Int      @id @default(autoincrement())
     channel   Channels @relation(fields: [channelId], references: [id])
     channelId Int
     user      User     @relation(fields: [userId], references: [id])
     userId    Int
+
+	@@id([channelId, userId], name: "id")
 
     @@map("UserChannel")
 }
