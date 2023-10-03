@@ -93,7 +93,7 @@ const ProfilButton: React.FC = () => {
 				<Avatar alt="profil picture" src={userInfos['photo']} />
 				<Divider>
 					<Typography>
-						{userInfos['login']}
+						{userInfos['name']}
 					</Typography>
 				</Divider>
 			</button>
