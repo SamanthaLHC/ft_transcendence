@@ -57,7 +57,7 @@ const ProfilButton: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
 
-	console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
+	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
 		async function getUserInfo() {
 
