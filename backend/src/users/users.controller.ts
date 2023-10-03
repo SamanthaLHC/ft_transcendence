@@ -1,7 +1,7 @@
 import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { SearchDto, addRelationDto, rmRelationDto } from './dto';
+import { SearchDto, addRelationDto, rmRelationDto, upNameDto } from './dto';
 import { FileInterceptor, MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
@@ -99,6 +99,12 @@ export class UsersController {
         console.log(file)
         this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`)
       }
+
+      @Post('update_name')
+    @UseGuards(AuthGuard)
+    async upname(@Body() dto: upNameDto, @Req() req){
+        return this.usersService.updateName(req.user.sub, dto.name);
+    }
 
       @Public()
       @UseGuards(AuthGuard)

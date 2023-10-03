@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { toDataURL } from 'qrcode';
@@ -230,6 +230,22 @@ export class UsersService {
             where: { id: id },
             data: {photo: url}
         })
+      }
+      async updateName(id: number, name: string) {
+        const user = await this.prisma.user.findFirst({
+            where: { name: name},
+        })
+        if (!user)
+        {
+            await this.prisma.user.update({
+                where: { id: id },
+                data: {name: name}
+            })
+        }
+        else
+        {
+            throw new ConflictException("Un utilisateur a deja ce nom !")
+        }
       }
 }
 
