@@ -19,6 +19,8 @@ model User {
     name                  String           @unique
     deuxfa                Boolean          @default(false)
     deuxfasecret          String?
+    nbwin                 Int               @default(0)
+    nbloose               Int               @default(0)
     channels              Channels[]
     userChannelMap        UserChannelMap[]
     messages              Messages[]
