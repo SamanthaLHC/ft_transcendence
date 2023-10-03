@@ -10,7 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 
 const ProfilButton: React.FC = () => {
 
-	console.log("Profil button call");
+	// console.log("Profil button call");
 
 	//redirect on click_______________________________________________
 
