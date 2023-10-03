@@ -73,6 +73,9 @@ const ProfilButton: React.FC = () => {
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
 			}
+			else{
+				changeToLogin();
+			}
 		}
 		getUserInfo();
 	}, [cookies.access_token]);
