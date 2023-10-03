@@ -14,10 +14,10 @@ const WindowChat: React.FC = () => {
 					{/* here, the messages sent */}
 				</ul>
 			</div>
-			<div>
+			<div id="input-area">
 				<textarea />
+				<button> SEND </button>
 			</div>
-			<button> SEND </button>
 		</div>
 	)
 }
