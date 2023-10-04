@@ -90,10 +90,7 @@ export class ChatService {
 	async leaveChannel(channelId: number, userId: number){
 		const ret = await this.prisma.userChannelMap.delete({
 			where: {
-				channelId_userId: {
-					channelId: channelId,
-					userId: userId,
-				}
+				id: {channelId: channelId, userId: userId}
 			}
 		});
 		Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");

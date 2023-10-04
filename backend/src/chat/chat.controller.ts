@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { Public } from 'src/auth/decorators/public.decorator';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
@@ -53,7 +53,7 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Post('channel/leave/:channelId')
+	@Delete('channel/leave/:channelId')
 	async leaveChannel(@Param('channelId') channelId: string, @Req() req) {
 		return await this.chatService.leaveChannel(+channelId, req.user.sub);
 	}
