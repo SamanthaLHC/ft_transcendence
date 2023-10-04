@@ -344,6 +344,60 @@ textarea {
 }
 
 /*_______________________________________________________________________________________*/
+/*                                  settings page                                        */
+/*_______________________________________________________________________________________*/
+
+#settings-content {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+	background-color: #080d17;
+	display: flex;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(85% - 2px);
+}
+
+.list-items {
+	width: 60%;
+	height: 100%;
+}
+
+.change-name {
+	width: 40%;
+	display: block;
+	text-align: center;
+	position: relative;
+	justify-content: center;
+}
+
+.settings button {
+	background-image: linear-gradient(to right, #020101 0%, #740a0a 51%, #dbcc45 100%);
+	width: 20%;
+	padding: 8px 8px;
+	text-align: center;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: #ffc107;
+	box-shadow: 0 0 20px #080606;
+	border-radius: 10px;
+	font-family: "Azonix";
+	font-size: small;
+	display: flex;
+}
+
+.settings button:hover {
+	background-position: right center;
+	color: black;
+	text-decoration: none;
+}
+
+
+
+/*_______________________________________________________________________________________*/
 /*                              page under construction component (TMP)                  */
 /*_______________________________________________________________________________________*/
 
