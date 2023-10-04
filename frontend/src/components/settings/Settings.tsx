@@ -10,7 +10,7 @@ const Settings: React.FC = () => {
 			<div id="container">
 				<Friends />
 				<div id='settings-content'>
-					<div className='settings list-items'>
+					<div className='list-items'>
 						<div className='change-name'>
 							<h3 className='typo yellow'> Change your name: </h3>
 							<textarea />

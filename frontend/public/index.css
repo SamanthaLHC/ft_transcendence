@@ -350,15 +350,19 @@ textarea {
 #settings-content {
 	position: absolute;
 	display: flex;
-	flex-direction: column;
+	flex-direction: row;
 	min-width: 0;
 	min-height: 0;
 	background-color: #080d17;
 	display: flex;
+	justify-content: center;
 	right: 0;
 	top: 0;
 	bottom: 0;
 	width: calc(85% - 2px);
+	/* top: 50%;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%); */
 }
 
 .list-items {
@@ -370,11 +374,9 @@ textarea {
 	width: 40%;
 	display: block;
 	text-align: center;
-	position: relative;
-	justify-content: center;
 }
 
-.settings button {
+.list-items button {
 	background-image: linear-gradient(to right, #020101 0%, #740a0a 51%, #dbcc45 100%);
 	width: 20%;
 	padding: 8px 8px;
@@ -389,7 +391,7 @@ textarea {
 	display: flex;
 }
 
-.settings button:hover {
+.list-items button:hover {
 	background-position: right center;
 	color: black;
 	text-decoration: none;
