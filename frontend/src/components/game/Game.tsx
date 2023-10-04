@@ -3,7 +3,7 @@ import ducky from '../../assets/fire.gif'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
-export default function Game() {
+const Game:React.FC = () => {
 
 	return (
 		<React.Fragment>
@@ -20,3 +20,5 @@ export default function Game() {
 
 	)
 }
+
+export default Game;

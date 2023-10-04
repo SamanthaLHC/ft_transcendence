@@ -18,7 +18,6 @@ detach: build
 stop:
 	docker compose -f ${DOCKER_COMPOSE} stop
 
-
 .PHONY: down
 down:
 	docker compose -f ${DOCKER_COMPOSE} down

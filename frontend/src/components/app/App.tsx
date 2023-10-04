@@ -9,18 +9,18 @@ import Profil from "../profil/Profil"
 import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
 
-function App() {
+const App: React.FC = () => {
 	return (
-		<Routes>
-			<Route path={"/"} element={<Login />} />
-			<Route path={"/home"} element={<Home />} />
-			<Route path={"/chat"} element={<Chat />} />
-			<Route path={"/game"} element={<Game />} />
-			<Route path={"/settings"} element={<Settings/>} />
-			<Route path={"/profil"} element={<Profil />} />
-			<Route path={"/friend"} element={<FriendPage />} />
-			<Route path={"*"} element={<Error/>} />
-		</Routes>
+			<Routes>
+				<Route path={"/"} element={<Login />} />
+				<Route path={"/home"} element={<Home />} />
+				<Route path={"/chat"} element={<Chat />} />
+				<Route path={"/game"} element={<Game />} />
+				<Route path={"/settings"} element={<Settings/>} />
+				<Route path={"/profil"} element={<Profil />} />
+				<Route path={"/friend"} element={<FriendPage />} />
+				<Route path={"*"} element={<Error/>} />
+			</Routes>
 	)
 }
 
@@ -28,4 +28,4 @@ export default App
 
 
 // TODO add route 2fa
-// TODO add route error 400
+//HERE add <PrivateRoute> with a isLog ?
