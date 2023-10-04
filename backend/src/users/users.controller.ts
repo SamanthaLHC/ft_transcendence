@@ -30,7 +30,6 @@ export class UsersController {
     @UseGuards(AuthGuard)
     async turnOnTwoFactorAuthentication(@Req() req) {
         const ret = await this.usersService.turnOnTwoFactorAuthentication(req.user.sub);
-        console.log(ret.otpauthUrl);
         return {
             otpAuthUrl: await this.usersService.generateQrCodeDataURL(ret.otpauthUrl),
           };

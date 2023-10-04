@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './decorators/public.decorator';
+import { IS_2FA_KEY } from './decorators/2fa.decorator';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -34,7 +35,16 @@ export class AuthGuard implements CanActivate {
           secret: process.env.JWTSECRET
         }
       );
-      request['user'] = payload;
+      const is2fa = this.reflector.getAllAndOverride<boolean>(IS_2FA_KEY, [
+        context.getHandler(),
+        context.getClass(),
+      ]);
+      if (payload.type == "acces" && !is2fa)
+        request['user'] = payload;
+      else if (payload.type == "2fa" && is2fa)
+        request['user'] = payload;
+      else
+        throw new UnauthorizedException();
     } catch {
       throw new UnauthorizedException();
     }
