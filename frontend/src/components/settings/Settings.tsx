@@ -12,12 +12,16 @@ const Settings: React.FC = () => {
 				<div id='settings-content'>
 					<div className='list-items'>
 						<div className='change-name'>
-							<h3 className='typo yellow'> Change your name: </h3>
+							<h3 className='typo-settings'> Change your name: </h3>
 							<textarea />
 						</div>
-						<button  >Activate 2fa</button>
-						<div>
+						<div className='btn-pos'>
+							<button  >Activate 2fa</button>
+						</div>
+						<div className='btn-pos'>
 							<button  >game option 1</button>
+						</div>
+						<div className='btn-pos'>
 							<button  >game option 2</button>
 						</div>
 					</div>
