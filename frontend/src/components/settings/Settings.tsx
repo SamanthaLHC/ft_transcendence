@@ -25,6 +25,9 @@ const Settings: React.FC = () => {
 							<button  >game option 2</button>
 						</div>
 					</div>
+					<div className='item-pos avatar-btn'>
+						<button  >Change your avatar</button>
+					</div>
 				</div>
 			</div>
 		</React.Fragment >
