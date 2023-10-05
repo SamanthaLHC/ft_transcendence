@@ -1,5 +1,6 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { converBase64ToImage } from 'convert-base64-to-image'
+import { useState } from 'react'
 import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
@@ -32,8 +33,10 @@ const Settings: React.FC = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				console.log("datas in response: ", datas);
-				const codeToConv: any = datas.otpAuthUrl;
+				const codeToConv: string = datas.otpAuthUrl;
 				console.log("codeToConv is: ", codeToConv);
+				const pathToSaveImage: string = '../../assets/qrcode.png';
+				const imgConvert = converBase64ToImage(codeToConv, pathToSaveImage);
 			} catch (error) {
 				console.error(error);
 			}
