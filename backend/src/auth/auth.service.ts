@@ -92,7 +92,7 @@ export class AuthService {
                 data: {
                     login: data2['login'],
                     photo: data2['image']['link'],
-                    name:  data2['displayname'],
+                    name:  data2['login'],
                 },
             });
             const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')

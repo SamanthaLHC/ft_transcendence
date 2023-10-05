@@ -6,6 +6,12 @@ export class SearchDto {
     search: string;
 }
 
+export class upNameDto {
+    @IsNotEmpty()
+    @IsString()
+    name: string;
+}
+
 export class addRelationDto {
     @IsInt()
     @IsNotEmpty()

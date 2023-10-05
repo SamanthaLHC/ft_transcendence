@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Divider, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
@@ -14,19 +14,19 @@ const ProfilButton: React.FC = () => {
 
 	//redirect on click_______________________________________________
 
-	const navToProfil = useNavigate();
+	const navToProfil: NavigateFunction = useNavigate();
 	const changeToProfil = () => {
 		let pathProfil: string = '/profil';
 		navToProfil(pathProfil);
 	}
 
-	const navToLogin = useNavigate();
+	const navToLogin : NavigateFunction = useNavigate();
 	const changeToLogin = () => {
 		let pathLogin: string = '/';
 		navToLogin(pathLogin);
 	}
 
-	const navToSettings = useNavigate();
+	const navToSettings : NavigateFunction = useNavigate();
 	const changeToSettings = () => {
 		let pathSettings: string = '/settings';
 		navToSettings(pathSettings);
@@ -93,7 +93,7 @@ const ProfilButton: React.FC = () => {
 				<Avatar alt="profil picture" src={userInfos['photo']} />
 				<Divider>
 					<Typography>
-						{userInfos['login']}
+						{userInfos['name']}
 					</Typography>
 				</Divider>
 			</button>
