@@ -45,6 +45,12 @@ export class UsersController {
         this.usersService.turnOffTwoFactorAuthentication(req.user.sub)
     }
 
+    @Get('2fa/state')
+    @UseGuards(AuthGuard)
+    async getstate2fa(@Req() req) {
+        return this.usersService.getState2fa(req.user.sub)
+    }
+
     @Get('search')
     @UseGuards(AuthGuard)
     async SearchUser(@Body() dto: SearchDto) {

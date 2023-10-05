@@ -19,7 +19,24 @@ export class UsersService {
                 id: true,
                 login: true,
                 name: true,
-                photo: true
+            }
+        })
+        if (user)
+            return (user)
+        else
+            throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
+    }
+
+    async getState2fa(id: string) {
+        var id_num:number = +id
+        if (!id_num)
+            throw new BadRequestException()
+        const user = await this.prisma.user.findFirst({
+            where: {
+                id: id_num,
+            },
+            select: {
+                deuxfa: true
             }
         })
         if (user)
