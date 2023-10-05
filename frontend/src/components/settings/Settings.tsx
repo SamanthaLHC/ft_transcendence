@@ -1,8 +1,16 @@
 import React from 'react'
+import {useState} from 'react'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
 const Settings: React.FC = () => {
+
+//_____________________handle enable2fa__________________________________________
+	const [active2fa, setActive2fa] = useState(false);
+
+	const  handleClick = () => {
+		setActive2fa(!active2fa);
+	}
 
 	return (
 		<React.Fragment>
@@ -16,7 +24,7 @@ const Settings: React.FC = () => {
 							<textarea />
 						</div>
 						<div className='btn-pos'>
-							<button  >Enable 2fa</button>
+							<button onClick={handleClick}>{ active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
 						</div>
 						<div className='btn-pos'>
 							<button  >game option 1</button>
