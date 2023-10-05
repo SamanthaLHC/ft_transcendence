@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Channels, PrismaPromise, Privacy } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
@@ -82,6 +82,8 @@ export class ChatService {
 	}
 
 	async joinChannel(channelId: number, userId: number){
+		if (channelId < 1 || Number.isNaN(channelId))
+			throw new BadRequestException(`Invalid channel id (${channelId})`);
 		const ret = await this.prisma.userChannelMap.create({
 			data: {
 				channelId: channelId,
@@ -89,10 +91,11 @@ export class ChatService {
 			}
 		});
 		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
-		return ret;
 	}
 
 	async leaveChannel(channelId: number, userId: number){
+		if (channelId < 1 || Number.isNaN(channelId))
+			throw new BadRequestException(`Invalid channel id (${channelId})`);
 		try
 		{
 			const ret = await this.prisma.userChannelMap.delete({
@@ -101,7 +104,6 @@ export class ChatService {
 				}
 			});
 			Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
-			return ret;
 		}
 		catch (e)
 		{

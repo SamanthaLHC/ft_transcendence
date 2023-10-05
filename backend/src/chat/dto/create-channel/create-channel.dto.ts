@@ -1,5 +1,5 @@
 import { Privacy } from "@prisma/client";
-import { IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, Matches, Max, MaxLength } from "class-validator";
+import { IsEnum, IsNotEmpty, IsString, Matches, MaxLength } from "class-validator";
 
 export class CreateChannelDto {
 	@IsNotEmpty()
