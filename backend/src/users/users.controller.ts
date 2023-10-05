@@ -102,7 +102,7 @@ export class UsersController {
       }))
       async upload( @UploadedFile() file, @Req() req) {
         if (!file)
-            throw new BadRequestException("Aucun fichier envoyer")
+            throw new BadRequestException("Error: No file sent")
         this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`)
       }
 
