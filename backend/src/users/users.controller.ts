@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SearchDto, addRelationDto, rmRelationDto, upNameDto } from './dto';
@@ -95,7 +95,8 @@ export class UsersController {
         })
       }))
       async upload( @UploadedFile() file, @Req() req) {
-        console.log(file)
+        if (!file)
+            throw new BadRequestException("Aucun fichier envoyer")
         this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`)
       }
 

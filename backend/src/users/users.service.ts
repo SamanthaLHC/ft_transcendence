@@ -232,6 +232,8 @@ export class UsersService {
         })
       }
       async updateName(id: number, name: string) {
+        if (name.length > 15)
+            throw new BadRequestException("name trop long")
         const user = await this.prisma.user.findFirst({
             where: { name: name},
         })
