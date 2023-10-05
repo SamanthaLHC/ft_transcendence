@@ -10,8 +10,4 @@ export class CreateChannelDto {
 
 	@IsEnum(Privacy)
 	privacy: Privacy;
-
-	@IsNumber()
-	@IsPositive()
-	ownerId: number;
 }

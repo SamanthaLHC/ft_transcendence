@@ -54,7 +54,7 @@ export class ChatService {
 		return channels;
 	}
 
-	async createChannelIfNotExists(newChannel : CreateChannelDto) : Promise<PrismaPromise<any>> {
+	async createChannelIfNotExists(newChannel : CreateChannelDto, userId: number) : Promise<PrismaPromise<any>> {
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
 				where: {
@@ -68,12 +68,16 @@ export class ChatService {
 				throw new ConflictException("Channel already exists");
 			}
 			const channel = await tx.channels.create({
-				data: newChannel,
+				data: {
+					name: newChannel.name,
+					privacy: newChannel.privacy,
+					ownerId: userId,
+				}
 			});
 			return channel;
 		});
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
-		this.joinChannel(channel.id, newChannel.ownerId);
+		this.joinChannel(channel.id, userId);
 		return channel;
 	}
 
@@ -85,14 +89,24 @@ export class ChatService {
 			}
 		});
 		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
+		return ret;
 	}
 
 	async leaveChannel(channelId: number, userId: number){
-		const ret = await this.prisma.userChannelMap.delete({
-			where: {
-				id: {channelId: channelId, userId: userId}
-			}
-		});
-		Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
+		try
+		{
+			const ret = await this.prisma.userChannelMap.delete({
+				where: {
+					id: {channelId: channelId, userId: userId}
+				}
+			});
+			Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
+			return ret;
+		}
+		catch (e)
+		{
+			Logger.log(`No entry found for user [${userId}] in channel [${channelId}]`, "ChatService");
+			throw new NotFoundException(`No entry found for user [${userId}] in channel [${channelId}]`);
+		}
 	}
 }

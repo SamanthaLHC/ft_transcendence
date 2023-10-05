@@ -11,9 +11,7 @@ import { AuthGuard } from 'src/auth/auth.guard';
 export class ChatController {
 	constructor(private readonly chatService: ChatService) {}
 	
-
-	// @UseGuards(AuthGuard)
-	@Public()
+	@UseGuards(AuthGuard)
 	@Get('channels')
 	async findAllChannels() {
 		return await this.chatService.findAllChannels();
@@ -25,25 +23,22 @@ export class ChatController {
 		return await this.chatService.findAllJoinedChannels(req.user.sub);
 	}
 	
-	// @UseGuards(AuthGuard)
-	@Public()
+	@UseGuards(AuthGuard)
 	@Get('channel/:channelName')
 	async getChannelByName(@Param('channelName') channelName: string) :Promise<PrismaPromise<any>>{
 		return await this.chatService.getChannelByName(channelName);
 	}
 
-	// @UseGuards(AuthGuard)
-	@Public()
+	@UseGuards(AuthGuard)
 	@Get('channel')
 	async findChannelBySearch(@Query('search') searchTerm: string) {
 		return await this.chatService.findChannelBySearch(searchTerm);
 	}
 
-	// @UseGuards(AuthGuard)
-	@Public()
+	@UseGuards(AuthGuard)
 	@Post('channel/create')
-	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto ) {
-		return await this.chatService.createChannelIfNotExists(newChannel);
+	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto, @Req() req) {
+		return await this.chatService.createChannelIfNotExists(newChannel, req.user.sub);
 	}
 
 	@UseGuards(AuthGuard)
