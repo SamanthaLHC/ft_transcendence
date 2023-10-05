@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { toDataURL } from 'qrcode';
@@ -9,6 +9,8 @@ export class UsersService {
     constructor(private prisma: PrismaService) {}
     async getUserFromId(id: string) {
         var id_num:number = +id
+        if (!id_num)
+            throw new BadRequestException()
         const user = await this.prisma.user.findFirst({
             where: {
                 id: id_num,
@@ -147,6 +149,24 @@ export class UsersService {
           throw new NotFoundException("aucune relation avec ces ids");
     }
 
+    async getclassement()
+    {
+        const classement = await this.prisma.user.findMany({
+            orderBy: {
+                nbwin: 'desc',
+            },
+            select: {
+                id: true,
+                login: true,
+                name: true,
+                photo: true,
+                nbwin: true,
+                nbloose: true
+            }
+          })
+        return (classement)
+    }
+
     async getlistfriend(source_id:number)
     {
         const relation = await this.prisma.relationships.findMany({
@@ -203,6 +223,31 @@ export class UsersService {
 
       async generateQrCodeDataURL(otpAuthUrl: string) {
         return toDataURL(otpAuthUrl);
+      }
+
+      async updateAvatar(id: number, url: string) {
+        await this.prisma.user.update({
+            where: { id: id },
+            data: {photo: url}
+        })
+      }
+      async updateName(id: number, name: string) {
+        if (name.length > 15)
+            throw new BadRequestException("Name too long: should be between 1 and 15 caracters")
+        const user = await this.prisma.user.findFirst({
+            where: { name: name},
+        })
+        if (!user)
+        {
+            await this.prisma.user.update({
+                where: { id: id },
+                data: {name: name}
+            })
+        }
+        else
+        {
+            throw new ConflictException("Un utilisateur a deja ce nom !")
+        }
       }
 }
 
