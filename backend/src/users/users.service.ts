@@ -19,6 +19,7 @@ export class UsersService {
                 id: true,
                 login: true,
                 name: true,
+                photo: true
             }
         })
         if (user)
