@@ -3,7 +3,7 @@ import ducky from '../../assets/cute_duck.png'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
-export default function Profil() {
+const Profil: React.FC = () => {
 
 	return (
 		<React.Fragment>
@@ -19,3 +19,5 @@ export default function Profil() {
 
 	)
 }
+
+export default Profil;

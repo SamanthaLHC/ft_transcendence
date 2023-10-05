@@ -3,7 +3,7 @@ import ducky from '../../assets/duck_worker.png'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
-export default function Settings() {
+const Settings: React.FC = () => {
 
 	return (
 		<React.Fragment>
@@ -18,6 +18,7 @@ export default function Settings() {
 				</div>
 			</div>
 		</React.Fragment>
-
 	)
 }
+
+export default Settings;

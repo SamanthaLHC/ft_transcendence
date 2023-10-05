@@ -1,7 +1,7 @@
 import React from 'react';
 import ducky from '../../assets/200w.gif'
 
-export default function Error() {
+const Error: React.FC = () => {
     return (
         <React.Fragment>
             <div id="container">
@@ -14,3 +14,5 @@ export default function Error() {
         </React.Fragment>
     )
 }
+
+export default Error;

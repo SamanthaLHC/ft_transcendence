@@ -2,33 +2,14 @@ import * as React from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
+import { Divider } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Avatar from '@mui/material/Avatar';
-// import rubber from '../../../assets/duck_in_lake.png'
 import rubber from '../../assets/duck_in_lake.png'
 import SearchBar from './SearchBar';
 
-//TODO search bar
-//TODO list avatar + name
-//TODO selection highlight with mouse
-//TODO connexion light (red or green)
 
-//TODO voir rubrique avatar with badge material ui
-
-
-//HERE get id 
-
-//HERE et name from back
-
-// HERE get photo
-
-
-//TODO prendra en param une list desdatas des users 
-// faire une loop pour afficher
-//TODO deuxieme param filter, (if filter === null || user.name.contains(filter))
-//condition pour affficher l'user
-
-export default function Friends() {
+const Friends: React.FC = () => {
 
 	let navToFriendProfil = useNavigate();
 	const changeToFriendProfil = () => {
@@ -74,12 +55,14 @@ export default function Friends() {
 							{users.map(((user) => (
 								<ListItem className='yellow' key={user.name}>
 									<ListItemAvatar>
-										<button className='button' onClick={changeToFriendProfil}>
+										<button className='profil-button' onClick={changeToFriendProfil}>
 											<Avatar alt="Profile Picture" src={rubber} />
+											<Divider>
+												<ListItemText />
+												{user.name}
+											</Divider>
 										</button>
 									</ListItemAvatar>
-									<ListItemText />
-									{user.name}
 								</ListItem>
 							)))}
 						</ul>
@@ -89,6 +72,9 @@ export default function Friends() {
 		</React.Fragment >
 	);
 }
+
+export default 	Friends;
+
 
 //TODO on click friends: ajouter les options 
 //TODO ajouter la diode de connexion

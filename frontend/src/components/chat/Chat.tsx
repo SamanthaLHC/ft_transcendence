@@ -1,21 +1,26 @@
 import React from 'react'
-import ducky from '../../assets/under_construction.png'
+import { Divider } from '@mui/material'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
+import Channels from './Channels'
+import WindowChat from './WindowChat';
 
-export default function Chat() {
+
+const Chat: React.FC = () => {
 
 	return (
 		<React.Fragment>
 			<Header />
 			<div id="container">
 				<Friends />
-				<div className='image-center'>
-					<h2> /!\ --CHAT-- PAGE UNDER CONSTRUCTION /!\ </h2>
-					<img src={ducky} alt='lol'></img>
-				</div>
+				<Divider>
+					<Channels />
+				</Divider>
+				<WindowChat />
 			</div>
-		</React.Fragment>
+		</React.Fragment >
 
 	)
 }
+
+export default Chat;

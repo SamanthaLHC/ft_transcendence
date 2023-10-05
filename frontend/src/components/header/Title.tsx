@@ -9,7 +9,7 @@ const theme = createTheme({
 	}
 });
 
-export default function TestingModule() {
+const Title: React.FC = () => {
 
 	return (
 		<ThemeProvider theme={theme}>
@@ -31,3 +31,5 @@ export default function TestingModule() {
 		</ThemeProvider>
 	)
 }
+
+export default Title;

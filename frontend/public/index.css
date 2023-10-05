@@ -1,3 +1,7 @@
+/*_______________________________________________________________________________________*/
+/*                        body and general style                                         */
+/*_______________________________________________________________________________________*/
+
 @font-face {
 	font-family: "earthorbiter";
 	src: local("earthorbiter"),
@@ -48,6 +52,29 @@ body {
 	font-family: 'earthorbiter';
 }
 
+.yellow {
+	color: #ffc107;
+}
+
+/*_______________________________________________________________________________________*/
+/*                        structure page                                                 */
+/*_______________________________________________________________________________________*/
+
+#header {
+	height: 78px;
+}
+
+#container {
+	width: 100%;
+	height: calc(100vh - 83px);
+	display: block;
+	position: relative;
+}
+
+/*_______________________________________________________________________________________*/
+/*                              login page style                                         */
+/*_______________________________________________________________________________________*/
+
 .giphy {
 	padding: 2px;
 	height: 70px;
@@ -94,6 +121,10 @@ body {
 	}
 }
 
+/*_______________________________________________________________________________________*/
+/*                              friend component style                                   */
+/*_______________________________________________________________________________________*/
+
 .friends {
 	color: black;
 	border-bottom: 4px;
@@ -112,24 +143,17 @@ body {
 .typo-friends {
 	width: 100%;
 	text-align: center;
-	font-size: 1.2em;
+	font-size: 1.5em;
 	margin: 10px 0;
 }
 
-.yellow {
-	color: #ffc107;
+.list {
+	padding: 15px;
 }
 
-#header {
-	height: 78px;
-}
-
-#container {
-	width: 100%;
-	height: calc(100vh - 83px);
-	display: block;
-	position: relative;
-}
+/*_______________________________________________________________________________________*/
+/*                              button component style                                   */
+/*_______________________________________________________________________________________*/
 
 .launch-game {
 	background-size: cover;
@@ -167,6 +191,162 @@ body {
 	text-decoration: none;
 }
 
+/*_______________________________________________________________________________________*/
+/*                              profil button component                                  */
+/*_______________________________________________________________________________________*/
+
+.profil-button {
+	background: #080d17;
+	font-weight: bold;
+	font-family: Azonix;
+	color: #ffc107;
+	border: black;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	width: auto;
+	cursor: auto;
+	cursor: pointer;
+}
+
+.profil-button:hover,
+.profil-button:focus {
+	background-color: #454b4f;
+}
+
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+	color: #fec400 !important;
+	background-color: rgb(8, 13, 23) !important;
+}
+
+
+/*_______________________________________________________________________________________*/
+/*                                    channel side bar component                         */
+/*_______________________________________________________________________________________*/
+
+.channels {
+	color: black;
+	border-bottom: 4px;
+	border: 1px solid rgb(66, 70, 79);
+	background-color: #080d17;
+	border-radius: 0;
+	height: calc(100% - 1px);
+	/* overflow-y: scroll; */
+	position: absolute;
+	top: 0;
+	left: 15%;
+	bottom: 0;
+	width: 20%;
+}
+
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+	color: rgb(236, 155, 33) !important;
+	padding: 0px 10px !important;
+}
+
+.typo-channel {
+	width: 100%;
+	/* text-align: center; */
+	font-size: 1.5em;
+	margin: 10px 10px;
+}
+
+.typo {
+	width: 100%;
+	font-size: 0.5em;
+	text-align: center;
+	margin: 20 0;
+}
+
+/*_______________________________________________________________________________________*/
+/*                                    window chat component                              */
+/*_______________________________________________________________________________________*/
+
+.chat-content {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+	background-color: #080d17;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(65% - 2px);
+}
+
+.chat-header {
+	position: absolute;
+	width: 100%;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	border-bottom: 3px solid #31343b;
+	padding: 15px;
+	color: #fec400;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#input-area {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+	bottom: 6px;
+}
+
+textarea {
+	width: 88%;
+	margin-right: 6px;
+	box-sizing: border-box;
+	border: none;
+	background-color: #31343b;
+	color: #ebebeb;
+}
+
+.chat-content button {
+	background-image: linear-gradient(to right, #020101 0%, #740a0a 51%, #dbcc45 100%);
+	width: 10%;
+	padding: 18px 10px;
+	text-align: center;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: #ffc107;
+	box-shadow: 0 0 20px #080606;
+	border-radius: 10px;
+	font-family: "Azonix";
+	font-size: small;
+}
+
+.chat-content button:hover {
+	background-position: right center;
+	color: black;
+	text-decoration: none;
+}
+
+/* message styles____________________________________________________________ */
+
+.messages-area {
+	position: absolute;
+	width: 100%;
+	height: 100;
+	top: 55px;
+	right: 0px;
+	left: 0px;
+	padding: 15px;
+	/* background-color: #ebebeb; */
+}
+
+/*_______________________________________________________________________________________*/
+/*                              page under construction component (TMP)                  */
+/*_______________________________________________________________________________________*/
+
 .image-center {
 	text-align: center;
 	margin: auto;
@@ -174,30 +354,9 @@ body {
 	display: block;
 	align-items: center;
 	justify-content: center;
-	/* flex-grow: 1; */
 	position: absolute;
 	right: 0;
 	top: 80px;
 	bottom: 0;
 	width: calc(85% - 2px);
 }
-
-.profil-button {
-	background: #080d17;
-	color: #ffc107;
-	border: black;
-	display: flex;
-	align-content: center;
-	align-items: center;
-	width: 100px;
-	cursor: auto;
-	cursor: pointer;
-}
-
-.button {
-	background: #080d17;
-	border: black;
-	cursor: auto;
-	cursor: pointer;
-}
-

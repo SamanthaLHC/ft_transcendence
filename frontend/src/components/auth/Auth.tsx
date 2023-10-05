@@ -1,26 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
-
-function getCode() {
-	let url_str = window.location.search;
-	let strToSearch = new URLSearchParams(url_str);
-	let code_param = strToSearch.get("code");
+function getCode(): string | null {
+	let url_str: string = window.location.search;
+	let strToSearch: URLSearchParams = new URLSearchParams(url_str);
+	let code_param: string | null = strToSearch.get("code");
 	return code_param;
 }
 
 //renderless component
-export default function AuthProcess() {
-
+const AuthProcess: React.FC = () => {
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
+	const [authDone, setAuthDone] = useState(false);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		async function getTok() {
+		async function getTok(): Promise<void> {
 
-			let codeP = getCode();
+			const codeP: string | null = getCode();
 			if (codeP != null) {
 				const obj = {
 					code: codeP
@@ -32,23 +31,24 @@ export default function AuthProcess() {
 					},
 					body: JSON.stringify(obj),
 				});
-				const response = await fetch(req);
-				const datas = await response.json();
-				if (datas.status === 302) {
-					const newUrl = datas.url;
-					window.location.href = newUrl; //problematique ? ça ne reste pas ça va recharger la page 
-					setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
+				try {
+
+					const response = await fetch(req);
+					const datas = await response.json();
+					if (datas.status === 302) {
+						setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
+						setAuthDone(true);
+						const tmp = new URL(datas.url);
+						navigate(tmp.pathname);
+					}
+				} catch (error) {
+					console.error(error);
+					navigate("/");
 				}
 			}
 		}
 		getTok();
-	}, [cookies]);
+	}, [navigate, authDone, cookies.access_token, setCookie]);
 	return (<React.Fragment />); //workaround renvoie un frag vide
 }
-
-
-
-
-//TODO traduire en typsecript
-
-//TODO gestion d'erreurs possibles
+export default AuthProcess;

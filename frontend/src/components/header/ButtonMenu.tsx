@@ -34,16 +34,17 @@ const theme = createTheme({
 	}
 });
 
-export default function ButtonMenu() {
-	let navToChat = useNavigate();
+const ButtonMenu: React.FC = () => {
+
+	const navToChat = useNavigate();
 	const changeToChat = () => {
-		let pathChat = '/chat';
+		let pathChat: string = '/chat';
 		navToChat(pathChat);
 	}
 
-	let navToGame = useNavigate();
+	const navToGame = useNavigate();
 	const changeToGame = () => {
-		let pathGame = '/home';
+		let pathGame: string = '/home';
 		navToGame(pathGame);
 	}
 
@@ -80,6 +81,4 @@ export default function ButtonMenu() {
 	);
 }
 
-// TODO redirect chat
-// TODO redirect home avec bouton game (ou lancer directement une partie)
-//TODO better css without theme provider
+export default ButtonMenu;

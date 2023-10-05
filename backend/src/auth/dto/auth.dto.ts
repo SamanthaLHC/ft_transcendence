@@ -10,7 +10,4 @@ export class Auth2faDto {
     @IsNotEmpty()
     @IsString()
     code: string;
-
-    @IsInt()
-    id: number
 }
