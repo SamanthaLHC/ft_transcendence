@@ -16,7 +16,7 @@ const Settings: React.FC = () => {
 							<textarea />
 						</div>
 						<div className='btn-pos'>
-							<button  >Activate 2fa</button>
+							<button  >Enable 2fa</button>
 						</div>
 						<div className='btn-pos'>
 							<button  >game option 1</button>
