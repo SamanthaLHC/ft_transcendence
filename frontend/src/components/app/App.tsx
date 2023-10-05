@@ -8,6 +8,7 @@ import Settings from "../settings/Settings";
 import Profil from "../profil/Profil"
 import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
+import Twofa from "../auth/Twofa"
 
 const App: React.FC = () => {
 	return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
 				<Route path={"/settings"} element={<Settings/>} />
 				<Route path={"/profil"} element={<Profil />} />
 				<Route path={"/friend"} element={<FriendPage />} />
+				<Route path={"/2fa"} element={<Twofa />} />
 				<Route path={"*"} element={<Error/>} />
 			</Routes>
 	)

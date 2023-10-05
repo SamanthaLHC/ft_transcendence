@@ -7,7 +7,8 @@ import Friends from '../friends/Friends'
 const Settings: React.FC = () => {
 
 	//_____________________handle enable2fa__________________________________________
-	const [active2fa, setActive2fa] = useState(false);
+	// const initial2faState = ;
+	const [active2fa, setActive2fa] = useState(false); // remplacer false par initial2faState
 	const [cookies] = useCookies(["access_token"]);
 
 	const handleClick = () => {
@@ -17,24 +18,50 @@ const Settings: React.FC = () => {
 
 	console.log("2fa status: enable -> ", active2fa);
 
-	useEffect(() => {
-		if (active2fa) {
-			async function enableTwofa() {
+	if (active2fa) {
+		async function enableTwofa() {
 
-				const req: Request = new Request('http://localhost:3000/auth/2fa/turn-on', {
-					method: "POST",
-					headers: {
-						"Authorization": `Bearer ${cookies.access_token}`,
-					},
-				});
+			const req: Request = new Request('http://localhost:3000/users/2fa/turn-on', {
+				method: "POST",
+				headers: {
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+			});
 
+			try {
 				const response = await fetch(req);
 				const datas = await response.json();
 				console.log("datas in response: ", datas);
+				const codeToConv: any = datas.otpAuthUrl;
+				console.log("codeToConv is: ", codeToConv);
+			} catch (error) {
+				console.error(error);
 			}
-			enableTwofa();
 		}
-	}, [cookies.access_token]);
+		enableTwofa();
+	}
+	// else
+	// {
+	// 	async function disableTwofa() {
+
+	// 		const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
+	// 			method: "POST",
+	// 			headers: {
+	// 				"Authorization": `Bearer ${cookies.access_token}`,
+	// 			},
+	// 		});
+
+	// 		try {
+
+	// 			const response = await fetch(req);
+	// 			const datas = await response.json();
+	// 			console.log("datas in response when 2fa turned off: ", datas);
+	// 		} catch (error) {
+	// 			console.error(error);
+	// 		}
+	// 	}
+	// 	disableTwofa();
+	// }
 
 	return (
 		<React.Fragment>
