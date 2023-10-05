@@ -1,16 +1,40 @@
 import React from 'react'
-import {useState} from 'react'
+import { useState, useEffect } from 'react'
+import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 
 const Settings: React.FC = () => {
 
-//_____________________handle enable2fa__________________________________________
+	//_____________________handle enable2fa__________________________________________
 	const [active2fa, setActive2fa] = useState(false);
+	const [cookies] = useCookies(["access_token"]);
 
-	const  handleClick = () => {
+	const handleClick = () => {
 		setActive2fa(!active2fa);
 	}
+	//TODO  else disable 2fa
+
+	console.log("2fa status: enable -> ", active2fa);
+
+	useEffect(() => {
+		if (active2fa) {
+			async function enableTwofa() {
+
+				const req: Request = new Request('http://localhost:3000/auth/2fa/turn-on', {
+					method: "POST",
+					headers: {
+						"Authorization": `Bearer ${cookies.access_token}`,
+					},
+				});
+
+				const response = await fetch(req);
+				const datas = await response.json();
+				console.log("datas in response: ", datas);
+			}
+			enableTwofa();
+		}
+	}, [cookies.access_token]);
 
 	return (
 		<React.Fragment>
@@ -24,7 +48,7 @@ const Settings: React.FC = () => {
 							<textarea />
 						</div>
 						<div className='btn-pos'>
-							<button onClick={handleClick}>{ active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
+							<button onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
 						</div>
 						<div className='btn-pos'>
 							<button  >game option 1</button>
