@@ -33,7 +33,6 @@ export class AuthService {
         var data = await raiponce.json();
         if (raiponce.status != 200) {
             console.log("nop 1")
-            console.log(data)
             throw new HttpException({
                 status: 401,
                 error: 'Erreur API 42',
@@ -48,7 +47,6 @@ export class AuthService {
         var data2 = await raiponce2.json()
         if (raiponce2.status != 200) {
             console.log("nop 2")
-            console.log(data2)
             throw new HttpException({
                 status: 401,
                 error: 'Erreur API 42',
@@ -64,24 +62,32 @@ export class AuthService {
         if (usere)
         {
             if (usere.deuxfa)
-            throw new HttpException({
+            {
+                const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+                const payload = { uuid: uuid, type: "2fa", sub: usere.id, username: usere.login };
+                const acces_token = await this.jwtService.signAsync(payload)
+                res.cookie("access_token", acces_token)
+                throw new HttpException({
                 status: 302,
                 clientId: usere.id,
                 url: "http://localhost:8000/2fa",
+                access_token: acces_token
               }, 302, {
               }); 
-            const payload = { sub: usere.id, username: usere.login };
-            res.cookie("access_token", await this.jwtService.signAsync(payload),)
+            }
+            const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+            const payload = { uuid: uuid, type: "acces", sub: usere.id, username: usere.login };
+            const acces_token = await this.jwtService.signAsync(payload)
+            res.cookie("access_token", acces_token)
             throw new HttpException({
                 status: 302,
                 url: "http://localhost:8000/home",
-                access_token: await this.jwtService.signAsync(payload),
+                access_token: acces_token
               }, 302, {
               });
         }
         else
         {
-            console.log(data2);
             const user = await this.prisma.user.create({
                 data: {
                     login: data2['login'],
@@ -89,22 +95,23 @@ export class AuthService {
                     name:  data2['displayname'],
                 },
             });
-            console.log(user)
-            const payload = { sub: user.id, username: user.login };
-            res.cookie("access_token", await this.jwtService.signAsync(payload),)
+            const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+            const payload = { uuid: uuid, type: "acces", sub: user.id, username: user.login };
+            const acces_token = await this.jwtService.signAsync(payload)
+            res.cookie("access_token", acces_token)
             throw new HttpException({
                 status: 302,
                 url: "http://localhost:8000/home",
-                access_token: await this.jwtService.signAsync(payload),
+                access_token: acces_token
               }, 302, {
               });
         }
     }
 
-    async login2fa(body: Auth2faDto, res: Response){
+    async login2fa(body: Auth2faDto, res: Response, id: number){
         const user = await this.prisma.user.findFirst({
             where: {
-                id: body.id,
+                id: id,
             },
         })
         const isCodeValid = this.isTwoFactorAuthenticationCodeValid(
@@ -113,12 +120,11 @@ export class AuthService {
           );
         if (!isCodeValid)
             throw new UnauthorizedException();
-        const payload = { sub: user.id, username: user.login };
+        const payload = { type: "acces", sub: user.id, username: user.login };
         res.cookie("access_token", await this.jwtService.signAsync(payload),)
         throw new HttpException({
             status: 302,
             url: "http://localhost:8000/home",
-            access_token: await this.jwtService.signAsync(payload),
           }, 302, {
           });
     }
