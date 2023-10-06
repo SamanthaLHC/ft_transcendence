@@ -72,19 +72,19 @@ const Settings: React.FC = () => {
 						<div className='change-name'>
 							<h3 className='typo-settings'> Change your name: </h3>
 							<textarea />
+						</div >
+						<div className='btn-pos '>
+							<button className="btn-size" onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
 						</div>
 						<div className='btn-pos'>
-							<button onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
+							<button className="btn-size" >game option 1</button>
 						</div>
 						<div className='btn-pos'>
-							<button  >game option 1</button>
-						</div>
-						<div className='btn-pos'>
-							<button  >game option 2</button>
+							<button className="btn-size">game option 2</button>
 						</div>
 					</div>
 					<div className='item-pos avatar-btn'>
-						<button  >Change your avatar</button>
+						<button className="btn-size" >Change your avatar</button>
 					</div>
 				</div>
 			</div>

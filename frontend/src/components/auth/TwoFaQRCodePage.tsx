@@ -16,14 +16,15 @@ const TwoFaQRCodePage: React.FC<ImgProps> = () => {
 	};
 
 	return (
-		<div id='container'>
-			<h1 className='typo-settings'>QR Code Page</h1>
-			<img className='img-center'
+		<div className='qr'>
+			<h1 className='typo-channel'>Scan this QR code with google authenticator</h1>
+			<br />
+			<img className='qr-image'
 				src={imageUrl}
 				alt="QR Code"
 			/>
 
-			<button onClick={handleRedirect}>Back to home</button>
+			<button className='btn-size' onClick={handleRedirect}>Back to home</button>
 		</div>
 	);
 };

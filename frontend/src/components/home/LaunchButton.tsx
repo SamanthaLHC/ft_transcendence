@@ -11,12 +11,12 @@ const LauncButton: React.FC = () => {
 		navToGame(pathGame);
 	}
 	return (
-			<div className='launch-game'
+		<div className='launch-game'
 			style={{ backgroundImage: `url(${coin})` }} >
-				<button onClick={changeToGame}>
-					Play this magical game, right now !
-				</button>
-			</div>	
+			<button className='launch-button' onClick={changeToGame}>
+				Play this magical game, right now !
+			</button>
+		</div>
 	);
 }
 
