@@ -6,8 +6,34 @@ import Friends from '../friends/Friends'
 import { useNavigate } from 'react-router-dom';
 
 const Settings: React.FC = () => {
-	const [active2fa, setActive2fa] = useState<boolean>(false);
+
+	const [initial2faState, setInitial2faState] = useState<boolean>(false);
 	const [cookies] = useCookies(['access_token']);
+
+	const fetchTwoFaState = async () => {
+
+		try {
+			const req: Request = new Request('http://localhost:3000/users/2fa/state', {
+				method: 'GET',
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+
+			const response = await fetch(req);
+			const datas = await response.json();
+			console.log('FETCH  2fa state:', datas);
+
+		}
+		catch (error) {
+			console.error(error);
+		}
+	};
+
+	fetchTwoFaState();
+
+	// const initialTwoFaState: boolean =
+	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [imageUrl, setImageUrl] = useState<string>('');
 	const navigate = useNavigate();
 
@@ -71,6 +97,7 @@ const Settings: React.FC = () => {
 					<div className='list-items'>
 						<div className='change-name'>
 							<h3 className='typo-settings'> Change your name: </h3>
+							<br />
 							<textarea />
 						</div >
 						<div className='btn-pos '>
