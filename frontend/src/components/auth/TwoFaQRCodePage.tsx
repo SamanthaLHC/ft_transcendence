@@ -12,7 +12,7 @@ const TwoFaQRCodePage: React.FC<ImgProps> = () => {
 	const navigate = useNavigate();
 
 	const handleRedirect = () => {
-		navigate('/home');
+		navigate('/2fa');
 	};
 
 	return (
@@ -24,7 +24,7 @@ const TwoFaQRCodePage: React.FC<ImgProps> = () => {
 				alt="QR Code"
 			/>
 
-			<button className='btn-size' onClick={handleRedirect}>Back to home</button>
+			<button className='btn-size' onClick={handleRedirect}>Click here to enter your 2fa code</button>
 		</div>
 	);
 };
