@@ -26,6 +26,8 @@
     "@nestjs/jwt": "^10.1.1",
     "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-socket.io": "^10.2.7",
+    "@nestjs/websockets": "^10.2.7",
     "@prisma/client": "^5.2.0",
     "@types/passport-local": "^1.0.35",
     "@types/validator": "^13.11.1",
