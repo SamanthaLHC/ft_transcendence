@@ -7,41 +7,17 @@ import { useNavigate } from 'react-router-dom';
 
 const Settings: React.FC = () => {
 
-	const [initial2faState, setInitial2faState] = useState<boolean>(false);
 	const [cookies] = useCookies(['access_token']);
-
-	const fetchTwoFaState = async () => {
-
-		try {
-			const req: Request = new Request('http://localhost:3000/users/2fa/state', {
-				method: 'GET',
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			});
-
-			const response = await fetch(req);
-			const datas = await response.json();
-			console.log('FETCH  2fa state:', datas);
-
-		}
-		catch (error) {
-			console.error(error);
-		}
-	};
-
-	fetchTwoFaState();
-
-	// const initialTwoFaState: boolean =
 	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [imageUrl, setImageUrl] = useState<string>('');
 	const navigate = useNavigate();
 
+
+	console.log("activate2fa is", active2fa);
+
 	useEffect(() => {
 		if (active2fa) {
 			enableTwofa();
-		} else {
-			disableTwofa();
 		}
 	}, [active2fa]);
 
@@ -56,30 +32,12 @@ const Settings: React.FC = () => {
 
 			const response = await fetch(req);
 			const datas = await response.json();
-			console.log('datas in response:', datas);
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
 			setImageUrl(imageUrl);
 			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
 		}
 		catch (error) {
-			console.error(error);
-		}
-	};
-
-	const disableTwofa = async () => {
-		try {
-			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			});
-
-			const response = await fetch(req);
-			const datas = await response.json();
-			console.log('datas in response when 2fa turned off:', datas);
-		} catch (error) {
 			console.error(error);
 		}
 	};
