@@ -1,70 +1,66 @@
 import React from 'react'
-import { converBase64ToImage } from 'convert-base64-to-image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
+import { useNavigate } from 'react-router-dom';
 
 const Settings: React.FC = () => {
+	const [active2fa, setActive2fa] = useState<boolean>(false);
+	const [cookies] = useCookies(['access_token']);
+	const [imageUrl, setImageUrl] = useState<string>('');
+	const navigate = useNavigate();
 
-	//_____________________handle enable2fa__________________________________________
-	// const initial2faState = ;
-	const [active2fa, setActive2fa] = useState(false); // remplacer false par initial2faState
-	const [cookies] = useCookies(["access_token"]);
+	useEffect(() => {
+		if (active2fa) {
+			enableTwofa();
+		} else {
+			disableTwofa();
+		}
+	}, [active2fa]);
 
-	const handleClick = () => {
-		setActive2fa(!active2fa);
-	}
-	//TODO  else disable 2fa
-
-	console.log("2fa status: enable -> ", active2fa);
-
-	if (active2fa) {
-		async function enableTwofa() {
-
+	const enableTwofa = async () => {
+		try {
 			const req: Request = new Request('http://localhost:3000/users/2fa/turn-on', {
-				method: "POST",
+				method: 'POST',
 				headers: {
-					"Authorization": `Bearer ${cookies.access_token}`,
+					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
 
-			try {
-				const response = await fetch(req);
-				const datas = await response.json();
-				console.log("datas in response: ", datas);
-				const codeToConv: string = datas.otpAuthUrl;
-				console.log("codeToConv is: ", codeToConv);
-				const pathToSaveImage: string = '../../assets/qrcode.png';
-				const imgConvert = converBase64ToImage(codeToConv, pathToSaveImage);
-			} catch (error) {
-				console.error(error);
-			}
+			const response = await fetch(req);
+			const datas = await response.json();
+			console.log('datas in response:', datas);
+			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
+			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
+			setImageUrl(imageUrl);
+			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
 		}
-		enableTwofa();
-	}
-	// else
-	// {
-	// 	async function disableTwofa() {
+		catch (error) {
+			console.error(error);
+		}
+	};
 
-	// 		const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
-	// 			method: "POST",
-	// 			headers: {
-	// 				"Authorization": `Bearer ${cookies.access_token}`,
-	// 			},
-	// 		});
+	const disableTwofa = async () => {
+		try {
+			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
 
-	// 		try {
+			const response = await fetch(req);
+			const datas = await response.json();
+			console.log('datas in response when 2fa turned off:', datas);
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
-	// 			const response = await fetch(req);
-	// 			const datas = await response.json();
-	// 			console.log("datas in response when 2fa turned off: ", datas);
-	// 		} catch (error) {
-	// 			console.error(error);
-	// 		}
-	// 	}
-	// 	disableTwofa();
-	// }
+	const handleClick = () => {
+		setActive2fa(!active2fa);
+	};
 
 	return (
 		<React.Fragment>
@@ -93,7 +89,7 @@ const Settings: React.FC = () => {
 				</div>
 			</div>
 		</React.Fragment >
-	)
-}
+	);
+};
 
 export default Settings;
