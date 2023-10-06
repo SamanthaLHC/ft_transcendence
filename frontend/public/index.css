@@ -310,7 +310,6 @@ button:hover {
 textarea {
 	width: 88%;
 	margin-right: 6px;
-	box-sizing: border-box;
 	border: none;
 	background-color: #31343b;
 	color: #ebebeb;
@@ -416,7 +415,7 @@ textarea {
 }
 
 /*_______________________________________________________________________________________*/
-/*                              qr code page                                             */
+/*                             2fa component                                             */
 /*_______________________________________________________________________________________*/
 
 .qr {
@@ -434,4 +433,12 @@ textarea {
 	display: inline-block;
 	vertical-align: middle;
 	margin: 20px;
+}
+
+.input-2fa {
+	border: none;
+	width: 30%;
+	padding: 0px;
+	font-size: 3em;
+	text-align: center;
 }

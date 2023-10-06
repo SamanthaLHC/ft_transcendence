@@ -9,6 +9,7 @@ import Profil from "../profil/Profil"
 import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
 import TwoFaQRCodePage from "../auth/TwoFaQRCodePage";
+import TwoFa from "../auth/TwoFa";
 
 const App: React.FC = () => {
 
@@ -24,7 +25,7 @@ const App: React.FC = () => {
 			<Route path={"/settings"} element={<Settings />} />
 			<Route path={"/profil"} element={<Profil />} />
 			<Route path={"/friend"} element={<FriendPage />} />
-			{/* <Route path={"/2fa"} element={<Twofa />} /> */}
+			<Route path={"/2fa"} element={<TwoFa />} />
 			<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
 			<Route path={"*"} element={<Error />} />
 		</Routes>

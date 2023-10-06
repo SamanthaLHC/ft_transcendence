@@ -1,8 +1,6 @@
 import coin from '../../assets/duck_in_lake.png'
 import { useNavigate } from 'react-router';
 
-
-
 const LauncButton: React.FC = () => {
 
 	const navToGame = useNavigate();
