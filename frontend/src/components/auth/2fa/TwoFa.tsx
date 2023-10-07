@@ -17,18 +17,20 @@ const TwoFa = () => {
 	const navigate = useNavigate();
 
 
-	console.log("otp is: ", otp);
 
 	const handleClick = async () => {
-		console.log("otp is: ", otp);
+		console.log("old cookie: ", cookies.access_token);
 
 		if (otp) {
+			console.log("otp is: ", otp);
+
 			const obj = {
 				code: otp
 			};
 			const req: Request = new Request('http://localhost:3000/auth/2fa', {
 				method: "POST",
 				headers: {
+					"content-type": "application/json",
 					"Authorization": `Bearer ${cookies.access_token}`,
 				},
 				body: JSON.stringify(obj),
@@ -39,6 +41,7 @@ const TwoFa = () => {
 				const datas = await response.json();
 				if (datas.status === 302) {
 					setCookie("access_token", datas.access_token, { path: "/" });
+					console.log("new cookie is: ", datas.access_token);
 					const tmp = new URL(datas.url);
 					navigate(tmp.pathname);
 				}
