@@ -442,3 +442,21 @@ textarea {
 	font-size: 3em;
 	text-align: center;
 }
+
+.otp-group {
+	display: flex;
+	width: 100%;
+	max-width: 360px;
+	column-gap: 10px;
+  }
+  
+  .otp-input {
+	width: 100%;
+	height: 60px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 32px;
+	font-weight: bold;
+	line-height: 1;
+  }

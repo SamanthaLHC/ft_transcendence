@@ -1,21 +1,23 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import React, { useRef, useEffect, useState } from 'react';
+import OtpInput from './OtpInput';
 
-const TwoFa: React.FC = () => {
+export type Props = {
+	value: string;
+	valueLength: number;
+	onChange: (value: string) => void;
+};
 
-	const navigate = useNavigate();
+const TwoFa = () => {
 
-	const handleRedirect = () => {
-		navigate('/home');
-	};
+	const [otp, setOtp] = useState('');
+	const onChange = (value: string) => setOtp(value);
 
 	return (
-		<div className='qr'>
-			<h1 className='typo-channel'>Type your google authenticator code:</h1>
-			<br />
-			<textarea className='input-2fa' />
+		<div className="qr">
+			<h1 className='typo-friends yellow'>Enter the code provided by google authenticator</h1>
+			<OtpInput value={otp} valueLength={6} onChange={onChange} />
 		</div>
 	);
-};
+}
 
 export default TwoFa;
