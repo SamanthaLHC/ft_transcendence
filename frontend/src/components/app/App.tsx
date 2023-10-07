@@ -8,8 +8,8 @@ import Settings from "../settings/Settings";
 import Profil from "../profil/Profil"
 import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
-import TwoFaQRCodePage from "../auth/TwoFaQRCodePage";
-import TwoFa from "../auth/TwoFa";
+import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
+import TwoFa from "../auth/2fa/TwoFa";
 
 const App: React.FC = () => {
 
@@ -25,7 +25,7 @@ const App: React.FC = () => {
 			<Route path={"/settings"} element={<Settings />} />
 			<Route path={"/profil"} element={<Profil />} />
 			<Route path={"/friend"} element={<FriendPage />} />
-			<Route path={"/2fa"} element={<TwoFa  />} />
+			<Route path={"/2fa"} element={<TwoFa />} />
 			<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
 			<Route path={"*"} element={<Error />} />
 		</Routes>
@@ -35,5 +35,4 @@ const App: React.FC = () => {
 export default App
 
 
-// TODO add route 2fa
 //HERE add <PrivateRoute> with a isLog ?
