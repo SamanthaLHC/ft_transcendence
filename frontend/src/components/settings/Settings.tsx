@@ -13,13 +13,28 @@ const Settings: React.FC = () => {
 	const navigate = useNavigate();
 
 
-	console.log("activate2fa is", active2fa);
 
 	useEffect(() => {
-		if (active2fa) {
-			enableTwofa();
-		}
-	}, [active2fa]);
+
+		const initTwofa = async () => {
+			try {
+				const req: Request = new Request('http://localhost:3000/users/2fa/state', {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+				});
+
+				const response = await fetch(req);
+				const datas = await response.json();
+				setActive2fa(datas.deuxfa);
+			}
+			catch (error) {
+				console.error(error);
+			}
+		};
+		initTwofa();
+	}, [setActive2fa]);
 
 	const enableTwofa = async () => {
 		try {
@@ -36,6 +51,29 @@ const Settings: React.FC = () => {
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
 			setImageUrl(imageUrl);
 			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
+			setActive2fa(true);
+		}
+		catch (error) {
+			console.error(error);
+		}
+	};
+
+	const disableTwofa = async () => {
+		try {
+			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+			const response = await fetch(req);
+			if (response.ok) {
+				//HERE for now, no body in response, should we get another token ?
+				setActive2fa(false);
+			}
+			else {
+				console.error(`Request failed with status: ${response.status}`);
+			}
 		}
 		catch (error) {
 			console.error(error);
@@ -43,7 +81,11 @@ const Settings: React.FC = () => {
 	};
 
 	const handleClick = () => {
-		setActive2fa(!active2fa);
+		console.log("activate2fa is", active2fa);
+		if (!active2fa)
+			enableTwofa();
+		else
+			disableTwofa();
 	};
 
 	return (
@@ -68,8 +110,10 @@ const Settings: React.FC = () => {
 							<button className="btn-size">game option 2</button>
 						</div>
 					</div>
-					<div className='item-pos avatar-btn'>
-						<button className="btn-size" >Change your avatar</button>
+					<div className='list-items'>
+						<div className='btn-pos'>
+							<button className="btn-size" >Change your avatar</button>
+						</div>
 					</div>
 				</div>
 			</div>

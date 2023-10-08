@@ -19,8 +19,6 @@ const TwoFa = () => {
 
 
 	const handleClick = async () => {
-		console.log("old cookie: ", cookies.access_token);
-
 		if (otp) {
 			console.log("otp is: ", otp);
 
@@ -40,8 +38,9 @@ const TwoFa = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas.status === 302) {
+					console.log("status response for the fetch POST OTP: ", datas.status)
 					setCookie("access_token", datas.access_token, { path: "/" });
-					console.log("new cookie is: ", datas.access_token);
+					console.log("new token is : ", cookies.access_token);
 					const tmp = new URL(datas.url);
 					navigate(tmp.pathname);
 				}
@@ -51,7 +50,6 @@ const TwoFa = () => {
 			}
 		}
 	};
-
 
 	return (
 		<div className="qr">

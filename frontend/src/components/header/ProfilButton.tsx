@@ -61,8 +61,6 @@ const ProfilButton: React.FC = () => {
 	useEffect(() => {
 		async function getUserInfo() {
 
-			console.log("in getUSer Infos for Profil button, cookie is: ", cookies.access_token);
-
 			const req: Request = new Request('http://localhost:3000/users/me', {
 				method: "GET",
 				headers: {
