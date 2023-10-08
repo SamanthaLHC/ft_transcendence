@@ -81,7 +81,6 @@ const Settings: React.FC = () => {
 	};
 
 	const handleClick = () => {
-		console.log("activate2fa is", active2fa);
 		if (!active2fa)
 			enableTwofa();
 		else

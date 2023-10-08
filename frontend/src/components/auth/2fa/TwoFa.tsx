@@ -17,13 +17,11 @@ const TwoFa = () => {
 
 	useEffect(() => {
 		if (!cookies.access_token) {
-			console.log("COUCOU");
 			navigate("/");
 		}
 	}, [cookies.access_token]);
 
 
-	console.log(cookies.access_token)
 
 	const [otp, setOtp] = useState('');
 	const onChange = (value: string) => setOtp(value);
@@ -32,8 +30,6 @@ const TwoFa = () => {
 
 	const handleClick = async () => {
 		if (otp) {
-			console.log("otp is: ", otp);
-
 			const obj = {
 				code: otp
 			};
@@ -50,9 +46,7 @@ const TwoFa = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas.status === 302) {
-					console.log("status response for the fetch POST OTP: ", datas.status)
 					setCookie("access_token", datas.access_token, { path: "/" });
-					console.log("new token is : ", cookies.access_token);
 					const tmp = new URL(datas.url);
 					navigate(tmp.pathname);
 				}
