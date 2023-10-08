@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import OtpInput from './OtpInput';
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
@@ -11,10 +11,22 @@ export type Props = {
 
 const TwoFa = () => {
 
+	const navigate = useNavigate();
+	const [cookies, setCookie] = useCookies(["access_token"]);
+
+
+	useEffect(() => {
+		if (!cookies.access_token) {
+			console.log("COUCOU");
+			navigate("/");
+		}
+	}, [cookies.access_token]);
+
+
+	console.log(cookies.access_token)
+
 	const [otp, setOtp] = useState('');
 	const onChange = (value: string) => setOtp(value);
-	const [cookies, setCookie] = useCookies(["access_token"]);
-	const navigate = useNavigate();
 
 
 

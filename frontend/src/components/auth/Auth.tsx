@@ -32,7 +32,6 @@ const AuthProcess: React.FC = () => {
 					body: JSON.stringify(obj),
 				});
 				try {
-
 					const response = await fetch(req);
 					const datas = await response.json();
 					if (datas.status === 302) {
