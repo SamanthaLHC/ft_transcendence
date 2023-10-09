@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from '../friends/SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ListItem from '@mui/material/ListItem';
@@ -7,26 +7,48 @@ import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useCookies } from "react-cookie";
 
 interface Channel {
 	name: string;
 }
 
-
 const Channels: React.FC = () => {
 
-	const chan: Channel[] = [
-		{
-			'name': "chan 1",
-		},
-		{
-			'name': "chan 2",
-		},
-		{
-			'name': "chan 3",
-		},
+	const [channels, setChannels] = useState<Channel[]>([]);
 
-	];
+	const [cookies] = useCookies(["access_token"]);
+
+	useEffect(() => {
+		async function getChannels() {
+			const req = new Request("http://localhost:3000/chat/channels/joined", {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+
+			try {
+				const response = await fetch(req);
+				const data = await response.json();
+				console.log(data);
+
+				// Extract channel names from the fetched data
+				const fetchedChannels = data.map((item: any) => {
+					return { name: item.channel.name };
+				});
+
+				setChannels(fetchedChannels);
+			} catch (error) {
+				console.error("Error fetching channels:", error);
+			}
+		}
+
+		if (cookies.access_token) {
+			getChannels();
+		}
+	}, [cookies.access_token]);
+
 	// handle dropdown menu _________________________________________
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -39,7 +61,7 @@ const Channels: React.FC = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-
+	// console.log(chan[0].name);
 	return (
 		<React.Fragment>
 			<div
@@ -68,21 +90,21 @@ const Channels: React.FC = () => {
 				</h5>
 				<SearchBar />
 				<div>
-					<ul className='typo yellow list'>
-						{chan.map(((channel) => (
-							<ListItem className='yellow' key={channel.name}>
-								<button className='profil-button'>
+					<ul className="typo yellow list">
+						{channels.map((channel) => (
+							<ListItem className="yellow" key={channel.name}>
+								<button className="profil-button">
 									<Divider>
 										<ListItemText />
 										{channel.name}
 									</Divider>
 								</button>
 							</ListItem>
-						)))}
+						))}
 					</ul>
 				</div>
 			</div>
-		</React.Fragment >
+		</React.Fragment>
 	);
 }
 export default Channels;
