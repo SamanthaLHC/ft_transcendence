@@ -95,6 +95,7 @@ const Settings: React.FC = () => {
 	//                           handle change name
 	//______________________________________________________________________________________
 
+	// ONGOING try createContext et useContexte to update PP and change name
 	const handleCloseInvalidNamePopup = () => {
 		setIsInvalidNamePopupOpen(false);
 	};
@@ -121,6 +122,8 @@ const Settings: React.FC = () => {
 					const response = await fetch(req);
 					if (!response.ok) {
 						setIsInvalidNamePopupOpen(true);
+					}
+					else {
 					}
 				} catch (error) {
 					console.error(error);

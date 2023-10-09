@@ -50,7 +50,7 @@ const ProfilButton: React.FC = () => {
 	// handle log out __________________________________________________
 
 	const LogOut = () => {
-		//TODO clear datas !
+		//TODO clear cookies !
 		changeToLogin();
 	}
 
