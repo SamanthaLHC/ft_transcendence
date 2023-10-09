@@ -11,6 +11,10 @@ import MenuItem from '@mui/material/MenuItem';
 const ProfilButton: React.FC = () => {
 
 	// console.log("Profil button call");
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const [cookies] = useCookies(["access_token"]);
+	const [userInfos, setUserInfos] = useState(null);
 
 	//redirect on click_______________________________________________
 
@@ -34,8 +38,6 @@ const ProfilButton: React.FC = () => {
 
 	// handle dropdown menu _________________________________________
 
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -54,8 +56,6 @@ const ProfilButton: React.FC = () => {
 
 	// handle bearer token cookie and set user datas______________________
 
-	const [cookies] = useCookies(["access_token"]);
-	const [userInfos, setUserInfos] = useState(null);
 
 	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
