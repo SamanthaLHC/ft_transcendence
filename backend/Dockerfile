@@ -13,5 +13,5 @@ RUN npx prisma generate
 RUN npm run build
 
 # CMD ["start.sh"]
-CMD npx prisma migrate dev && npm run start:dev
+CMD npx prisma migrate deploy && npm run start:dev
 # CMD ["yes"]
