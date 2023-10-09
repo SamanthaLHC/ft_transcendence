@@ -11,7 +11,7 @@ function InvalidPopup({ isOpen, onClose }: InvalidPopupProps) {
         <div className="change-name">
             <div className='yellow'>
                 <h2>Invalid Name</h2>
-                <p>should be between 1 and 15 caracter.</p>
+                <p>name already exist or is not between 1 and 15 caracters.</p>
                 <br />
                 <button className="btn-size" onClick={onClose}>Close</button>
             </div>
