@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from '../friends/SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -8,6 +7,7 @@ import { Divider } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useCookies } from "react-cookie";
+import SearchBar from "./SearchBar";
 
 interface Channel {
 	name: string;
@@ -16,8 +16,13 @@ interface Channel {
 const Channels: React.FC = () => {
 
 	const [channels, setChannels] = useState<Channel[]>([]);
-
 	const [cookies] = useCookies(["access_token"]);
+	const [searchQuery, setSearchQuery] = useState("");
+
+	const handleSearchChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
+		setSearchQuery(event.target.value);
+	};
+
 
 	useEffect(() => {
 		async function getChannels() {
@@ -35,7 +40,7 @@ const Channels: React.FC = () => {
 
 				// Extract channel names from the fetched data
 				const fetchedChannels = data.map((item: any) => {
-					return { name: item.channel.name };
+					return { name: item.name };
 				});
 
 				setChannels(fetchedChannels);
@@ -88,7 +93,8 @@ const Channels: React.FC = () => {
 						<MenuItem > password </MenuItem>
 					</Menu>
 				</h5>
-				<SearchBar />
+				<SearchBar setChannels={setChannels}/>
+
 				<div>
 					<ul className="typo yellow list">
 						{channels.map((channel) => (
