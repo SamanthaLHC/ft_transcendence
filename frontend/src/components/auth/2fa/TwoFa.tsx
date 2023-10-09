@@ -13,7 +13,8 @@ const TwoFa = () => {
 
 	const navigate = useNavigate();
 	const [cookies, setCookie] = useCookies(["access_token"]);
-
+	const [otp, setOtp] = useState('');
+	const [showInvalidOTP, setShowInvalidOTP] = useState(false);
 
 	useEffect(() => {
 		if (!cookies.access_token) {
@@ -21,12 +22,7 @@ const TwoFa = () => {
 		}
 	}, [cookies.access_token]);
 
-
-
-	const [otp, setOtp] = useState('');
 	const onChange = (value: string) => setOtp(value);
-
-
 
 	const handleClick = async () => {
 		if (otp) {
@@ -50,9 +46,11 @@ const TwoFa = () => {
 					const tmp = new URL(datas.url);
 					navigate(tmp.pathname);
 				}
+				else {
+					setShowInvalidOTP(true);
+				}
 			} catch (error) {
 				console.error(error);
-				navigate("/");
 			}
 		}
 	};
@@ -62,6 +60,12 @@ const TwoFa = () => {
 			<h1 className='typo-friends yellow'>Enter the code provided by google authenticator</h1>
 			<OtpInput value={otp} valueLength={6} onChange={onChange} />
 			<button className='btn-size qr-image' onClick={handleClick}>validate</button>
+			{showInvalidOTP && (
+				<div className='popup'>
+					<p>Invalid code. Please try again</p>
+					<button className='btn-size qr-image' onClick={() => setShowInvalidOTP(false)}>Close</button>
+				</div>
+			)}
 		</div>
 	);
 }

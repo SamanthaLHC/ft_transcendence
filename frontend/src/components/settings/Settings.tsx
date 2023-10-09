@@ -68,7 +68,6 @@ const Settings: React.FC = () => {
 			});
 			const response = await fetch(req);
 			if (response.ok) {
-				//HERE for now, no body in response, should we get another token ?
 				setActive2fa(false);
 			}
 			else {
