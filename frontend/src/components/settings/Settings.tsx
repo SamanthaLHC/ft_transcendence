@@ -5,6 +5,8 @@ import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import { useNavigate } from 'react-router-dom';
 import InvalidPopup from './InvalidPopup';
+import { useUser } from "../Context";
+
 
 const Settings: React.FC = () => {
 
@@ -13,6 +15,7 @@ const Settings: React.FC = () => {
 	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
+	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 
 	//______________________________________________________________________________________
@@ -124,6 +127,7 @@ const Settings: React.FC = () => {
 						setIsInvalidNamePopupOpen(true);
 					}
 					else {
+						updateUserData(inputValue, userData.photo);
 					}
 				} catch (error) {
 					console.error(error);

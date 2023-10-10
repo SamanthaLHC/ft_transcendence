@@ -7,6 +7,8 @@ import { Divider, Typography } from '@mui/material';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useUser } from "../Context";
+
 
 const ProfilButton: React.FC = () => {
 
@@ -15,6 +17,7 @@ const ProfilButton: React.FC = () => {
 	const open = Boolean(anchorEl);
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
+	const { userData, updateUserData } = useUser();
 
 	//redirect on click_______________________________________________
 
@@ -72,6 +75,7 @@ const ProfilButton: React.FC = () => {
 			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
+				updateUserData(datas.name, datas.photo);
 			}
 			else {
 				changeToLogin();
@@ -93,7 +97,7 @@ const ProfilButton: React.FC = () => {
 				<Avatar alt="profil picture" src={userInfos['photo']} />
 				<Divider>
 					<Typography>
-						{userInfos['name']}
+						{userData.name}
 					</Typography>
 				</Divider>
 			</button>
