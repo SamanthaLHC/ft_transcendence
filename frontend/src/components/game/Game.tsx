@@ -3,15 +3,16 @@ import ducky from '../../assets/fire.gif'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import io from 'socket.io-client';
+import { useCookies } from 'react-cookie';
 
 const Game:React.FC = () => {
-	// const [socket, setSocket] = useState(null);
+	const [cookies] = useCookies(["access_token"]);
 	useEffect(() => {
 		const socket = io('http://localhost:3000', {
 			autoConnect: false,
 		  });
-		// let token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZGRhOWM0YjZhYTlkMjQ5ZDZhMTQ1MzJlZWEyNDY0NzYiLCJ0eXBlIjoiYWNjZXMiLCJzdWIiOjEsInVzZXJuYW1lIjoibmZlbHNlbWIiLCJpYXQiOjE2OTY2MDAyNDksImV4cCI6MTY5NjY4NjY0OX0.iXSh4HBpHtGaBOLhJBCHK5NjJMih3LUIPtnG5Ld-RaE";
-		// socket.auth = { token };
+		let token = cookies.access_token;
+		socket.auth = { token };
 		socket.connect()
 		// setSocket(socketInstance);
 	  
@@ -22,11 +23,22 @@ const Game:React.FC = () => {
 		});
 	  
 		socket.on('lalalalala', (data) => {
-		  console.log(`Received message: ${data}`);
+		  console.log(`Received update: ${data}`);
 		});
 
-		socket.emit('message', "un lapin")
-	  
+		const onKeyPressed = (ev: KeyboardEvent): any => {
+			if (ev.key === "ArrowDown")
+			{
+				socket.emit('OnKeyDownArrowDown')
+			}
+			else if (ev.key === "ArrowUp")
+			{
+				socket.emit('OnKeyDownArrowUp')
+			}
+		}
+
+		window.addEventListener("keydown", onKeyPressed)
+
 		return () => {
 		  if (socket) {
 			socket.disconnect();
