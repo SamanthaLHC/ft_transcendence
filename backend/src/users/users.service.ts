@@ -212,7 +212,7 @@ export class UsersService {
         const user = await this.prisma.user.findFirst({
             where: { id: userId}
         })
-        return await this.generateTwoFactorAuthenticationSecret(user.login, userId)
+        return await this.generateTwoFactorAuthenticationSecret(user.name, userId)
     }
 
     async turnOffTwoFactorAuthentication(userId: number) {
