@@ -88,13 +88,43 @@ export class AuthService {
         }
         else
         {
-            const user = await this.prisma.user.create({
-                data: {
-                    login: data2['login'],
-                    photo: data2['image']['link'],
-                    name:  data2['login'],
+            let useret = await this.prisma.user.findFirst({
+                where: {
+                    name: data2['login'],
                 },
-            });
+            })
+            let user
+            if (useret)
+            {
+                let randomName
+                while (useret)
+                {
+                    randomName = Array(3).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+                    randomName = `${data2['login']}${randomName}`
+                    useret = await this.prisma.user.findFirst({
+                        where: {
+                            name: randomName,
+                        },
+                    })
+                }
+                user = await this.prisma.user.create({
+                    data: {
+                        login: data2['login'],
+                        photo: data2['image']['link'],
+                        name:  randomName,
+                    },
+                });
+            }
+            else
+            {
+                user = await this.prisma.user.create({
+                    data: {
+                        login: data2['login'],
+                        photo: data2['image']['link'],
+                        name:  data2['login'],
+                    },
+                });
+            }
             const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
             const payload = { uuid: uuid, type: "acces", sub: user.id, username: user.login };
             const acces_token = await this.jwtService.signAsync(payload)
