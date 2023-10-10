@@ -80,7 +80,7 @@ const ProfilButton: React.FC = () => {
 			}
 		}
 		getUserInfo();
-	}, [cookies.access_token]);
+	}, [cookies.access_token, updateUserData]);
 
 	if (!userInfos)
 		return null;

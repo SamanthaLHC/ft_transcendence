@@ -40,7 +40,7 @@ const Settings: React.FC = () => {
 			}
 		};
 		initTwofa();
-	}, [setActive2fa]);
+	}, [cookies.access_token, setActive2fa]);
 
 	const enableTwofa = async () => {
 		try {
