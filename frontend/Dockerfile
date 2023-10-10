@@ -1,5 +1,11 @@
 FROM node:buster
-# RUN apt-get update
-# RUN apt-get install npm -y
-WORKDIR /front/frontend
+RUN apt-get update
+
+WORKDIR /front
+
+COPY package*.json ./
+
+RUN npm install
+
 CMD [ "npm", "start"]
+# CMD [ "yes" ]

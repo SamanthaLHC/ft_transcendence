@@ -1,0 +1,464 @@
+/*_______________________________________________________________________________________*/
+/*                        body and general style                                         */
+/*_______________________________________________________________________________________*/
+
+@font-face {
+	font-family: "earthorbiter";
+	src: local("earthorbiter"),
+		url(/fonts/earthorbiteracad.ttf);
+}
+
+@font-face {
+	font-family: "earthorbiter3";
+	src: local("earthorbiter3"),
+		url(/fonts/earthorbiter3dital.ttf);
+}
+
+@font-face {
+	font-family: "Countless";
+	src: local("Countless"),
+		url(/fonts/Countless.ttf);
+}
+
+@font-face {
+	font-family: "Azonix";
+	src: local("Azonixs"),
+		url(/fonts/Azonix.otf);
+}
+
+@font-face {
+	font-family: "Geomatrix";
+	src: local("Geomatrix"),
+		url(/fonts/GeomatrixMedium-1G4Zv.ttf);
+}
+
+@font-face {
+	font-family: "Vensfolk";
+	src: local("Vensfolk"),
+		url(/fonts/Vensfolk.otf);
+}
+
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	box-sizing: border-box;
+	font-family: "eartg";
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	background-color: #080d17;
+	font-family: 'earthorbiter';
+}
+
+.yellow {
+	color: #ffc107;
+}
+
+button {
+
+	background-image: linear-gradient(to right, #020101 0%, #740a0a 51%, #dbcc45 100%);
+	/* margin: 10px; */
+	/* padding: 15px; */
+	text-align: center;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: #ffc107;
+	box-shadow: 0 0 20px #080606;
+	border-radius: 10px;
+	display: block;
+	font-family: "Azonix";
+	font-size: small;
+}
+
+button:hover {
+	background-position: right center;
+	color: black;
+	text-decoration: none;
+}
+
+
+/*_______________________________________________________________________________________*/
+/*                        structure page                                                 */
+/*_______________________________________________________________________________________*/
+
+#header {
+	height: 78px;
+}
+
+#container {
+	width: 100%;
+	height: calc(100vh - 83px);
+	display: block;
+	position: relative;
+}
+
+/*_______________________________________________________________________________________*/
+/*                              login page style                                         */
+/*_______________________________________________________________________________________*/
+
+.giphy {
+	padding: 2px;
+	height: 70px;
+	width: 70px;
+}
+
+.Login {
+	text-align: center;
+}
+
+.Login-logo {
+	height: 10vmin;
+	margin: 10px
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.Login-logo {
+		animation: Login-logo-spin infinite 20s linear;
+	}
+}
+
+.Login-header {
+	background-color: #000000;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+	color: rgb(255, 210, 7);
+}
+
+.Login-link {
+	color: #ff643d;
+}
+
+@keyframes Login-logo-spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+/*_______________________________________________________________________________________*/
+/*                              friend component style                                   */
+/*_______________________________________________________________________________________*/
+
+.friends {
+	color: black;
+	border-bottom: 4px;
+	border: 1px solid rgb(66, 70, 79);
+	background-color: #080d17;
+	border-radius: 0;
+	height: calc(100% - 1px);
+	overflow-y: scroll;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 15%;
+}
+
+.typo-friends {
+	width: 100%;
+	text-align: center;
+	font-size: 1.5em;
+	margin: 10px 0;
+}
+
+.list {
+	padding: 15px;
+}
+
+/*_______________________________________________________________________________________*/
+/*                              button component style                                   */
+/*_______________________________________________________________________________________*/
+
+.launch-button {
+	padding: 15px 45px;
+	font-size: large;
+}
+
+.launch-game {
+	background-size: cover;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* flex-grow: 1; */
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(85% - 2px);
+}
+
+
+/*_______________________________________________________________________________________*/
+/*                              profil button component                                  */
+/*_______________________________________________________________________________________*/
+
+.profil-button {
+	background: #080d17;
+	font-weight: bold;
+	font-family: Azonix;
+	color: #ffc107;
+	border: black;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	width: auto;
+	cursor: auto;
+	cursor: pointer;
+}
+
+.profil-button:hover,
+.profil-button:focus {
+	background-color: #454b4f;
+}
+
+.css-3dzjca-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+	color: #fec400 !important;
+	background-color: rgb(8, 13, 23) !important;
+}
+
+
+/*_______________________________________________________________________________________*/
+/*                                    channel side bar component                         */
+/*_______________________________________________________________________________________*/
+
+.channels {
+	color: black;
+	border-bottom: 4px;
+	border: 1px solid rgb(66, 70, 79);
+	background-color: #080d17;
+	border-radius: 0;
+	height: calc(100% - 1px);
+	/* overflow-y: scroll; */
+	position: absolute;
+	top: 0;
+	left: 15%;
+	bottom: 0;
+	width: 20%;
+}
+
+.css-78trlr-MuiButtonBase-root-MuiIconButton-root {
+	color: rgb(236, 155, 33) !important;
+	padding: 0px 10px !important;
+}
+
+.typo-channel {
+	width: 100%;
+	/* text-align: center; */
+	font-size: 1.5em;
+	margin: 10px 10px;
+}
+
+.typo {
+	width: 100%;
+	font-size: 0.5em;
+	text-align: center;
+	margin: 20 0;
+}
+
+/*_______________________________________________________________________________________*/
+/*                                    window chat component                              */
+/*_______________________________________________________________________________________*/
+
+.chat-content {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	min-height: 0;
+	background-color: #080d17;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(65% - 2px);
+}
+
+.chat-header {
+	position: absolute;
+	width: 100%;
+	top: 0px;
+	right: 0px;
+	left: 0px;
+	border-bottom: 3px solid #31343b;
+	padding: 15px;
+	color: #fec400;
+	font-size: 20px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#input-area {
+	position: absolute;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	width: 100%;
+	bottom: 6px;
+}
+
+textarea {
+	width: 88%;
+	margin-right: 6px;
+	border: none;
+	background-color: #31343b;
+	color: #ebebeb;
+}
+
+.send-button {
+	width: 10%;
+	padding: 18px 10px;
+	text-align: center;
+	font-size: small;
+}
+
+
+/* message styles____________________________________________________________ */
+
+.messages-area {
+	position: absolute;
+	width: 100%;
+	height: 100;
+	top: 55px;
+	right: 0px;
+	left: 0px;
+	padding: 15px;
+	/* background-color: #ebebeb; */
+}
+
+/*_______________________________________________________________________________________*/
+/*                                  settings page                                        */
+/*_______________________________________________________________________________________*/
+
+#settings-content {
+	position: absolute;
+	flex-direction: row;
+	min-width: 0;
+	min-height: 0;
+	background-color: #080d17;
+	display: flex;
+	justify-content: center;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: calc(85% - 2px);
+}
+
+.list-items {
+	width: 100%;
+	height: 100%;
+}
+
+.item-pos {
+	height: 100%;
+	width: 100%;
+}
+
+.avatar-btn {
+	text-align: center;
+	padding: 5px;
+	margin: 42px;
+	padding-left: 150px;
+	padding-top: 150px;
+}
+
+.typo-settings {
+	font-size: small;
+	color: #ffc107;
+	font-family: "Azonix";
+}
+
+.change-name {
+	width: 60%;
+	padding: 5px;
+	margin: 42px 150px;
+	text-align: center;
+}
+
+.btn-pos {
+	text-align: center;
+	padding: 5px;
+	margin: 42px;
+	padding-left: 150px;
+}
+
+.btn-size {
+	padding: 15px 15px;
+}
+
+/*_______________________________________________________________________________________*/
+/*                              page under construction component (TMP)                  */
+/*_______________________________________________________________________________________*/
+
+.image-center {
+	text-align: center;
+	margin: auto;
+	color: #ffc107;
+	display: block;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
+	right: 0;
+	top: 180px;
+	bottom: 0;
+	width: 100%;
+}
+
+/*_______________________________________________________________________________________*/
+/*                             2fa component                                             */
+/*_______________________________________________________________________________________*/
+
+.qr {
+	color: #ffc107;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	height: 100vh;
+}
+
+.qr-image {
+	line-height: 1.5;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 20px;
+}
+
+.input-2fa {
+	border: none;
+	width: 30%;
+	padding: 0px;
+	font-size: 3em;
+	text-align: center;
+}
+
+.otp-group {
+	display: flex;
+	width: 100%;
+	max-width: 360px;
+	column-gap: 10px;
+}
+
+.otp-input {
+	width: 100%;
+	height: 60px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 32px;
+	font-weight: bold;
+	line-height: 1;
+}
+
+.popup {}

@@ -1,27 +1,38 @@
-import React from 'react';
-import logo from '../../assets/duck.png';
-import '../auth/Auth' 
-import './App.css';
+import React from "react";
+import { Routes, Route, useParams } from "react-router-dom";
+import Login from "../auth/Login";
+import Home from "../home/Home";
+import Chat from "../chat/Chat";
+import Game from "../game/Game";
+import Settings from "../settings/Settings";
+import Profil from "../profil/Profil"
+import FriendPage from "../friends/FriendPage"
+import Error from "../error/Error";
+import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
+import TwoFa from "../auth/2fa/TwoFa";
 
-const clientid = process.env.REACT_APP_CLIENT_ID;
+const App: React.FC = () => {
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          ~ Magical ducky pong ~
-        </p>
-        <a
-          className="App-link"
-          href={`https://api.intra.42.fr/oauth/authorize?client_id=${clientid}&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2F&response_type=code`}
-        >
-          Connexion with 42
-        </a>
-      </header>
-    </div>
-  );
+	const params = useParams();
+	const imageUrl = params.imageUrl || '';
+
+	return (
+		<Routes>
+			<Route path={"/"} element={<Login />} />
+			<Route path={"/home"} element={<Home />} />
+			<Route path={"/chat"} element={<Chat />} />
+			<Route path={"/game"} element={<Game />} />
+			<Route path={"/settings"} element={<Settings />} />
+			<Route path={"/profil"} element={<Profil />} />
+			<Route path={"/friend"} element={<FriendPage />} />
+			<Route path={"/2fa"} element={<TwoFa />} />
+			<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
+			<Route path={"*"} element={<Error />} />
+		</Routes>
+	)
 }
 
-export default App;
+export default App
+
+
+//HERE add <PrivateRoute> with a isLog ?

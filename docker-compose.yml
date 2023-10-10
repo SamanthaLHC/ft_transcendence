@@ -1,5 +1,13 @@
 version: '3'
 services:
+  postgres:
+    image: postgres:15.4
+    container_name: postgres
+    env_file: .env
+    networks:
+      - back
+    expose:
+      - 5432
   backend:
     container_name: backend
     env_file: .env
@@ -8,9 +16,15 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - .:/back
+      - ./backend:/back
+      - /back/node_modules
+    networks:
+      - back
     ports:
       - 3000:3000
+      - 5555:5555 # prisma studio
+    depends_on:
+      - postgres
   frontend:
     container_name: frontend
     env_file: .env
@@ -19,6 +33,10 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
-      - .:/front
+      - ./frontend:/front/
+      - /front/node_modules
     ports:
       - 8000:8000
+
+networks:
+  back:

@@ -1,6 +1,7 @@
 # compiled output
 backend/dist
 backend/node_modules
+backend/uploads/*
 /node_modules/
 /dist
 
@@ -37,5 +38,4 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 .env
-
-package-lock.json
+start.sh
