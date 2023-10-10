@@ -14,7 +14,7 @@ const WindowChat: React.FC = () => {
 			</div>
 			<div id="input-area">
 				<textarea />
-				<button> SEND </button>
+				<button className="send-button"> SEND </button>
 			</div>
 		</div>
 	)

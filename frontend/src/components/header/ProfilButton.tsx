@@ -20,13 +20,13 @@ const ProfilButton: React.FC = () => {
 		navToProfil(pathProfil);
 	}
 
-	const navToLogin : NavigateFunction = useNavigate();
+	const navToLogin: NavigateFunction = useNavigate();
 	const changeToLogin = () => {
 		let pathLogin: string = '/';
 		navToLogin(pathLogin);
 	}
 
-	const navToSettings : NavigateFunction = useNavigate();
+	const navToSettings: NavigateFunction = useNavigate();
 	const changeToSettings = () => {
 		let pathSettings: string = '/settings';
 		navToSettings(pathSettings);
@@ -73,7 +73,7 @@ const ProfilButton: React.FC = () => {
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
 			}
-			else{
+			else {
 				changeToLogin();
 			}
 		}
