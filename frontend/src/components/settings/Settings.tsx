@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import InvalidPopup from './InvalidPopup';
 import { useUser } from "../Context";
 
-
 const Settings: React.FC = () => {
 
 	const [cookies] = useCookies(['access_token']);
@@ -23,7 +22,6 @@ const Settings: React.FC = () => {
 	//______________________________________________________________________________________
 
 	useEffect(() => {
-
 		const initTwofa = async () => {
 			try {
 				const req: Request = new Request('http://localhost:3000/users/2fa/state', {
@@ -52,7 +50,6 @@ const Settings: React.FC = () => {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
-
 			const response = await fetch(req);
 			const datas = await response.json();
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob

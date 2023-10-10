@@ -59,11 +59,9 @@ const ProfilButton: React.FC = () => {
 
 	// handle bearer token cookie and set user datas______________________
 
-
 	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
 		async function getUserInfo() {
-
 			const req: Request = new Request('http://localhost:3000/users/me', {
 				method: "GET",
 				headers: {
