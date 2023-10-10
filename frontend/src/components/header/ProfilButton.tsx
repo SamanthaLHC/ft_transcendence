@@ -7,10 +7,17 @@ import { Divider, Typography } from '@mui/material';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useUser } from "../Context";
+
 
 const ProfilButton: React.FC = () => {
 
 	// console.log("Profil button call");
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const [cookies] = useCookies(["access_token"]);
+	const [userInfos, setUserInfos] = useState(null);
+	const { userData, updateUserData } = useUser();
 
 	//redirect on click_______________________________________________
 
@@ -34,8 +41,6 @@ const ProfilButton: React.FC = () => {
 
 	// handle dropdown menu _________________________________________
 
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -48,14 +53,12 @@ const ProfilButton: React.FC = () => {
 	// handle log out __________________________________________________
 
 	const LogOut = () => {
-		//TODO clear datas !
+		//TODO clear cookies !
 		changeToLogin();
 	}
 
 	// handle bearer token cookie and set user datas______________________
 
-	const [cookies] = useCookies(["access_token"]);
-	const [userInfos, setUserInfos] = useState(null);
 
 	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
@@ -72,6 +75,7 @@ const ProfilButton: React.FC = () => {
 			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
+				updateUserData(datas.name, datas.photo);
 			}
 			else {
 				changeToLogin();
@@ -93,7 +97,7 @@ const ProfilButton: React.FC = () => {
 				<Avatar alt="profil picture" src={userInfos['photo']} />
 				<Divider>
 					<Typography>
-						{userInfos['name']}
+						{userData.name}
 					</Typography>
 				</Divider>
 			</button>
