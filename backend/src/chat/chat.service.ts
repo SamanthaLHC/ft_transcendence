@@ -2,10 +2,11 @@ import { BadRequestException, ConflictException, Injectable, Logger, NotFoundExc
 import { Channels, PrismaPromise, Privacy } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { ChatGateway } from './chat.gateway';
 
 @Injectable()
 export class ChatService {
-	constructor(private readonly prisma: PrismaService)	{}
+	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway)	{}
 
 	async findAllChannels() : Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
@@ -39,6 +40,7 @@ export class ChatService {
 			Logger.log("Channel not found", channelName);
 			throw new NotFoundException("Channel not found");
 		}
+		this.gateway.changeRoom(channelName)
 		return channel;
 	}
 
