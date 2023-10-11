@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchBar from '../friends/SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ListItem from '@mui/material/ListItem';
@@ -7,6 +7,7 @@ import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useCookies } from "react-cookie";
 
 interface Channel {
 	name: string;
@@ -15,6 +16,9 @@ interface Channel {
 
 const Channels: React.FC = () => {
 
+	const [cookies] = useCookies(["access_token"])
+	const [channelName, setChannelName] = useState("");
+	
 	const chan: Channel[] = [
 		{
 			'name': "chan 1",
@@ -35,6 +39,34 @@ const Channels: React.FC = () => {
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
+	useEffect ( () => {
+		async function sendChanRequest(name: string) {
+			name = "Pouet"
+			console.log("http://localhost:3000/chat/channel/" + name)
+			const req = new Request("http://localhost:3000/chat/channel/" + name, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			})
+			try {
+				const response = await fetch(req)
+				const data = response.json()
+				console.log(data)
+			}
+			catch (error) {
+				console.log ("Error in Channel switching : ", error)
+			}
+		}
+		sendChanRequest(channelName)
+
+	},[cookies.access_token, channelName])
+	
+	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		console.log("handleChannelClick:", event.currentTarget.textContent);
+		if (event.currentTarget.textContent)
+			setChannelName(event.currentTarget.textContent)
+	}
 
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -71,7 +103,7 @@ const Channels: React.FC = () => {
 					<ul className='typo yellow list'>
 						{chan.map(((channel) => (
 							<ListItem className='yellow' key={channel.name}>
-								<button className='profil-button'>
+								<button className='profil-button' onClick={handleChannelClick}>
 									<Divider>
 										<ListItemText />
 										{channel.name}
