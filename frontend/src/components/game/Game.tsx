@@ -22,8 +22,11 @@ const Game:React.FC = () => {
 		  console.log('Connected to server');
 		});
 	  
-		socket.on('lalalalala', (data) => {
-		  console.log(`Received update: ${data}`);
+		socket.on('connect_room', (data) => {
+			console.log(`Received conect room: ${data}`);
+		  });
+		socket.on('update', (data) => {
+		  console.log(`Received update:`, data);
 		});
 
 		const onKeyPressed = (ev: KeyboardEvent): any => {
