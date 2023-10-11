@@ -19,14 +19,21 @@ const Channels: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const handleSearchChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-		setSearchQuery(event.target.value);
-	};
 
+	const handleSearchChange = (query: string) => {
+		setSearchQuery(query);
+	};
 
 	useEffect(() => {
 		async function getChannels() {
-			const req = new Request("http://localhost:3000/chat/channels/joined", {
+
+			let uri_str: string
+			if (searchQuery === '')
+				uri_str = 'http://localhost:3000/chat/channels/joined'
+			else 
+				uri_str = 'http://localhost:3000/chat/channel?search=' + searchQuery
+
+			const req = new Request(uri_str, {
 				method: "GET",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -36,9 +43,6 @@ const Channels: React.FC = () => {
 			try {
 				const response = await fetch(req);
 				const data = await response.json();
-				console.log(data);
-
-				// Extract channel names from the fetched data
 				const fetchedChannels = data.map((item: any) => {
 					return { name: item.name };
 				});
@@ -52,7 +56,7 @@ const Channels: React.FC = () => {
 		if (cookies.access_token) {
 			getChannels();
 		}
-	}, [cookies.access_token]);
+	}, [cookies.access_token, searchQuery]);
 
 	// handle dropdown menu _________________________________________
 
@@ -61,6 +65,10 @@ const Channels: React.FC = () => {
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
+	};
+
+	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		console.log("handleChannelClick:", event.currentTarget.textContent);
 	};
 
 	const handleClose = () => {
@@ -93,13 +101,13 @@ const Channels: React.FC = () => {
 						<MenuItem > password </MenuItem>
 					</Menu>
 				</h5>
-				<SearchBar setChannels={setChannels}/>
+				<SearchBar onSearchChange={handleSearchChange} />
 
 				<div>
 					<ul className="typo yellow list">
 						{channels.map((channel) => (
 							<ListItem className="yellow" key={channel.name}>
-								<button className="profil-button">
+								<button className="profil-button" onClick={handleChannelClick}>
 									<Divider>
 										<ListItemText />
 										{channel.name}
