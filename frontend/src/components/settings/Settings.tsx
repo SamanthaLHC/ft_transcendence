@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ChangeEvent } from 'react'
 import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
@@ -14,6 +14,7 @@ const Settings: React.FC = () => {
 	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
+	const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 
@@ -95,7 +96,6 @@ const Settings: React.FC = () => {
 	//                           handle change name
 	//______________________________________________________________________________________
 
-	// ONGOING try createContext et useContexte to update PP and change name
 	const handleCloseInvalidNamePopup = () => {
 		setIsInvalidNamePopupOpen(false);
 	};
@@ -134,6 +134,66 @@ const Settings: React.FC = () => {
 		}
 	};
 
+	//______________________________________________________________________________________
+	//                           handle change avatar
+	//______________________________________________________________________________________
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const selectedFile = e.target.files && e.target.files[0];
+		console.log(selectedFile);
+		if (selectedFile) {
+			console.log("SELECTEDFILE NOT EMPTY")
+			setFile(selectedFile);
+			console.log(file);
+			if (file) {
+				uploadAvatar();
+			}
+			else{
+				console.log("");
+			}
+		
+		}
+	};
+
+
+	const uploadAvatar = async () => {
+
+		if (file) {
+			console.log(file);
+			const formData = new FormData();
+			formData.append('file', file);
+			console.log(formData);
+
+			try {
+				const req = new Request("http://localhost:3000/users/upload", {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+					body: formData,
+				});
+
+				const response = await fetch(req);
+				if (response.ok) {
+					const responseJson = await response.json();
+					const newPhotoUrl = responseJson.photo;
+					console.log(newPhotoUrl);
+					updateUserData(userData.name, newPhotoUrl);
+				} else {
+					// setAvatarUploadError("Avatar upload failed. Please try again.");
+				}
+			} catch (error) {
+				console.error(error);
+				// setAvatarUploadError("An error occurred while uploading your avatar.");
+			}
+		}
+		else {
+			console.log("EMPTy FILE");
+		}
+	}
+
+
+
 	return (
 		<React.Fragment>
 			<Header />
@@ -164,7 +224,16 @@ const Settings: React.FC = () => {
 					</div>
 					<div className='list-items'>
 						<div className='btn-pos'>
-							<button className="btn-size" >Change your avatar</button>
+							<button className="btn-size" onClick={() => document.getElementById('fileInput')?.click()}>
+								Change your avatar
+							</button>
+							<input
+								id="fileInput"
+								type="file"
+								accept="image/png,image/jpeg,image/gif"
+								style={{ display: 'none' }}
+								onChange={handleFileChange}
+							/>
 						</div>
 					</div>
 				</div>

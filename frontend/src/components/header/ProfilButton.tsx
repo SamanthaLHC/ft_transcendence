@@ -80,7 +80,7 @@ const ProfilButton: React.FC = () => {
 			}
 		}
 		getUserInfo();
-	}, [cookies.access_token, updateUserData]);
+	}, [cookies.access_token]);
 
 	if (!userInfos)
 		return null;
@@ -92,7 +92,7 @@ const ProfilButton: React.FC = () => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 				onClick={handleClick}>
-				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Avatar alt="profil picture" src={userData.photo} />
 				<Divider>
 					<Typography>
 						{userData.name}
