@@ -5,8 +5,12 @@ export interface Data {
   jgauche: number
   jdroiteid: number
   jdroite: number
+  scoregauche: number
+  scoredroite: number
   posballex: number
   posballey: number
+  speedballX: number
+  speedballY: number
 }
 
 export interface Room {

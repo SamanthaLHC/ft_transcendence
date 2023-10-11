@@ -28,8 +28,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let dat: Data = {jgauche: 5,
       jdroite: 5,
       posballex: 50,
-      posballey: 50, jgaucheid: null, jdroiteid: null}
-    
+      posballey: 50,
+      jgaucheid: null,
+      jdroiteid: null,
+      scoredroite: 0,
+      scoregauche: 0,
+      speedballX: Math.floor(Math.random() * (20 - -20 + 1) - 20) / 10,
+      speedballY: Math.floor(Math.random() * (25 - -25 + 1) - 25) / 10}
+      if (dat.speedballX < 1 && dat.speedballX >= 0)
+        dat.speedballX = 1
+      if (dat.speedballX < -1 && dat.speedballX >= 0)
+        dat.speedballX = -1
     return dat
   }
 
@@ -76,6 +85,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
         this.server.to((this.rooms.length - 1).toString()).emit("update", this.rooms[this.rooms.length - 1].data)
+        console.log("starting game on room ", this.rooms.length - 1)
+        this.startgame(this.rooms.length - 1)
       }
     }
   }
@@ -104,6 +115,52 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       i++
     }
     return -1
+  }
+
+  async startgame(roomid:number)
+  {
+    let finish = false
+    while(!finish)
+    {
+      this.rooms[roomid].data.posballex += this.rooms[roomid].data.speedballX
+      this.rooms[roomid].data.posballey += this.rooms[roomid].data.speedballY
+      if (this.rooms[roomid].data.posballex <= 0)
+      {
+        this.rooms[roomid].data.speedballX = Math.floor(Math.random() * (20 - 0 + 1)) / 10
+        if (this.rooms[roomid].data.speedballX < 1)
+          this.rooms[roomid].data.speedballX = 1
+        this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (20 - -20 + 1) - 20) / 10
+        this.rooms[roomid].data.posballex = 50
+        this.rooms[roomid].data.posballey = 50
+        this.rooms[roomid].data.scoregauche++
+        console.log("score gauche ", this.rooms[roomid].data.scoregauche)
+        this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
+        await new Promise(f => setTimeout(f, 3000));
+      }
+      if (this.rooms[roomid].data.posballex >= 100)
+      {
+        this.rooms[roomid].data.speedballX = (Math.floor(Math.random() * (20 - 0 + 1)) / 10) * -1
+        if (this.rooms[roomid].data.speedballX > -1)
+          this.rooms[roomid].data.speedballX = -1
+        this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (20 - -20 + 1) - 20) / 10
+        this.rooms[roomid].data.posballex = 50
+        this.rooms[roomid].data.posballey = 50
+        this.rooms[roomid].data.scoredroite++
+        console.log("score droite ", this.rooms[roomid].data.scoredroite)
+        this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
+        await new Promise(f => setTimeout(f, 3000));
+      }
+      if (this.rooms[roomid].data.posballey <= 0 || this.rooms[roomid].data.posballey >= 100)
+        this.rooms[roomid].data.speedballY = -this.rooms[roomid].data.speedballY
+      this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
+      console.log("")
+      console.log("BalleX ", this.rooms[roomid].data.posballex)
+      console.log("BalleY ", this.rooms[roomid].data.posballey)
+      if (this.rooms[roomid].data.scoredroite > 2 || this.rooms[roomid].data.scoregauche > 2)
+        finish = true
+      await new Promise(f => setTimeout(f, 500));
+    }
+    console.log("finish game in room ", roomid)
   }
 
   @SubscribeMessage('OnKeyDownArrowDown')
