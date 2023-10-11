@@ -140,32 +140,24 @@ const Settings: React.FC = () => {
 	//______________________________________________________________________________________
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.files);
 		if (e.target.files && e.target.files.length > 0) {
-			console.log("COUCOU");
 			setFile(e.target.files[0]);
 		}
 	};
 
 	useEffect(() => {
 		if (file) {
-			console.log("after setFile: ", file);
 			uploadAvatar();
 		} else {
-			console.log("EMPTY FILE");
+			//pop up invalid file
 		}
 	}, [file]);
 
 	const uploadAvatar = async () => {
-
 		if (file) {
-			console.log("in upload avatar if file exist", file);
 			const formData = new FormData();
 			formData.append('file', file);
-			console.log("formData still the same file", formData);
-
 			try {
-				console.log("I AM DOING THE POST");
 				const req = new Request("http://localhost:3000/users/upload", {
 					method: "POST",
 					headers: {
@@ -176,11 +168,8 @@ const Settings: React.FC = () => {
 
 				const response = await fetch(req);
 				if (response.ok) {
-					const responseBlob = await response.blob();
-					console.log("what is in responseBlob? --> ", responseBlob);
-					const newPhotoUrl = URL.createObjectURL(responseBlob);
-					updateUserData(userData.name, newPhotoUrl);
-					console.log("photo after getting the response", newPhotoUrl);
+					const responseStr = await response.text();
+					updateUserData(userData.name, responseStr);
 				} else {
 					// setAvatarUploadError("Avatar upload failed. Please try again.");
 				}
@@ -189,11 +178,7 @@ const Settings: React.FC = () => {
 				// setAvatarUploadError("An error occurred while uploading your avatar.");
 			}
 		}
-		else {
-			console.log("EMPTy FILE");
-		}
-	}
-
+	};
 
 
 	return (
@@ -232,8 +217,7 @@ const Settings: React.FC = () => {
 							<input
 								id="fileInput"
 								type="file"
-								// accept="image/png,image/jpeg,image/gif"
-								accept="image/*"
+								accept="image/png,image/jpeg,image/gif"
 								style={{ display: 'none' }}
 								onChange={handleFileChange}
 							/>

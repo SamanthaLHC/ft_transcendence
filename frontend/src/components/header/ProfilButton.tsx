@@ -92,7 +92,7 @@ const ProfilButton: React.FC = () => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 				onClick={handleClick}>
-				<Avatar alt="profil picture" src={userData.photo} />
+				<Avatar alt="Kprofil picture" src={userData.photo} />
 				<Divider>
 					<Typography>
 						{userData.name}

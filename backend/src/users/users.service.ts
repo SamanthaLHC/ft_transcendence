@@ -248,6 +248,7 @@ export class UsersService {
             where: { id: id },
             data: {photo: url}
         })
+		return url;
       }
       async updateName(id: number, name: string) {
         if (name.length > 15)
