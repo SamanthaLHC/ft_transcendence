@@ -14,6 +14,7 @@ const Settings: React.FC = () => {
 	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
+	// const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
@@ -139,32 +140,32 @@ const Settings: React.FC = () => {
 	//______________________________________________________________________________________
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const selectedFile = e.target.files && e.target.files[0];
-		console.log(selectedFile);
-		if (selectedFile) {
-			console.log("SELECTEDFILE NOT EMPTY")
-			setFile(selectedFile);
-			console.log(file);
-			if (file) {
-				uploadAvatar();
-			}
-			else{
-				console.log("");
-			}
-		
+		console.log(e.target.files);
+		if (e.target.files && e.target.files.length > 0) {
+			console.log("COUCOU");
+			setFile(e.target.files[0]);
 		}
 	};
 
+	useEffect(() => {
+		if (file) {
+			console.log("after setFile: ", file);
+			uploadAvatar();
+		} else {
+			console.log("EMPTY FILE");
+		}
+	}, [file]);
 
 	const uploadAvatar = async () => {
 
 		if (file) {
-			console.log(file);
+			console.log("in upload avatar if file exist", file);
 			const formData = new FormData();
 			formData.append('file', file);
-			console.log(formData);
+			console.log("formData still the same file", formData);
 
 			try {
+				console.log("I AM DOING THE POST");
 				const req = new Request("http://localhost:3000/users/upload", {
 					method: "POST",
 					headers: {
@@ -175,10 +176,11 @@ const Settings: React.FC = () => {
 
 				const response = await fetch(req);
 				if (response.ok) {
-					const responseJson = await response.json();
-					const newPhotoUrl = responseJson.photo;
-					console.log(newPhotoUrl);
+					const responseBlob = await response.blob();
+					console.log("what is in responseBlob? --> ", responseBlob);
+					const newPhotoUrl = URL.createObjectURL(responseBlob);
 					updateUserData(userData.name, newPhotoUrl);
+					console.log("photo after getting the response", newPhotoUrl);
 				} else {
 					// setAvatarUploadError("Avatar upload failed. Please try again.");
 				}
@@ -230,7 +232,8 @@ const Settings: React.FC = () => {
 							<input
 								id="fileInput"
 								type="file"
-								accept="image/png,image/jpeg,image/gif"
+								// accept="image/png,image/jpeg,image/gif"
+								accept="image/*"
 								style={{ display: 'none' }}
 								onChange={handleFileChange}
 							/>
