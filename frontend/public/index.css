@@ -340,7 +340,7 @@ textarea {
 /*                                  settings page                                        */
 /*_______________________________________________________________________________________*/
 
-#settings-content {
+.content-page {
 	position: absolute;
 	flex-direction: row;
 	min-width: 0;

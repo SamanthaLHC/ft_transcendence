@@ -186,7 +186,7 @@ const Settings: React.FC = () => {
 			<Header />
 			<div id="container">
 				<Friends />
-				<div id='settings-content'>
+				<div className='content-page'>
 					<div className='list-items'>
 						<div className='change-name'>
 							<h3 className='typo-settings'> Change your name: </h3>
