@@ -1,5 +1,4 @@
 import React from 'react'
-import { Divider } from '@mui/material'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import MatchHistory from './MatchHistory'

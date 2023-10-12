@@ -1,6 +1,33 @@
 import React from "react";
+import { useCookies } from "react-cookie";
 
 const Ranking: React.FC = () => {
+
+    const [cookies] = useCookies(['access_token']);
+
+    const getRanking = async () => {
+
+        try {
+            const req = new Request("http://localhost:3000/users/get_class", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${cookies.access_token}`,
+                },
+            });
+
+            const response = await fetch(req);
+            if (response.ok) {
+                console.log(response);
+            } else {
+                // setAvatarUploadError("Avatar upload failed. Please try again.");
+            }
+        } catch (error) {
+            console.error(error);
+            // setAvatarUploadError("An error occurred while uploading your avatar.");
+        }
+    };
+
+    getRanking();
 
     return (
         <React.Fragment>
