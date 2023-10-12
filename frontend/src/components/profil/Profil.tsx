@@ -1,7 +1,9 @@
 import React from 'react'
-import ducky from '../../assets/cute_duck.png'
+import { Divider } from '@mui/material'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
+import MatchHistory from './MatchHistory'
+import Ranking from './Ranking'
 
 const Profil: React.FC = () => {
 
@@ -10,9 +12,13 @@ const Profil: React.FC = () => {
 			<Header />
 			<div id="container">
 				<Friends />
-				<div className='image-center'>
-					<h2> /!\ -- PROFIL PAGE -- under construction /!\ </h2>
-					<img src={ducky} alt='lol'></img>
+				<div className='content-page'>
+					<div className='list-items'>
+						<Ranking />
+					</div>
+					<div className='list-items'>
+						<MatchHistory />
+					</div>
 				</div>
 			</div>
 		</React.Fragment>

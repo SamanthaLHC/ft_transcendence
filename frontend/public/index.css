@@ -455,3 +455,49 @@ textarea {
 	font-weight: bold;
 	line-height: 1;
 }
+
+/*_______________________________________________________________________________________*/
+/*                            Profile Page                                               */
+/*_______________________________________________________________________________________*/
+
+.typo-pos {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.styled-table {
+	border-collapse: collapse;
+	margin: 42px 12px;
+	font-size: 0.9em;
+	font-family: azonix;
+	width: 95%;
+}
+
+.styled-table thead tr {
+	background-color: #ffc107;
+	color: #000000;
+	text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+	padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+	border-bottom: 1px solid #000000;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+	background-color: #333437;
+}
+
+.styled-table tbody tr:last-of-type {
+	border-bottom: 2px solid #ffc107;
+}
+
+.styled-table tbody tr.active-row {
+	font-weight: bold;
+	color: #ffc107;
+}
