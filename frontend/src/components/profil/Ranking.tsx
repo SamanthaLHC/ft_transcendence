@@ -25,7 +25,6 @@ const Ranking: React.FC = () => {
 
                 const response = await fetch(req);
                 if (response.ok) {
-                    console.log(response);
                     const data = await response.json();
                     setRankingData(data);
                 } else {

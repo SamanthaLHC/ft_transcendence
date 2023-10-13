@@ -1,25 +1,27 @@
 import React, { createContext, useContext, useState } from "react";
 
 interface UserData {
+    id: string;
     name: string;
     photo: string;
 }
 
 interface UserContextType {
     userData: UserData;
-    updateUserData: (name: string, photo: string) => void;
+    updateUserData: (id: string, name: string, photo: string) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [userData, setUserData] = useState<UserData>({
+        id: '',
         name: "Default Name",
         photo: "",
     });
 
-    const updateUserData = (name: string, photo: string) => {
-        setUserData({ name, photo });
+    const updateUserData = (id: string, name: string, photo: string) => {
+        setUserData({ id, name, photo });
     };
 
     return (

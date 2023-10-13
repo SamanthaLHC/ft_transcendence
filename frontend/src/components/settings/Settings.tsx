@@ -14,7 +14,6 @@ const Settings: React.FC = () => {
 	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
-	// const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
@@ -105,7 +104,6 @@ const Settings: React.FC = () => {
 		if (e.key === 'Enter') {
 			e.preventDefault(); // prevent newline to be added
 
-
 			if (inputValue) {
 				const obj = {
 					name: inputValue
@@ -125,7 +123,7 @@ const Settings: React.FC = () => {
 						setIsInvalidNamePopupOpen(true);
 					}
 					else {
-						updateUserData(inputValue, userData.photo);
+						updateUserData(userData.id, inputValue, userData.photo);
 					}
 				} catch (error) {
 					console.error(error);
@@ -169,7 +167,7 @@ const Settings: React.FC = () => {
 				const response = await fetch(req);
 				if (response.ok) {
 					const responseStr = await response.text();
-					updateUserData(userData.name, responseStr);
+					updateUserData(userData.id, userData.name, responseStr);
 				} else {
 					// setAvatarUploadError("Avatar upload failed. Please try again.");
 				}
