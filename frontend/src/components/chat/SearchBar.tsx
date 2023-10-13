@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
 				label="Search"
 				variant="outlined"
 				fullWidth
-				// value={searchText}
+				value={searchText}
 				onChange={handleSearchChange}
 				style={{ backgroundColor: '#42464f' }}
 				InputProps={{

@@ -18,7 +18,6 @@ const Channels: React.FC = () => {
 	const [channels, setChannels] = useState<Channel[]>([]);
 	const [cookies] = useCookies(["access_token"]);
 	const [searchQuery, setSearchQuery] = useState("");
-	const [channelName, setChannelName] = useState("");
 
 
 	const handleSearchChange = (query: string) => {
@@ -41,17 +40,18 @@ const Channels: React.FC = () => {
 				},
 			});
 
-			try {
-				const response = await fetch(req);
-				const data = await response.json();
-				const fetchedChannels = data.map((item: any) => {
-					return { name: item.name };
-				});
 
-				setChannels(fetchedChannels);
-			} catch (error) {
-				console.error("Error fetching channels:", error);
-			}
+			return fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					const fetchedChannels = data.map((item: any) => {
+						return { name: item.name };
+					});
+					setChannels(fetchedChannels);
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
 		}
 
 		if (cookies.access_token) {
@@ -67,33 +67,24 @@ const Channels: React.FC = () => {
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
-	useEffect ( () => {
-		async function sendChanRequest(name: string) {
-			name = "Pouet"
-			console.log("http://localhost:3000/chat/channel/" + name)
-			const req = new Request("http://localhost:3000/chat/channel/" + name, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			})
-			try {
-				const response = await fetch(req)
-				const data = response.json()
-				console.log(data)
-			}
-			catch (error) {
-				console.log ("Error in Channel switching : ", error)
-			}
-		}
-		sendChanRequest(channelName)
 
-	},[cookies.access_token, channelName])
-	
 	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		console.log("handleChannelClick:", event.currentTarget.textContent);
-		if (event.currentTarget.textContent)
-			setChannelName(event.currentTarget.textContent)
+		const name = event.currentTarget.textContent
+		console.log("handleChannelClick:", name);
+		const req = new Request("http://localhost:3000/chat/channel/" + name, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+			},
+		})
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("data:", data);
+			})
+			.catch((error) => {
+				console.error("Error fetching channels:", error);
+			});
 	}
 
 	const handleClose = () => {
