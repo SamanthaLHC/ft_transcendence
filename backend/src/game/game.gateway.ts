@@ -40,16 +40,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       speedballX: 0,
       speedballY: 0
     }
-      const rand = Math.floor(Math.random() * (10 - 1 + 1) - 1)
+      const rand = Math.floor(Math.random() * (10 - 1 + 1) + 1)
       if (rand < 5 )
-        dat.speedballY = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10 * -1
+        dat.speedballY = (Math.random() * (10 - 3 + 1) + 3) / 10 * -1
       else
-        dat.speedballY = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10
-      const rande = Math.floor(Math.random() * (10 - 1 + 1) - 1)
+        dat.speedballY = (Math.random() * (10 - 3 + 1) + 3) / 10
+      const rande = Math.floor(Math.random() * (10 - 1 + 1) + 1)
       if (rande < 5 )
-        dat.speedballX = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10 * -1
+        dat.speedballX = (Math.random() * (10 - 3 + 1) + 3) / 10 * -1
       else
-        dat.speedballX = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10
+        dat.speedballX = (Math.random() * (10 - 3 + 1) + 3) / 10
     return dat
   }
 
@@ -128,7 +128,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   getroombyuser(user: User): number
   {
-    let i = 0;
+    let i = this.rooms.length -1;
     while (this.rooms[i])
     {
       if (this.rooms[i].userone.id === user.id || this.rooms[i].usertwo.id === user.id)
@@ -141,9 +141,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   resetgame(roomid: number) {
     const rand = Math.floor(Math.random() * (10 - 1 + 1) - 1)
     if (rand < 5 )
-      this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (10 - 3 + 1) - 3) / 10 * -1
+      this.rooms[roomid].data.speedballY = (Math.random() * (10 - 3 + 1) + 3) / 10 * -1
     else
-      this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (10 - 3 + 1) - 3) / 10
+      this.rooms[roomid].data.speedballY = (Math.random() * (10 - 3 + 1) + 3) / 10
     console.log("speed balle ", this.rooms[roomid].data.speedballY)
     this.rooms[roomid].data.posballex = 50
     this.rooms[roomid].data.posballey = 50
@@ -158,16 +158,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.rooms[roomid].data.posballey += this.rooms[roomid].data.speedballY
       if (this.rooms[roomid].data.posballex <= 0)
       {
-        this.rooms[roomid].data.speedballX = Math.floor(Math.random() * (10 - 3 + 1) - 3) / 10
+        this.rooms[roomid].data.speedballX = (Math.random() * (10 - 3 + 1) + 3) / 10
         this.resetgame(roomid)
         this.rooms[roomid].data.scoregauche++
         console.log("score gauche ", this.rooms[roomid].data.scoregauche)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
-        await new Promise(f => setTimeout(f, 33));
+        await new Promise(f => setTimeout(f, 3000));
       }
       if (this.rooms[roomid].data.posballex >= 100)
       {
-        this.rooms[roomid].data.speedballX = Math.floor(Math.random() * (10 - 2 + 1) - 2) / 10 * -1
+        this.rooms[roomid].data.speedballX = ((Math.random() * (10 - 3 + 1) + 3) / 10) * -1
         this.resetgame(roomid)
         this.rooms[roomid].data.scoredroite++
         console.log("score droite ", this.rooms[roomid].data.scoredroite)
@@ -187,18 +187,26 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX +0.05
           else
             this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX -0.05
+          if (this.rooms[roomid].data.speedballY > 0)
+            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY +0.05
+          else
+            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
           console.log("colision pad droite")
         }
       }
-      else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 2)
+      else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3)
       {
-        if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 10 >= this.rooms[roomid].data.posballey)
+        if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey)
         {
           this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
           if (this.rooms[roomid].data.speedballX > 0)
             this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX +0.05
           else
             this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX -0.05
+          if (this.rooms[roomid].data.speedballY > 0)
+            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY +0.05
+          else
+            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
           console.log("colision pad gauche")
         }
       }

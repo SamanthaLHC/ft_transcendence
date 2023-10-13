@@ -35,7 +35,7 @@ const Game:React.FC = () => {
 			setData(data)
 		  });
 		socket.on('update', (data) => {
-		  console.log(`Received update:`, data);
+			console.log("balle ", data.posballex, data.posballey)
 		  setData(data)
 		});
 		socket.on('game_finish', () => {
@@ -94,3 +94,7 @@ const Game:React.FC = () => {
 }
 
 export default Game;
+
+function useRef(innerWidth: number) {
+	throw new Error('Function not implemented.');
+}
