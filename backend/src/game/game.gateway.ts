@@ -26,20 +26,30 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   init_data(): Data {
-    let dat: Data = {jgauche: 5,
+    let dat: Data = {
+      jgauche: 5,
       jdroite: 5,
       posballex: 50,
       posballey: 50,
       jgaucheid: null,
       jdroiteid: null,
+      jdscockid: null,
+      jgscockid: null,
       scoredroite: 0,
       scoregauche: 0,
-      speedballX: Math.floor(Math.random() * (20 - -20 + 1) - 20) / 10,
-      speedballY: 0}//Math.floor(Math.random() * (25 - -25 + 1) - 25) / 10}
-      if (dat.speedballX < 1 && dat.speedballX >= 0)
-        dat.speedballX = 1
-      if (dat.speedballX < -1 && dat.speedballX >= 0)
-        dat.speedballX = -1
+      speedballX: 0,
+      speedballY: 0
+    }
+      const rand = Math.floor(Math.random() * (10 - 1 + 1) - 1)
+      if (rand < 5 )
+        dat.speedballY = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10 * -1
+      else
+        dat.speedballY = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10
+      const rande = Math.floor(Math.random() * (10 - 1 + 1) - 1)
+      if (rande < 5 )
+        dat.speedballX = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10 * -1
+      else
+        dat.speedballX = Math.floor(Math.random() * (10 - 1 + 1) - 1) / 10
     return dat
   }
 
@@ -65,6 +75,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       let data: Data
       data = this.init_data()
       data.jgaucheid = user.id
+      data.jgscockid = socket.id
       console.log(data)
       this.rooms.push({id: 0, userone: user, usertwo: null, data: data})
       await this.server.in(socket.id).socketsJoin("0")
@@ -75,6 +86,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         let data: Data
         data = this.init_data()
         data.jgaucheid = user.id
+        data.jgscockid = socket.id
         console.log(data)
         this.rooms.push({id: this.rooms.length, userone: user, usertwo: null, data: data})
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
@@ -82,6 +94,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       else {
         this.rooms[this.rooms.length - 1].usertwo = user
         this.rooms[this.rooms.length - 1].data.jdroiteid = user.id
+        this.rooms[this.rooms.length - 1].data.jdscockid = socket.id
         console.log(this.rooms[this.rooms.length - 1].data)
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
@@ -125,6 +138,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return -1
   }
 
+  resetgame(roomid: number) {
+    const rand = Math.floor(Math.random() * (10 - 1 + 1) - 1)
+    if (rand < 5 )
+      this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (10 - 3 + 1) - 3) / 10 * -1
+    else
+      this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (10 - 3 + 1) - 3) / 10
+    console.log("speed balle ", this.rooms[roomid].data.speedballY)
+    this.rooms[roomid].data.posballex = 50
+    this.rooms[roomid].data.posballey = 50
+  }
+
   async startgame(roomid:number)
   {
     let finish = false
@@ -134,56 +158,56 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.rooms[roomid].data.posballey += this.rooms[roomid].data.speedballY
       if (this.rooms[roomid].data.posballex <= 0)
       {
-        this.rooms[roomid].data.speedballX = Math.floor(Math.random() * (20 - 0 + 1)) / 10
-        if (this.rooms[roomid].data.speedballX < 1)
-          this.rooms[roomid].data.speedballX = 1
-        this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (20 - -20 + 1) - 20) / 10
-        this.rooms[roomid].data.posballex = 50
-        this.rooms[roomid].data.posballey = 50
+        this.rooms[roomid].data.speedballX = Math.floor(Math.random() * (10 - 3 + 1) - 3) / 10
+        this.resetgame(roomid)
         this.rooms[roomid].data.scoregauche++
         console.log("score gauche ", this.rooms[roomid].data.scoregauche)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
-        await new Promise(f => setTimeout(f, 3000));
+        await new Promise(f => setTimeout(f, 33));
       }
       if (this.rooms[roomid].data.posballex >= 100)
       {
-        this.rooms[roomid].data.speedballX = (Math.floor(Math.random() * (20 - 0 + 1)) / 10) * -1
-        if (this.rooms[roomid].data.speedballX > -1)
-          this.rooms[roomid].data.speedballX = -1
-        this.rooms[roomid].data.speedballY = Math.floor(Math.random() * (20 - -20 + 1) - 20) / 10
-        this.rooms[roomid].data.posballex = 50
-        this.rooms[roomid].data.posballey = 50
+        this.rooms[roomid].data.speedballX = Math.floor(Math.random() * (10 - 2 + 1) - 2) / 10 * -1
+        this.resetgame(roomid)
         this.rooms[roomid].data.scoredroite++
         console.log("score droite ", this.rooms[roomid].data.scoredroite)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
       }
-      if (this.rooms[roomid].data.posballex >= 95 && this.rooms[roomid].data.posballex <= 100)
+      if (this.rooms[roomid].data.posballex >= 98 && this.rooms[roomid].data.posballex <= 100)
       {
         console.log("")
-        console.log("jdroite", (this.rooms[roomid].data.jdroite * 10) + 2)
-        console.log("jdroite", (this.rooms[roomid].data.jdroite * 10) - 2)
+        console.log("jdroite", (this.rooms[roomid].data.jdroite * 10))
+        console.log("jdroite", (this.rooms[roomid].data.jdroite * 10) + 20)
         console.log("jdroite", this.rooms[roomid].data.posballey)
-        if ((this.rooms[roomid].data.jdroite * 10) + 2 > this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) - 2 < this.rooms[roomid].data.posballey)
+        if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey)
         {
           this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+          if (this.rooms[roomid].data.speedballX > 0)
+            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX +0.05
+          else
+            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX -0.05
           console.log("colision pad droite")
         }
       }
-      else if (this.rooms[roomid].data.posballex >= 5 && this.rooms[roomid].data.posballex <= 10)
+      else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 2)
       {
-        if ((this.rooms[roomid].data.jgauche * 10) + 2 > this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 - 2 < this.rooms[roomid].data.posballey)
+        if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 10 >= this.rooms[roomid].data.posballey)
         {
           this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+          if (this.rooms[roomid].data.speedballX > 0)
+            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX +0.05
+          else
+            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX -0.05
           console.log("colision pad gauche")
         }
       }
       if (this.rooms[roomid].data.posballey <= 0 || this.rooms[roomid].data.posballey >= 100)
         this.rooms[roomid].data.speedballY = -this.rooms[roomid].data.speedballY
       this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
-      if (this.rooms[roomid].data.scoredroite > 2 || this.rooms[roomid].data.scoregauche > 2)
+      if (this.rooms[roomid].data.scoredroite > 4 || this.rooms[roomid].data.scoregauche > 4)
         finish = true
-      await new Promise(f => setTimeout(f, 50));
+      await new Promise(f => setTimeout(f, 33));
     }
     console.log("finish game in room ", roomid)
     this.gameService.finish_game(this.rooms[roomid].data)
@@ -208,12 +232,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!user)
       socket.disconnect
     const id = this.getroombyuser(user)
-    if (user.id == this.rooms[id].data.jdroiteid)
+    if (socket.id == this.rooms[id].data.jdscockid)
     {
       if (this.rooms[id].data.jdroite < 8)
         this.rooms[id].data.jdroite = this.rooms[id].data.jdroite + 1
     }
-    else if ((user.id == this.rooms[id].data.jgaucheid))
+    else if ((socket.id == this.rooms[id].data.jgscockid))
     {
       if (this.rooms[id].data.jgauche < 8)
         this.rooms[id].data.jgauche = this.rooms[id].data.jgauche + 1
@@ -241,12 +265,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!user)
       socket.disconnect
       const id = this.getroombyuser(user)
-      if (user.id == this.rooms[id].data.jdroiteid)
+      if (socket.id == this.rooms[id].data.jdscockid)
       {
         if (this.rooms[id].data.jdroite > 0)
           this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1
       }
-      else if ((user.id == this.rooms[id].data.jgaucheid))
+      else if ((socket.id == this.rooms[id].data.jgscockid))
       {
         if (this.rooms[id].data.jgauche > 0)
           this.rooms[id].data.jgauche = this.rooms[id].data.jgauche - 1

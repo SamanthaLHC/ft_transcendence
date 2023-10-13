@@ -20,12 +20,12 @@ type CanvasProps = {
 
     const drawgauchepad = (rect: CanvasRenderingContext2D) => {
         rect.fillStyle = 'red';
-        rect.fillRect(0, data.jgauche*500/10, 20, 100);
+        rect.fillRect(0, data.jgauche*500/10, 2*1000/100, 20*500/100);
     }
 
     const drawdroitepad = (rect: CanvasRenderingContext2D) => {
         rect.fillStyle = 'blue';
-        rect.fillRect(980, data.jdroite*500/10, 20, 100);
+        rect.fillRect(980, data.jdroite*500/10, 2*1000/100, 20*500/100);
     }
 
     const drawballe = (ctx: CanvasRenderingContext2D) => {
