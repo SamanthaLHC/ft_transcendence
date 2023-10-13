@@ -1,33 +1,43 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
+
+interface RankingData {
+    id: number;
+    login: string;
+    name: string;
+}
 
 const Ranking: React.FC = () => {
 
     const [cookies] = useCookies(['access_token']);
+    const [rankingData, setRankingData] = useState<RankingData[]>([]);
 
-    const getRanking = async () => {
+    useEffect(() => {
+        const getRanking = async () => {
 
-        try {
-            const req = new Request("http://localhost:3000/users/get_class", {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${cookies.access_token}`,
-                },
-            });
+            try {
+                const req = new Request("http://localhost:3000/users/get_class", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${cookies.access_token}`,
+                    },
+                });
 
-            const response = await fetch(req);
-            if (response.ok) {
-                console.log(response);
-            } else {
-                // setAvatarUploadError("Avatar upload failed. Please try again.");
+                const response = await fetch(req);
+                if (response.ok) {
+                    console.log(response);
+                    const data = await response.json();
+                    setRankingData(data);
+                } else {
+                    // setAvatarUploadError("Avatar upload failed. Please try again.");
+                }
+            } catch (error) {
+                console.error(error);
+                // setAvatarUploadError("An error occurred while uploading your avatar.");
             }
-        } catch (error) {
-            console.error(error);
-            // setAvatarUploadError("An error occurred while uploading your avatar.");
-        }
-    };
-
-    getRanking();
+        };
+        getRanking();
+    }, [cookies.access_token]);
 
     return (
         <React.Fragment>
@@ -42,14 +52,12 @@ const Ranking: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="active-row">
-                            <td>1</td>
-                            <td>Carsu</td>
-                        </tr>
-                        <tr className="active-row">
-                            <td>2</td>
-                            <td>wamu</td>
-                        </tr>
+                        {rankingData.map((item, index) => (
+                            <tr className="active-row" key={index}>
+                                <td>{index + 1}</td>
+                                <td>{item.name}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>
