@@ -33,11 +33,16 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			console.log ("Change from ", this.room, " to ", new_room)
 		}
 		this.socket.join(new_room)
+		console.log("Joining " + new_room)
 		this.room = new_room
 	}
-
+	
 	getRoom() {
 		return this.room;
 	}
-
+	
+	broadCast(event: string) {
+		console.log("Emiting to " + this.room)
+		this.server.to(this.room).emit("update", this.room + event)
+	}
 }

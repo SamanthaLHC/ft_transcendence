@@ -46,6 +46,7 @@ export class ChatService {
 			throw new NotFoundException("Channel not found");
 		}
 		this.gateway.changeRoom(channelName)
+		this.gateway.broadCast(" needs update ")
 		return channel;
 	}
 
