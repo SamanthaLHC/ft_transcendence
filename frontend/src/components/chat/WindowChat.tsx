@@ -20,7 +20,11 @@ const WindowChat: React.FC = () => {
 		socket.on('lalalalala', (data) => {
 		  console.log(`Received chat message: ${data}`);
 		});
-
+		
+		socket.on('update', (data) => {
+			console.log(`Received chat message: ${data}`);
+		  });
+  
 		socket.emit('message', "un lapin")
 	  
 		return () => {
