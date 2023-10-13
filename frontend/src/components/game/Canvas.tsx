@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import duck from '../../assets/duck.png'
 
 type CanvasProps = {
     data: {
@@ -29,6 +30,12 @@ type CanvasProps = {
     }
 
     const drawballe = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
+        // let img = new Image();
+        // img.onload = () => {
+        //     ctx.drawImage(img, data.posballex*wight/100, data.posballey*height/100, wight/50, wight/50)
+        //     ctx.beginPath();
+        // }
+        // img.src = duck
         ctx.fillStyle = 'yellow';
         ctx.beginPath();
         ctx.arc(data.posballex*wight/100, data.posballey*height/100, wight/100, 0, 2 * Math.PI);
@@ -47,9 +54,9 @@ type CanvasProps = {
                 drawballe(context, canvas.width, canvas.height);
             }
         }
-    }, [drawgauchepad]);
-
-    return <canvas ref={canvasRef} width={1000} height={500} />;
+    }, [data]);
+    let {innerWidth, innerHeight} = window;
+    return <canvas ref={canvasRef} width={innerWidth/2} height={innerWidth/2/2} />;
 };
 
 export default Canvas;

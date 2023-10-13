@@ -16,6 +16,26 @@ export class GameService {
                     scorePerdant: dat.scoregauche
                 },
             });
+            await this.prisma.user.update({
+                where: {
+                    id: dat.jdroiteid,
+                },
+                data: {
+                    nbwin: {
+                        increment: 1,
+                    }
+                },
+            });
+            await this.prisma.user.update({
+                where: {
+                    id: dat.jgaucheid,
+                },
+                data: {
+                    nbloose: {
+                        increment: 1,
+                    }
+                },
+            });
         }
         else
         {
@@ -25,6 +45,26 @@ export class GameService {
                     perdantId: dat.jdroiteid,
                     scoreGagnant: dat.scoregauche,
                     scorePerdant: dat.scoredroite
+                },
+            });
+            await this.prisma.user.update({
+                where: {
+                    id: dat.jgaucheid,
+                },
+                data: {
+                    nbwin: {
+                        increment: 1,
+                    }
+                },
+            });
+            await this.prisma.user.update({
+                where: {
+                    id: dat.jdroiteid,
+                },
+                data: {
+                    nbloose: {
+                        increment: 1,
+                    }
                 },
             });
         }

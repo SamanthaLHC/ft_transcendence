@@ -35,7 +35,7 @@ const Game:React.FC = () => {
 			setData(data)
 		  });
 		socket.on('update', (data) => {
-			console.log("balle ", data.posballex, data.posballey)
+			// console.log("balle ", data.posballex, data.posballey)
 		  setData(data)
 		});
 		socket.on('game_finish', () => {
