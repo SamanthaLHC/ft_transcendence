@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ducky from '../../assets/fire.gif'
+// import coin from '../../assets/canard.mp3'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import io from 'socket.io-client';
@@ -10,11 +11,15 @@ import Canvas from './Canvas'
 const Game:React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const navToHome = useNavigate();
+	const [canardmod, setCanardmod] = useState<boolean>(false);
 	const gamefinish = () => {
 			let pathHome: string = '/home';
 			navToHome(pathHome);
 	}
 	const [data, setData] = useState(null);
+	const playsound = () => {
+		new Audio("e").play();
+	}
 	useEffect(() => {
 		const socket = io('http://localhost:3000', {
 			autoConnect: false,
@@ -41,6 +46,9 @@ const Game:React.FC = () => {
 		socket.on('game_finish', () => {
 			gamefinish()
 		});
+		socket.on('colpad', () => {
+			// playsound()
+		});
 
 		const onKeyPressed = (ev: KeyboardEvent): any => {
 			if (ev.key === "ArrowDown")
@@ -54,6 +62,7 @@ const Game:React.FC = () => {
 		}
 
 		window.addEventListener("keydown", onKeyPressed)
+		
 
 		return () => {
 		  if (socket) {
@@ -61,6 +70,12 @@ const Game:React.FC = () => {
 		  }
 		};
 	  }, []);
+	const handleClick = () => {
+		if (!canardmod)
+			setCanardmod(true)
+		else
+			setCanardmod(false)
+	};
 	if (!data)
 	{
 		return (
@@ -84,8 +99,9 @@ const Game:React.FC = () => {
 			<div id="container">
 				<Friends />
 				<div className='image-center'>
+					<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
 					<h2> {data["scoregauche"]} --------- {data["scoredroite"]}</h2>
-					<Canvas data={data}/>
+					<Canvas data={data} canardmod={canardmod}/>
 				</div>
 			</div>
 		</React.Fragment>
@@ -94,7 +110,3 @@ const Game:React.FC = () => {
 }
 
 export default Game;
-
-function useRef(innerWidth: number) {
-	throw new Error('Function not implemented.');
-}

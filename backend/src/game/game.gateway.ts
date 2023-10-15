@@ -174,7 +174,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
       }
-      if (this.rooms[roomid].data.posballex >= 98 && this.rooms[roomid].data.posballex <= 100)
+      if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100)
       {
         console.log("")
         console.log("jdroite", (this.rooms[roomid].data.jdroite * 10))
@@ -191,6 +191,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY +0.05
           else
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
+          this.server.to((roomid).toString()).emit("colpad")
           console.log("colision pad droite")
         }
       }
@@ -207,6 +208,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY +0.05
           else
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
+          this.server.to((roomid).toString()).emit("colpad")
           console.log("colision pad gauche")
         }
       }
