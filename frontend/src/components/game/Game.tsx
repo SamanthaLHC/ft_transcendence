@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ducky from '../../assets/fire.gif'
-// import coin from '../../assets/canard.mp3'
+import coin from '../../assets/canard.mp3'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import io from 'socket.io-client';
@@ -17,9 +17,6 @@ const Game:React.FC = () => {
 			navToHome(pathHome);
 	}
 	const [data, setData] = useState(null);
-	const playsound = () => {
-		new Audio("e").play();
-	}
 	useEffect(() => {
 		const socket = io('http://localhost:3000', {
 			autoConnect: false,
@@ -47,7 +44,7 @@ const Game:React.FC = () => {
 			gamefinish()
 		});
 		socket.on('colpad', () => {
-			// playsound()
+			playsound(canardmod)
 		});
 
 		const onKeyPressed = (ev: KeyboardEvent): any => {
@@ -75,6 +72,10 @@ const Game:React.FC = () => {
 			setCanardmod(true)
 		else
 			setCanardmod(false)
+	};
+	const playsound = (can: boolean) => {
+		console.log(can)
+		new Audio(coin).play();
 	};
 	if (!data)
 	{
