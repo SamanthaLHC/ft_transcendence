@@ -4,10 +4,30 @@ services:
     image: postgres:15.4
     container_name: postgres
     env_file: .env
+    healthcheck: 
+       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
     networks:
       - back
     expose:
       - 5432
+
+  prisma-studio: 
+     image: timothyjmiller/prisma-studio:latest 
+     container_name: prisma-studio 
+     ports: 
+       - "127.0.0.1:5555:5555" 
+     restart: always 
+     env_file: 
+       - .env 
+     depends_on: 
+       postgres: 
+         condition: service_healthy 
+     entrypoint: ['node_modules/.bin/prisma', 'studio'] 
+     volumes: 
+       - ./backend/prisma/schema.prisma:/schema.prisma 
+     networks: 
+       - back
+
   backend:
     container_name: backend
     env_file: .env
@@ -22,9 +42,9 @@ services:
       - back
     ports:
       - 3000:3000
-      - 5555:5555 # prisma studio
     depends_on:
       - postgres
+
   frontend:
     container_name: frontend
     env_file: .env
