@@ -160,7 +160,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       {
         this.rooms[roomid].data.speedballX = (Math.random() * (10 - 3 + 1) + 3) / 10
         this.resetgame(roomid)
-        this.rooms[roomid].data.scoregauche++
+        this.rooms[roomid].data.scoredroite++
         console.log("score gauche ", this.rooms[roomid].data.scoregauche)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
@@ -169,7 +169,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       {
         this.rooms[roomid].data.speedballX = ((Math.random() * (10 - 3 + 1) + 3) / 10) * -1
         this.resetgame(roomid)
-        this.rooms[roomid].data.scoredroite++
+        this.rooms[roomid].data.scoregauche++
         console.log("score droite ", this.rooms[roomid].data.scoredroite)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
@@ -221,6 +221,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     console.log("finish game in room ", roomid)
     this.gameService.finish_game(this.rooms[roomid].data)
+    this.server.to((roomid).toString()).emit("aff_win", this.rooms[roomid].data)
+    await new Promise(f => setTimeout(f, 5000));
     this.server.to((roomid).toString()).emit("game_finish")
   }
 

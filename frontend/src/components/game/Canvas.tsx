@@ -7,6 +7,8 @@ type CanvasProps = {
         jgaucheid: number
         jgauche: number
         jdroiteid: number
+        jdscockid: string
+        jgscockid: string
         jdroite: number
         scoregauche: number
         scoredroite: number
