@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import io from 'socket.io-client';
+import { useChatSocket } from '../Context';
 
 const WindowChat: React.FC = () => {
 
 	//Socket
+	const socket = useChatSocket()
 	useEffect(() => {
-		const socket = io('http://localhost:3000', {
-			autoConnect: false,
-		  });
+		// , {
+		// 	autoConnect: false,
+		//   });
 		socket.connect()
 		// setSocket(socketInstance);
 	  
@@ -24,7 +26,9 @@ const WindowChat: React.FC = () => {
 		socket.on('update', (data) => {
 			console.log(`Received chat message: ${data}`);
 		  });
-  
+
+		socket.emit('change_room', "Pouet")
+		
 		socket.emit('message', "un lapin")
 	  
 		return () => {

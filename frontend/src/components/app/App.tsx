@@ -10,7 +10,7 @@ import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
 import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
 import TwoFa from "../auth/2fa/TwoFa";
-import { UserProvider } from "../Context"
+import { ChatSocketProvider, UserProvider } from "../Context"
 import { useUser } from "../Context"; // Correct import path
 
 const App: React.FC = () => {
@@ -21,6 +21,7 @@ const App: React.FC = () => {
 
 	return (
 		<UserProvider>
+		<ChatSocketProvider>
 			<Routes>
 				<Route path={"/"} element={<Login />} />
 				<Route path={"/home"} element={<Home />} />
@@ -33,6 +34,7 @@ const App: React.FC = () => {
 				<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
 				<Route path={"*"} element={<Error />} />
 			</Routes>
+		</ChatSocketProvider>
 		</UserProvider>
 	)
 }
