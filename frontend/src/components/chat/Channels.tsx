@@ -5,11 +5,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
-import { on } from "events";
 
 interface Channel {
 	name: string;
@@ -68,13 +65,11 @@ const Channels: React.FC = () => {
 	// handle create channel _________________________________________
 
 	const handleSubmit = (name: string, privacy: string, password?: string) => {
-		console.log("CreateChannelForm:", name, privacy, password);
 		const body = {
 			name: name,
 			privacy: privacy,
 			password: password,
 		};
-		console.log(body)
 		const req = new Request("http://localhost:3000/chat/channel/create", {
 			method: "POST",
 			headers: {
@@ -82,14 +77,18 @@ const Channels: React.FC = () => {
 				"Content-Type": "application/json", // Specify content type
 			},
 			body: JSON.stringify(body),
-		})
-		console.log(req)
+		});
 
 		fetch(req)
 			.then((response) => response.json())
 			.then((data) => {
-				console.log("data:", data);
+				if (data.error) {
+					console.log("Error:", data.error);
+					return;
+				}
+				// TODO: change to new channel
 				setChannelCreated(true);
+				handleClose();
 			})
 			.catch((error) => {
 				console.error("Error fetching channels:", error);
