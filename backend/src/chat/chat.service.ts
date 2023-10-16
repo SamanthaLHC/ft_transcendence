@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { Channels, PrismaPromise, Privacy } from '@prisma/client';
+import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
@@ -32,9 +32,6 @@ export class ChatService {
 		});
 
 		const channels = userChannelMaps.map(userChannelMap => userChannelMap.channel);
-
-		console.log("in findAllJoinedChannels");
-		console.log(channels);
 		return channels;
 	}
 
@@ -64,8 +61,6 @@ export class ChatService {
 				name: true,
 			}
 		});
-		console.log("in findChannelBySearch")
-		console.log(channels);
 		return channels;
 	}
 
