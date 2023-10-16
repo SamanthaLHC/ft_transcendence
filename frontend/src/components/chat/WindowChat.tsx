@@ -1,6 +1,34 @@
-// import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
+import io from 'socket.io-client';
 
 const WindowChat: React.FC = () => {
+
+	//Socket
+	useEffect(() => {
+		const socket = io('http://localhost:3000', {
+			autoConnect: false,
+		  });
+		socket.connect()
+		// setSocket(socketInstance);
+	  
+		// listen for events emitted by the server
+	  
+		socket.on('connect', () => {
+		  console.log('Chat connected to server');
+		});
+	  
+		socket.on('lalalalala', (data) => {
+		  console.log(`Received chat message: ${data}`);
+		});
+
+		socket.emit('message', "un lapin")
+	  
+		return () => {
+		  if (socket) {
+			socket.disconnect();
+		  }
+		};
+	  }, []);
 
 	return (
 		<div className='chat-content'> {/* the big window */}

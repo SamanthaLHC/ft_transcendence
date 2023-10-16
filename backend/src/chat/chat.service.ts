@@ -2,12 +2,13 @@ import { BadRequestException, ConflictException, Injectable, Logger, NotFoundExc
 import { Channels, PrismaPromise, Privacy } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { ChatGateway } from './chat.gateway';
 
 @Injectable()
 export class ChatService {
-	constructor(private readonly prisma: PrismaService)	{}
+	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway)	{}
 
-	async findAllChannels() : Promise<PrismaPromise<any>> {
+	async findAllChannels(): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
 			// select: {
 			// 	name: true,
@@ -16,53 +17,66 @@ export class ChatService {
 		return channels;
 	}
 
-	async findAllJoinedChannels(userId: number) : Promise<PrismaPromise<any>> {
-		const channels = await this.prisma.userChannelMap.findMany({
+	async findAllJoinedChannels(userId: number): Promise<PrismaPromise<any>> {
+		const userChannelMaps = await this.prisma.userChannelMap.findMany({
 			where: {
 				userId: userId,
 			},
 			select: {
-				channel: true
-			}
+				channel: {
+					select: {
+						name: true,
+					}
+				}
+			},
 		});
+
+		const channels = userChannelMaps.map(userChannelMap => userChannelMap.channel);
+
+		console.log("in findAllJoinedChannels");
+		console.log(channels);
 		return channels;
 	}
 
-	async getChannelByName(channelName: string) : Promise<PrismaPromise<any>> {
+	async getChannelByName(channelName: string): Promise<PrismaPromise<any>> {
 		const channel = await this.prisma.channels.findUnique({
 			where: {
 				name: channelName,
 			}
 		});
-		if (!channel)
-		{
+		if (!channel) {
 			Logger.log("Channel not found", channelName);
 			throw new NotFoundException("Channel not found");
 		}
+		this.gateway.changeRoom(channelName)
 		return channel;
 	}
 
-	async findChannelBySearch(searchTerm: string) : Promise<PrismaPromise<any>> {
+	async findChannelBySearch(searchTerm: string): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
 			where: {
 				name: {
-					contains: searchTerm, 
+					contains: searchTerm,
 					mode: 'insensitive'
 				}
+			},
+			select: {
+				name: true,
 			}
 		});
+		console.log("in findChannelBySearch")
+		console.log(channels);
 		return channels;
 	}
 
-	async createChannelIfNotExists(newChannel : CreateChannelDto, userId: number) : Promise<PrismaPromise<any>> {
+	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
 				where: {
 					name: newChannel.name,
 				}
 			});
-			if (existingChannel)
-			{
+			if (existingChannel) {
 				Logger.log("Channel already exists", "ChatService");
 				Logger.log(existingChannel, "ChatService");
 				throw new ConflictException("Channel already exists");
@@ -81,7 +95,7 @@ export class ChatService {
 		return channel;
 	}
 
-	async joinChannel(channelId: number, userId: number){
+	async joinChannel(channelId: number, userId: number) {
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 		const ret = await this.prisma.userChannelMap.create({
@@ -93,20 +107,18 @@ export class ChatService {
 		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
 	}
 
-	async leaveChannel(channelId: number, userId: number){
+	async leaveChannel(channelId: number, userId: number) {
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
-		try
-		{
+		try {
 			const ret = await this.prisma.userChannelMap.delete({
 				where: {
-					id: {channelId: channelId, userId: userId}
+					id: { channelId: channelId, userId: userId }
 				}
 			});
 			Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
 		}
-		catch (e)
-		{
+		catch (e) {
 			Logger.log(`No entry found for user [${userId}] in channel [${channelId}]`, "ChatService");
 			throw new NotFoundException(`No entry found for user [${userId}] in channel [${channelId}]`);
 		}

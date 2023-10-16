@@ -1,5 +1,5 @@
-import React from "react";
-import SearchBar from '../friends/SearchBar';
+import React, { useEffect, useState } from "react";
+import SearchBar from './SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -7,26 +7,58 @@ import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useCookies } from "react-cookie";
 
 interface Channel {
 	name: string;
 }
 
-
 const Channels: React.FC = () => {
 
-	const chan: Channel[] = [
-		{
-			'name': "chan 1",
-		},
-		{
-			'name': "chan 2",
-		},
-		{
-			'name': "chan 3",
-		},
+	const [channels, setChannels] = useState<Channel[]>([]);
+	const [cookies] = useCookies(["access_token"]);
+	const [searchQuery, setSearchQuery] = useState("");
 
-	];
+
+	const handleSearchChange = (query: string) => {
+		setSearchQuery(query);
+	};
+
+	useEffect(() => {
+		async function getChannels() {
+
+			let uri_str: string
+			if (searchQuery === '')
+				uri_str = 'http://localhost:3000/chat/channels/joined'
+			else 
+				uri_str = 'http://localhost:3000/chat/channel?search=' + searchQuery
+
+			const req = new Request(uri_str, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+
+
+			return fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					const fetchedChannels = data.map((item: any) => {
+						return { name: item.name };
+					});
+					setChannels(fetchedChannels);
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		}
+
+		if (cookies.access_token) {
+			getChannels();
+		}
+	}, [cookies.access_token, searchQuery]);
+
 	// handle dropdown menu _________________________________________
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -36,10 +68,29 @@ const Channels: React.FC = () => {
 		setAnchorEl(event.currentTarget);
 	};
 
+	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		const name = event.currentTarget.textContent
+		console.log("handleChannelClick:", name);
+		const req = new Request("http://localhost:3000/chat/channel/" + name, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+			},
+		})
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("data:", data);
+			})
+			.catch((error) => {
+				console.error("Error fetching channels:", error);
+			});
+	}
+
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-
+	// console.log(chan[0].name);
 	return (
 		<React.Fragment>
 			<div
@@ -66,23 +117,24 @@ const Channels: React.FC = () => {
 						<MenuItem > password </MenuItem>
 					</Menu>
 				</h5>
-				<SearchBar />
+				<SearchBar onSearchChange={handleSearchChange} />
+
 				<div>
-					<ul className='typo yellow list'>
-						{chan.map(((channel) => (
-							<ListItem className='yellow' key={channel.name}>
-								<button className='profil-button'>
+					<ul className="typo yellow list">
+						{channels.map((channel) => (
+							<ListItem className="yellow" key={channel.name}>
+								<button className="profil-button" onClick={handleChannelClick}>
 									<Divider>
 										<ListItemText />
 										{channel.name}
 									</Divider>
 								</button>
 							</ListItem>
-						)))}
+						))}
 					</ul>
 				</div>
 			</div>
-		</React.Fragment >
+		</React.Fragment>
 	);
 }
 export default Channels;
