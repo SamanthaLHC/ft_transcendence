@@ -44,7 +44,7 @@ const Game:React.FC = () => {
 			gamefinish()
 		});
 		socket.on('colpad', () => {
-			playsound(canardmod)
+			playsound()
 		});
 
 		const onKeyPressed = (ev: KeyboardEvent): any => {
@@ -73,8 +73,8 @@ const Game:React.FC = () => {
 		else
 			setCanardmod(false)
 	};
-	const playsound = (can: boolean) => {
-		console.log(can)
+	const playsound = () => {
+		console.log(canardmod)
 		new Audio(coin).play();
 	};
 	if (!data)
