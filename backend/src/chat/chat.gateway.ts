@@ -33,13 +33,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		console.log("User " + removedItem["user"] + " was disconnected from " + removedItem["socket"])
 	}
 
-	@SubscribeMessage('message')
-	handleMessage(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
-	// Handle received message
-	console.log(data);
-	this.server.emit('lalalalala', data); // Broadcast the message to all connected clients
-	}
-
 	@SubscribeMessage('change_room')
 	changeRoom(@MessageBody() new_room: string, @ConnectedSocket() client: Socket) {
 		let findSocket = this.sockets.find(sockets => sockets.socket === client)
@@ -55,8 +48,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		console.log("After change " + findSocket2.room)
 	}
 	
-	// broadCast(event: string) {
-	// 	console.log("Emiting to " + this.room)
-	// 	this.server.to(this.room).emit("update", this.room + event)
-	// }
+	@SubscribeMessage('update')
+	broadCast(@MessageBody() event: string, @ConnectedSocket() client: Socket) {
+		let findSocket = this.sockets.find(sockets => sockets.socket === client)
+		this.server.to(findSocket.room).emit("update_front", event)
+	}
 }
