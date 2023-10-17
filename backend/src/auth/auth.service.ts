@@ -5,6 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Response, response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { authenticator } from 'otplib';
+import { access } from 'fs';
 
 const formData = (body: { [key: string]: string }) => {
 	const form = new FormData()
@@ -88,13 +89,43 @@ export class AuthService {
         }
         else
         {
-            const user = await this.prisma.user.create({
-                data: {
-                    login: data2['login'],
-                    photo: data2['image']['link'],
-                    name:  data2['login'],
+            let useret = await this.prisma.user.findFirst({
+                where: {
+                    name: data2['login'],
                 },
-            });
+            })
+            let user
+            if (useret)
+            {
+                let randomName
+                while (useret)
+                {
+                    randomName = Array(3).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
+                    randomName = `${data2['login']}${randomName}`
+                    useret = await this.prisma.user.findFirst({
+                        where: {
+                            name: randomName,
+                        },
+                    })
+                }
+                user = await this.prisma.user.create({
+                    data: {
+                        login: data2['login'],
+                        photo: data2['image']['link'],
+                        name:  randomName,
+                    },
+                });
+            }
+            else
+            {
+                user = await this.prisma.user.create({
+                    data: {
+                        login: data2['login'],
+                        photo: data2['image']['link'],
+                        name:  data2['login'],
+                    },
+                });
+            }
             const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
             const payload = { uuid: uuid, type: "acces", sub: user.id, username: user.login };
             const acces_token = await this.jwtService.signAsync(payload)
@@ -108,36 +139,37 @@ export class AuthService {
         }
     }
 
-    async login2fa(body: Auth2faDto, res: Response, id: number){
-        const user = await this.prisma.user.findFirst({
-            where: {
-                id: id,
-            },
-        })
-        const isCodeValid = this.isTwoFactorAuthenticationCodeValid(
-            body.code,
-            user.deuxfasecret,
-          );
-        if (!isCodeValid)
-            throw new UnauthorizedException();
-        const payload = { type: "acces", sub: user.id, username: user.login };
-        res.cookie("access_token", await this.jwtService.signAsync(payload),)
-        throw new HttpException({
-            status: 302,
-            url: "http://localhost:8000/home",
-          }, 302, {
-          });
-    }
-      
+	async login2fa(body: Auth2faDto, res: Response, id: number) {
+		const user = await this.prisma.user.findFirst({
+			where: {
+				id: id,
+			},
+		})
+		const isCodeValid = this.isTwoFactorAuthenticationCodeValid(
+			body.code,
+			user.deuxfasecret,
+		);
+		if (!isCodeValid)
+			throw new UnauthorizedException();
+		const payload = { type: "acces", sub: user.id, username: user.login };
+		res.cookie("access_token", await this.jwtService.signAsync(payload),)
+		const acces_token = await this.jwtService.signAsync(payload);
+		throw new HttpException({
+			status: 302,
+			url: "http://localhost:8000/home",
+			access_token: acces_token
+		}, 302, {
+		});
+	}
 
-    isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, secret: string) {
-        return authenticator.verify({
-          token: twoFactorAuthenticationCode,
-          secret: secret,
-        });
-      }
+	isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, secret: string) {
+		return authenticator.verify({
+			token: twoFactorAuthenticationCode,
+			secret: secret,
+		});
+	}
 
-      
+
 }
 
 

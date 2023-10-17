@@ -28,6 +28,24 @@ export class UsersService {
             throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
     }
 
+    async getState2fa(id: string) {
+        var id_num:number = +id
+        if (!id_num)
+            throw new BadRequestException()
+        const user = await this.prisma.user.findFirst({
+            where: {
+                id: id_num,
+            },
+            select: {
+                deuxfa: true
+            }
+        })
+        if (user)
+            return (user)
+        else
+            throw new NotFoundException(`Aucun user avec l'id ${id_num}`)
+    }
+
     async getHistoFromId(id: string) {
         var id_num:number = +id
         const hist = await this.prisma.gameHistory.findMany({
@@ -194,7 +212,7 @@ export class UsersService {
         const user = await this.prisma.user.findFirst({
             where: { id: userId}
         })
-        return await this.generateTwoFactorAuthenticationSecret(user.login, userId)
+        return await this.generateTwoFactorAuthenticationSecret(user.name, userId)
     }
 
     async turnOffTwoFactorAuthentication(userId: number) {

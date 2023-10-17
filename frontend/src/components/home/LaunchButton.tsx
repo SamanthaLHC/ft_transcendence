@@ -1,8 +1,6 @@
 import coin from '../../assets/duck_in_lake.png'
 import { useNavigate } from 'react-router';
 
-
-
 const LauncButton: React.FC = () => {
 
 	const navToGame = useNavigate();
@@ -11,12 +9,12 @@ const LauncButton: React.FC = () => {
 		navToGame(pathGame);
 	}
 	return (
-			<div className='launch-game'
+		<div className='launch-game'
 			style={{ backgroundImage: `url(${coin})` }} >
-				<button onClick={changeToGame}>
-					Play this magical game, right now !
-				</button>
-			</div>	
+			<button className='launch-button' onClick={changeToGame}>
+				Play this magical game, right now !
+			</button>
+		</div>
 	);
 }
 
