@@ -196,6 +196,19 @@ button:hover {
 	width: calc(85% - 2px);
 }
 
+.disabled-button {
+	background: #606060;
+	font-weight: bold;
+	font-family: Azonix;
+	color: #b0b0b0;
+	border: 1px solid #808080;
+	display: flex;
+	align-content: center;
+	align-items: center;
+	width: auto;
+	cursor: not-allowed;
+}
+  
 
 /*_______________________________________________________________________________________*/
 /*                              profil button component                                  */

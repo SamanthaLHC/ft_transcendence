@@ -19,6 +19,8 @@ const CreateChannelForm: React.FC<CreateChannelFormProps> = ({ isOpen, onSubmit 
 		onSubmit(name, privacy, privacy === 'PROTECTED' ? password : undefined);
 	};
 
+	const isCreateButtonDisabled = name.trim() === '';
+
 	return (
 		<div className="popup">
 			<form onSubmit={handleSubmit}>
@@ -56,7 +58,13 @@ const CreateChannelForm: React.FC<CreateChannelFormProps> = ({ isOpen, onSubmit 
 					</>
 				)}
 
-				<button type="submit">Create</button>
+				<button
+					type="submit"
+					disabled={isCreateButtonDisabled}
+					className={isCreateButtonDisabled ? 'disabled-button' : ''}
+				>
+					Create
+				</button>
 			</form>
 		</div>
 	);
