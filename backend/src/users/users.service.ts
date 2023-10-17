@@ -19,7 +19,9 @@ export class UsersService {
                 id: true,
                 login: true,
                 name: true,
-                photo: true
+                photo: true,
+                nbwin: true,
+                nbloose: true
             }
         })
         if (user)
