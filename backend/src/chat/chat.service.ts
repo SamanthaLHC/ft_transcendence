@@ -74,7 +74,7 @@ export class ChatService {
 			if (existingChannel) {
 				Logger.log("Channel already exists", "ChatService");
 				Logger.log(existingChannel, "ChatService");
-				existingChannel["error"] = "This channel already exists";
+				existingChannel["message"] = "This channel already exists";
 				return existingChannel;
 			}
 			const channel = await tx.channels.create({
@@ -86,7 +86,7 @@ export class ChatService {
 			});
 			return channel;
 		});
-		if (channel["error"])
+		if (channel["message"])
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
 		this.joinChannel(channel.id, userId);

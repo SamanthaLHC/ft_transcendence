@@ -82,9 +82,9 @@ const Channels: React.FC = () => {
 		fetch(req)
 			.then((response) => response.json())
 			.then((data) => {
-				if (data.error) {
-					console.log("Error:", data.error);
-					alert(data.error);
+				if (data.message) { // if error
+					console.log("Error:", data.message);
+					alert(data.message);
 					return;
 				}
 				// TODO: change to new channel
