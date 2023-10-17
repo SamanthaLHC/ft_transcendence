@@ -23,6 +23,12 @@ type CanvasProps = {
   const Canvas: React.FC<CanvasProps> = ({ data, canardmod }) => {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+    let imgballe = new Image();
+    imgballe.src = duck
+    let imgpad = new Image();
+    imgpad.src = pad
+    let imgpadd = new Image();
+    imgpadd.src = pad
     const drawgauchepad = (rect: CanvasRenderingContext2D, wight: number, height: number) => {
         rect.fillStyle = 'red';
         rect.fillRect(0, data.jgauche*height/10, 2*wight/100, 20*height/100);
@@ -40,62 +46,52 @@ type CanvasProps = {
 
     const drawballe = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
         ctx.fillStyle = 'yellow';
-        ctx.beginPath();
         ctx.arc(data.posballex*wight/100, data.posballey*height/100, wight/100, 0, 2 * Math.PI);
         ctx.fill();
     }
 
     const drawcanard = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
-        let img = new Image();
-        img.onload = () => {
-            ctx.drawImage(img, data.posballex*wight/100-(wight/50/2), data.posballey*height/100-(wight/50/2), wight/50, wight/50)
-            ctx.beginPath();
+        imgballe.onload = () => {
+            ctx.drawImage(imgballe, data.posballex*wight/100-(wight/50/2), data.posballey*height/100-(wight/50/2), wight/50, wight/50)
         }
-        img.src = duck
     }
 
     const drawpadgauchebag = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
-        let img = new Image();
-        img.onload = () => {
-            ctx.drawImage(img, 0, data.jgauche*height/10, 2*wight/100, 20*height/100)
-            ctx.beginPath();
+        imgpad.onload = () => {
+            ctx.drawImage(imgpad, 0, data.jgauche*height/10, 2*wight/100, 20*height/100)
         }
-        img.src = pad
     }
 
     const drawpaddroitebag = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
-        let img = new Image();
-        img.onload = () => {
-            ctx.drawImage(img, wight-2*wight/100, data.jdroite*height/10, 2*wight/100, 20*height/100)
-            ctx.beginPath();
+        imgpadd.onload = () => {
+            ctx.drawImage(imgpadd, wight-2*wight/100, data.jdroite*height/10, 2*wight/100, 20*height/100)
         }
-        img.src = pad
     }
-    useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas) {
             const context = canvas.getContext('2d');
             if (context) {
+                context.clearRect(0, 0, canvas.width, canvas.height)
+                context.beginPath()
+                context.fillStyle = '#000000';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                drawmidline(context, canvas.width, canvas.height);
                 if (!canardmod)
                 {
-                    context.fillStyle = '#000000';
-                    context.fillRect(0, 0, canvas.width, canvas.height);
                     drawgauchepad(context, canvas.width, canvas.height);
                     drawdroitepad(context, canvas.width, canvas.height);
-                    drawmidline(context, canvas.width, canvas.height);
                     drawballe(context, canvas.width, canvas.height);
                 }
                 else
                 {
-                    context.fillStyle = '#000000';
-                    context.fillRect(0, 0, canvas.width, canvas.height);
                     drawcanard(context, canvas.width, canvas.height);
                     drawpadgauchebag(context, canvas.width, canvas.height);
                     drawpaddroitebag(context, canvas.width, canvas.height);
                 }
+                context.fill()
+                context.closePath()
             }
         }
-    }, [data, canardmod]);
     let {innerWidth, innerHeight} = window;
     return (
         <div>

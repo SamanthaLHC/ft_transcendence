@@ -152,6 +152,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async startgame(roomid:number)
   {
     let finish = false
+    this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
+    await new Promise(f => setTimeout(f, 3000));
     while(!finish)
     {
       this.rooms[roomid].data.posballex += this.rooms[roomid].data.speedballX

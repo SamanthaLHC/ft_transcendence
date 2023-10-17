@@ -15,6 +15,8 @@ let finish = false
 let id = ""
 
 const Game:React.FC = () => {
+	let logindroite = ""
+	let logingauche = ""
 	const [cookies] = useCookies(["access_token"]);
 	const navToHome = useNavigate();
 	const gamefinish = () => {
@@ -24,6 +26,29 @@ const Game:React.FC = () => {
 			navToHome(pathHome);
 	}
 	const [data, setData] = useState(null);
+	const getnamebyid = async (id: string): Promise<string> => {
+		try {
+            const req = new Request(`http://localhost:3000/users/id/${id}`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${cookies.access_token}`,
+                },
+            });
+
+            const response = await fetch(req);
+
+            if (response.ok) {
+                const user = await response.json();
+                return user.name
+            } else {
+                console.log("request failed");
+                return "Unknown";
+            }
+        } catch (error) {
+            console.error("An error occurred while fetching user data:", error);
+            return "Unknown";
+        }
+	}
 	useEffect(() => {
 
 		const socket = io('http://localhost:3000', {
@@ -73,7 +98,7 @@ const Game:React.FC = () => {
 
 		window.addEventListener("keydown", onKeyPressed)
 		
-
+		
 		return () => {
 		  if (socket) {
 			socket.disconnect();
@@ -188,20 +213,40 @@ const Game:React.FC = () => {
 		}
 		
 	}
-	return (
+	if (id === data["jdscockid"])
+	{return (
 		<React.Fragment>
 			<Header />
 			<div id="container">
 				<Friends />
 				<div className='image-center'>
 					<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
-					<h2> {data["scoregauche"]} --------- {data["scoredroite"]}</h2>
+					<h2>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
+					<h2>Tu es a DROITE (bleu) ⬇️</h2>
 					<Canvas data={data} canardmod={canardmod}/>
 				</div>
 			</div>
 		</React.Fragment>
 
-	)
+	)}
+	else
+	{
+		return (
+			<React.Fragment>
+				<Header />
+				<div id="container">
+					<Friends />
+					<div className='image-center'>
+						<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
+						<h2>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
+						<h2>⬇️ Tu es a GAUCHE (rouge)</h2>
+						<Canvas data={data} canardmod={canardmod}/>
+					</div>
+				</div>
+			</React.Fragment>
+	
+		)
+	}
 }
 
 export default Game;
