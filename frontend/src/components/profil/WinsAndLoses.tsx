@@ -44,8 +44,8 @@ const WinsAndLoses: React.FC = () => {
                 <table className="styled-table">
                     <thead>
                         <tr>
-                            <th>Wins</th>
-                            <th>Loses</th>
+                            <th>your wins</th>
+                            <th>your loses</th>
                         </tr>
                     </thead>
                     <tbody>
