@@ -84,6 +84,7 @@ const Channels: React.FC = () => {
 			.then((data) => {
 				if (data.error) {
 					console.log("Error:", data.error);
+					alert(data.error);
 					return;
 				}
 				// TODO: change to new channel
