@@ -7,6 +7,7 @@ import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
 import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
+import { useChatSocket } from '../Context';
 
 interface Channel {
 	name: string;
@@ -20,10 +21,13 @@ const Channels: React.FC = () => {
 	const [channelCreated, setChannelCreated] = useState(false);
 
 
+	const socket = useChatSocket()
+	
+	
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
 	};
-
+	
 	useEffect(() => {
 		async function getChannels() {
 			console.log("getChannels:", searchQuery);
@@ -112,6 +116,7 @@ const Channels: React.FC = () => {
 	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		const name = event.currentTarget.textContent
 		console.log("handleChannelClick:", name);
+		socket.emit('change_room', name)
 		const req = new Request("http://localhost:3000/chat/channel/" + name, {
 			method: "GET",
 			headers: {

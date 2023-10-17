@@ -18,25 +18,22 @@ const WindowChat: React.FC = () => {
 		socket.on('connect', () => {
 		  console.log('Chat connected to server');
 		});
-	  
-		socket.on('lalalalala', (data) => {
-		  console.log(`Received chat message: ${data}`);
-		});
-		
-		socket.on('update', (data) => {
-			console.log(`Received chat message: ${data}`);
-		  });
 
-		socket.emit('change_room', "Pouet")
-		
-		socket.emit('message', "un lapin")
-	  
+		socket.on('update_front', () => {
+			console.log('I must update');
+		}); 
+ 
 		return () => {
 		  if (socket) {
 			socket.disconnect();
 		  }
 		};
 	  }, []);
+
+	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		// fetch pour envoyer le message en base de donnée
+		socket.emit('update', "update")
+	}
 
 	return (
 		<div className='chat-content'> {/* the big window */}
@@ -50,7 +47,7 @@ const WindowChat: React.FC = () => {
 			</div>
 			<div id="input-area">
 				<textarea />
-				<button className="send-button"> SEND </button>
+				<button className="send-button" onClick={handleSendClick}> SEND </button>
 			</div>
 		</div>
 	)
