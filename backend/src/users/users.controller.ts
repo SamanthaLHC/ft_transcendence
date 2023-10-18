@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, FileTypeValidator, ParseFilePipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SearchDto, addRelationDto, rmRelationDto, upNameDto } from './dto';
@@ -102,10 +102,15 @@ export class UsersController {
             }
         })
     }))
-    async upload(@UploadedFile() file, @Req() req) {
+    async upload(@UploadedFile()file, @Req() req) {
         if (!file)
             throw new BadRequestException("Error: No file sent")
-        return this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`)
+        if(file.mimetype == "image/png" || file.mimetype == "image/gif" || file.mimetype == "image/jpeg")
+        {
+            return this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`)
+        }
+        else
+            throw new BadRequestException("Pas une image ou un gif")
     }
 
     @Post('update_name')
