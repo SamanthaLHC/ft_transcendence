@@ -196,6 +196,12 @@ button:hover {
 	width: calc(85% - 2px);
 }
 
+.btn-game {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 
 /*_______________________________________________________________________________________*/
 /*                              profil button component                                  */

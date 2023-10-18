@@ -20,6 +20,12 @@ const Login: React.FC = () => {
 					>
 						Connexion with 42
 					</a>
+					<a
+						className="Login-link"
+						href={`http://localhost:8000/?code=test`}
+					>
+						Connexion with test
+					</a>
 				</header>
 			</div>
 		</React.Fragment>
