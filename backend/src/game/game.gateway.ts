@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { GameService } from './game.service';
 
-@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }})
+@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: 'game' })
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private jwtService: JwtService, private usersService: UsersService, private prisma: PrismaService, private gameService: GameService) {}
   @WebSocketServer()
@@ -69,6 +69,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!user)
       socket.disconnect
     console.log (`user connect : ${user.name}`)
+    console.log(this.rooms)
     if(!this.rooms || this.rooms.length == 0)
     {
       this.rooms = []
@@ -92,6 +93,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
       }
       else {
+        if (this.rooms[this.rooms.length - 1].userone.id == user.id)
+        {
+          socket.emit("game_finish")
+          return ;
+        }
         this.rooms[this.rooms.length - 1].usertwo = user
         this.rooms[this.rooms.length - 1].data.jdroiteid = user.id
         this.rooms[this.rooms.length - 1].data.jdscockid = socket.id
@@ -119,7 +125,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
     })
     const roomid = this.getroombyuser(user)
-    if (!this.roomisfull(roomid))
+    if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
     {
       this.rooms.pop()
     }
@@ -131,7 +137,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     let i = this.rooms.length -1;
     while (this.rooms[i])
     {
-      if (this.rooms[i].userone.id === user.id || this.rooms[i].usertwo.id === user.id)
+      if (this.rooms[i].userone.id === user.id)
+        return i
+      if (this.rooms[i].usertwo && this.rooms[i].usertwo.id === user.id)
         return i
       i++
     }
@@ -185,6 +193,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey)
         {
           this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+          this.rooms[roomid].data.posballex = 96
           if (this.rooms[roomid].data.speedballX > 0)
             this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX +0.05
           else
@@ -210,6 +219,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY +0.05
           else
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
+          this.rooms[roomid].data.posballex = 4
           this.server.to((roomid).toString()).emit("colpad")
           console.log("colision pad gauche")
         }

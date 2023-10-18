@@ -51,7 +51,7 @@ const Game:React.FC = () => {
 	}
 	useEffect(() => {
 
-		const socket = io('http://localhost:3000', {
+		const socket = io('http://localhost:3000/game', {
 			autoConnect: false,
 	  	});
 		let token = cookies.access_token;
@@ -219,8 +219,10 @@ const Game:React.FC = () => {
 			<Header />
 			<div id="container">
 				<Friends />
+					<div className='btn-game'>
+						<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
+					</div>
 				<div className='image-center'>
-					<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
 					<h2>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
 					<h2>Tu es a DROITE (bleu) ⬇️</h2>
 					<Canvas data={data} canardmod={canardmod}/>
@@ -236,8 +238,10 @@ const Game:React.FC = () => {
 				<Header />
 				<div id="container">
 					<Friends />
-					<div className='image-center'>
+					<div className='btn-game'>
 						<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
+					</div>
+					<div className='image-center'>
 						<h2>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
 						<h2>⬇️ Tu es a GAUCHE (rouge)</h2>
 						<Canvas data={data} canardmod={canardmod}/>
