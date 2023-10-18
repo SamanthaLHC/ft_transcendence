@@ -49,7 +49,7 @@ export const useUser = (): UserContextType => {
 // 	socket: Socket
 // }
 
-export const socket = io('http://localhost:3000', {autoConnect: false});
+export const socket = io('http://localhost:3000/chat', {autoConnect: false});
 export const ChatSocketContext = React.createContext<Socket>(socket);
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
