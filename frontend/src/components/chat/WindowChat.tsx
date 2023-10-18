@@ -4,8 +4,10 @@ import { useChatSocket } from '../Context';
 
 const WindowChat: React.FC = () => {
 
-	//Socket
 	const socket = useChatSocket()
+	const [inputValue, setInputValue] = useState('');
+
+	//Socket
 	useEffect(() => {
 		// , {
 		// 	autoConnect: false,
@@ -19,8 +21,8 @@ const WindowChat: React.FC = () => {
 		  console.log('Chat connected to server');
 		});
 
-		socket.on('update_front', () => {
-			console.log('I must update');
+		socket.on('update_front', (data) => {
+			console.log('I must update', data);
 		}); 
  
 		return () => {
@@ -31,8 +33,20 @@ const WindowChat: React.FC = () => {
 	  }, []);
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		// fetch pour envoyer le message en base de donnée
-		socket.emit('update', "update")
+		if (inputValue !== "") {
+			emitMsg()
+		}
+	}
+	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+		if (event.key === 'Enter' && inputValue != "") {
+			emitMsg();
+		}
+	}
+
+	const emitMsg = () => {
+		socket.emit('update', inputValue)
+		console.log("in handle")
+		setInputValue("")
 	}
 
 	return (
@@ -46,7 +60,9 @@ const WindowChat: React.FC = () => {
 				</ul>
 			</div>
 			<div id="input-area">
-				<textarea />
+				<textarea id="inputMsg" name="inputMsg" value={inputValue}
+								onChange={(e) => setInputValue(e.target.value)}
+								onKeyDown={handleSendKey}/>
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
 			</div>
 		</div>

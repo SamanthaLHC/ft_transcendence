@@ -51,6 +51,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('update')
 	broadCast(@MessageBody() event: string, @ConnectedSocket() client: Socket) {
 		let findSocket = this.sockets.find(sockets => sockets.socket === client)
-		this.server.to(findSocket.room).emit("update_front", event)
+		if (findSocket.room !== "") {
+			this.server.to(findSocket.room).emit("update_front", event)
+		}
 	}
 }
