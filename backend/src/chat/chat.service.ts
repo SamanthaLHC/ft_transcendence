@@ -65,6 +65,7 @@ export class ChatService {
 	}
 
 	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
+		newChannel.name = newChannel.name.toLowerCase();
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
 				where: {
