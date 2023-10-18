@@ -196,6 +196,12 @@ button:hover {
 	width: calc(85% - 2px);
 }
 
+.btn-game {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .disabled-button {
 	background: #606060;
 	font-weight: bold;
