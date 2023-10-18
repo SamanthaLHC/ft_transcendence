@@ -25,7 +25,6 @@ const WinsAndLoses: React.FC = () => {
             const response = await fetch(req);
             const datas = await response.json();
             if (response.status === 200 || response.status === 304) {
-                console.log(datas);
                 setWinsData(datas.nbwin);
                 setLoseData(datas.nbloose);
             }

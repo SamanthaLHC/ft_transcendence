@@ -106,11 +106,9 @@ const Game: React.FC = () => {
 	const handleClick = () => {
 		if (!canardmod) {
 			canardmod = true
-			console.log(canardmod)
 		}
 		else {
 			canardmod = false
-			console.log(canardmod)
 		}
 	};
 	const playsound = () => {
@@ -134,7 +132,6 @@ const Game: React.FC = () => {
 		)
 	}
 	else if (finish) {
-		console.log(id)
 		if (id === data["jdscockid"]) {
 			if (data["scoredroite"] > data["scoregauche"]) {
 				return (
