@@ -28,7 +28,13 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Post('channel/:channelName')
+	@Post('channel/create')
+	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto, @Req() req) {
+		return await this.chatService.createChannelIfNotExists(newChannel, req.user.sub);
+	}
+	
+	@UseGuards(AuthGuard)
+	@Post('channel/msg/:channelName')
 	async addNewMessage(@Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
 		console.log ("in control")
 		return await this.chatService.addNewMessage(newMessage, req.user.sub);
@@ -40,11 +46,6 @@ export class ChatController {
 		return await this.chatService.findChannelBySearch(searchTerm);
 	}
 
-	@UseGuards(AuthGuard)
-	@Post('channel/create')
-	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto, @Req() req) {
-		return await this.chatService.createChannelIfNotExists(newChannel, req.user.sub);
-	}
 
 	@UseGuards(AuthGuard)
 	@Post('channel/join/:channelId')

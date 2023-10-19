@@ -58,7 +58,7 @@ const WindowChat: React.FC = () => {
 			};
 			const bodyjsson = JSON.stringify(body)
 			console.log(bodyjsson)
-			const req = new Request("http://localhost:3000/chat/channel/" + socket.room, {
+			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.room, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
