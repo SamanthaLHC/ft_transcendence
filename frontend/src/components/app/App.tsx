@@ -12,13 +12,35 @@ import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
 import TwoFa from "../auth/2fa/TwoFa";
 import { UserProvider } from "../Context"
 import { useUser } from "../Context"; // Correct import path
+import { useEffect } from 'react';
+import { io } from 'socket.io-client';
+import { useCookies } from 'react-cookie';
 
 const App: React.FC = () => {
 
 	const params = useParams();
 	const imageUrl = params.imageUrl || '';
 
-
+	const [cookies] = useCookies(["access_token"]);
+	useEffect(() => {
+		const socket = io('http://localhost:3000/status', {
+			autoConnect: false,
+		});
+		console.log(cookies.access_token)
+		if (cookies.access_token) {
+			let token = cookies.access_token;
+			socket.auth = { token };
+			socket.connect()
+			socket.on('connect', () => {
+				console.log('Connected to server');
+			});
+			return () => {
+			if (socket) {
+				socket.disconnect();
+			}
+			}
+		}
+	}, [cookies.access_token]);
 	return (
 		<UserProvider>
 			<Routes>

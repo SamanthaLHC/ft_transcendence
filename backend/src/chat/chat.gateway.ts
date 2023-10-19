@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 
-@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }})
+@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	room: string
 	socket: Socket;

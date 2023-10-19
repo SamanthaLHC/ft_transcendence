@@ -11,11 +11,12 @@ import { UsersController } from './users/users.controller';
 import { ChatModule } from './chat/chat.module';
 import { GameGateway } from './game/game.gateway';
 import { GameService } from './game/game.service';
+import { MasterGateway } from './app.gateway';
 
 
 @Module({
   imports: [AuthModule, PrismaModule, ConfigModule.forRoot(), ChatModule],
   controllers: [AppController, AuthController, UsersController],
-  providers: [AppService, AuthService, UsersService, GameGateway, GameService],
+  providers: [AppService, AuthService, UsersService, GameGateway, GameService, MasterGateway],
 })
 export class AppModule {}
