@@ -88,7 +88,7 @@ const MatchHistory: React.FC = () => {
         if (matchData.length > 0) {
             fetchUserNames();
         }
-    }, [matchData]);
+    }, [setMatchData]);
 
     return (
         <React.Fragment>
