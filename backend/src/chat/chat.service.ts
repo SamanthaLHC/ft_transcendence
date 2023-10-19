@@ -3,6 +3,7 @@ import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
+import { NewMessageDto } from './dto/new-message/new-message.dto';
 
 @Injectable()
 export class ChatService {
@@ -120,5 +121,25 @@ export class ChatService {
 			Logger.log(`No entry found for user [${userId}] in channel [${channelId}]`, "ChatService");
 			throw new NotFoundException(`No entry found for user [${userId}] in channel [${channelId}]`);
 		}
+	}
+
+	async addNewMessage(newMessage: NewMessageDto, userId: number) {
+		try {
+			console.log("in Service")
+			const channel = await this.getChannelByName(newMessage.channel)
+			const ret = await this.prisma.messages.create({
+				data: {
+					content: newMessage.msg,
+					senderId: userId,
+					channelId: channel.id,
+				}
+			})
+			console.log ("End of service")
+		}
+		catch (e) {
+			Logger.log("Can't add msg");
+			return false
+		}
+		return false
 	}
 }

@@ -3,7 +3,7 @@ import { ChatService } from './chat.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
-
+import { NewMessageDto } from './dto/new-message/new-message.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -25,6 +25,13 @@ export class ChatController {
 	@Get('channel/:channelName')
 	async getChannelByName(@Param('channelName') channelName: string) :Promise<PrismaPromise<any>>{
 		return await this.chatService.getChannelByName(channelName);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelName')
+	async addNewMessage(@Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
+		console.log ("in control")
+		return await this.chatService.addNewMessage(newMessage, req.user.sub);
 	}
 
 	@UseGuards(AuthGuard)
