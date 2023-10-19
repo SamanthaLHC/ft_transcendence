@@ -1,33 +1,40 @@
 import React, { useState, useEffect } from 'react'
-import io from 'socket.io-client';
 import { useChatSocket } from '../Context';
+import { useCookies } from "react-cookie";
 
 const WindowChat: React.FC = () => {
 
 	const socket = useChatSocket()
 	const [inputValue, setInputValue] = useState('');
+	// const [channelName, setChannelName] = useState('');
+	const [cookies] = useCookies(["access_token"]);
 
 	//Socket
 	useEffect(() => {
 		// , {
 		// 	autoConnect: false,
 		//   });
-		socket.connect()
+		socket.socket.connect()
 		// setSocket(socketInstance);
 	  
 		// listen for events emitted by the server
 	  
-		socket.on('connect', () => {
+		socket.socket.on('connect', () => {
 		  console.log('Chat connected to server');
 		});
 
-		socket.on('update_front', (data) => {
+		socket.socket.on('update_front', (data) => {
 			console.log('I must update', data);
 		}); 
- 
+
+		// socket.socket.on('channel', (data) => {
+		// 	setChannelName(data)
+		// 	console.log('update channel', channelName);
+		// }); 
+
 		return () => {
 		  if (socket) {
-			socket.disconnect();
+			socket.socket.disconnect();
 		  }
 		};
 	  }, []);
@@ -44,7 +51,31 @@ const WindowChat: React.FC = () => {
 	}
 
 	const emitMsg = () => {
-		socket.emit('update', inputValue)
+		if (socket.room !== "") {
+			const body = {
+				msg: inputValue,
+				channel: socket.room,
+			};
+			const bodyjsson = JSON.stringify(body)
+			console.log(bodyjsson)
+			const req = new Request("http://localhost:3000/chat/channel/" + socket.room, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+					"Content-Type": "application/json", // Specify content type
+				},
+				body: bodyjsson,
+			})
+			fetch(req)
+				.then((response) => {console.log(response);response.json()})
+				.then((data) => {
+					socket.socket.emit('update', inputValue)
+				})
+				.catch((error) => {
+					console.error("Error sending message:", error);
+				});
+	
+		}
 		console.log("in handle")
 		setInputValue("")
 	}

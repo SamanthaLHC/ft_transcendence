@@ -116,7 +116,9 @@ const Channels: React.FC = () => {
 	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		const name = event.currentTarget.textContent
 		console.log("handleChannelClick:", name);
-		socket.emit('change_room', name)
+		socket.socket.emit('change_room', name);
+		if (name)
+			socket.room = name
 		const req = new Request("http://localhost:3000/chat/channel/" + name, {
 			method: "GET",
 			headers: {

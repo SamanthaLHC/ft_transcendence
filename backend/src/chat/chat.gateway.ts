@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatSocketDto } from './dto/chat_socket.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: "chat"})
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -48,6 +49,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		console.log("After change " + findSocket2.room)
 	}
 	
+	@SubscribeMessage('get_channel')
+	getRoom(@ConnectedSocket() client: Socket) {
+		let findSocket = this.sockets.find(sockets => sockets.socket === client)
+		if (findSocket.room !== "") {
+			this.server.to(findSocket.room).emit("channel", findSocket.room)
+		}
+	}
+
+
 	@SubscribeMessage('update')
 	broadCast(@MessageBody() event: string, @ConnectedSocket() client: Socket) {
 		let findSocket = this.sockets.find(sockets => sockets.socket === client)
