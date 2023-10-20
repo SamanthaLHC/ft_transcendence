@@ -20,9 +20,16 @@ export class GameService {
         else if (status == "CONNECTED")
         {
             await this.prisma.user.updateMany({
-                where: {
-                    id: { in: [idone, idtwo] },
-                },
+                where: { 
+                    AND: [
+                        {
+                            id: { in: [idone, idtwo] },
+                        },
+                        {
+                            status: "INGAME"
+                        }
+                    ]
+                 },
                 data: {
                 status: "CONNECTED",
                 },
