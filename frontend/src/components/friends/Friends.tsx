@@ -7,40 +7,52 @@ import { useNavigate } from 'react-router';
 import Avatar from '@mui/material/Avatar';
 import rubber from '../../assets/duck_in_lake.png'
 import SearchBar from './SearchBar';
+import { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
+interface User {
+	name: string;
+	id: number;
+	photo: string;
+  }
 
 const Friends: React.FC = () => {
-
+	const [users, setUsers] = useState<User[]>([]);
+	const [cookies] = useCookies(["access_token"]);
 	let navToFriendProfil = useNavigate();
 	const changeToFriendProfil = () => {
 		let pathFriendProfil = '/friend';
 		navToFriendProfil(pathFriendProfil);
 	}
-
-	const users = [
-		{
-			'image': "",
-			'name': "coin",
-		},
-		{
-			'image': "",
-			'name': "pouet",
-		},
-		{
-			'image': "",
-			'name': "ducky",
-		}, {
-			'image': "",
-			'name': "yoyo",
-		}, {
-			'image': "",
-			'name': "coucou",
-		},
-	];
-
+	useEffect(() => {
+		async function getFriend(): Promise<void> {
+			const req = new Request('http://localhost:3000/users/get_friend', {
+					method: "GET",
+					headers: {
+						"Authorization": `Bearer ${cookies.access_token}`,
+					},
+				});
+				try {
+					const response = await fetch(req);
+					const datas = await response.json();
+					if (datas) {
+						let usersData: User[] = []
+						let i = 0
+						while(datas[i])
+						{
+							usersData.push({name: datas[i].target.name, id: datas[i].target.id, photo: datas[i].target.photo})
+							i++
+						}
+						setUsers(usersData)
+					}
+				} catch (error) {
+					
+				}
+			}
+		getFriend()
+	}, [cookies.access_token]);
 	//json.parse
 	// loop pour afficher listItem
-
 	return (
 		<React.Fragment>
 			<div
@@ -56,7 +68,7 @@ const Friends: React.FC = () => {
 								<ListItem className='yellow' key={user.name}>
 									<ListItemAvatar>
 										<button className='profil-button' onClick={changeToFriendProfil}>
-											<Avatar alt="Profile Picture" src={rubber} />
+											<Avatar alt="Profile Picture" src={user.photo} />
 											<Divider>
 												<ListItemText />
 												{user.name}

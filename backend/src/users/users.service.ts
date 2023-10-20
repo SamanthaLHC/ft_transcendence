@@ -199,7 +199,16 @@ export class UsersService {
                 ]
              },
             select: {
-                targetId: true
+                target: {
+                    select: {
+                        id: true,
+                        login: true,
+                        name: true,
+                        photo: true,
+                        nbwin: true,
+                        nbloose: true
+                    }
+                }
             }
           })
         if (relation[0])
