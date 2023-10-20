@@ -69,7 +69,7 @@ const WindowChat: React.FC = () => {
 	}
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if (inputValue != "\n" && inputValue !== "") {
+		if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
 			emitMsg()
 		} else {
 			setInputValue("")
@@ -77,11 +77,12 @@ const WindowChat: React.FC = () => {
 	}
 	
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (event.key === 'Enter' && inputValue != "\n" && inputValue !== "") {
-			console.log("input", inputValue)
-			emitMsg();
-		} else {
-			setInputValue("")
+		if (event.key === 'Enter') {
+			if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+				emitMsg();
+			} else {
+				setInputValue("")
+			}
 		}
 	}
 
@@ -91,7 +92,6 @@ const WindowChat: React.FC = () => {
 				msg: inputValue,
 				channel: socket.room,
 			};
-			console.log(body)
 			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.room, {
 				method: "POST",
 				headers: {
@@ -101,7 +101,7 @@ const WindowChat: React.FC = () => {
 				body: JSON.stringify(body),
 			})
 			fetch(req)
-				.then((response) => {console.log(response);response.json()})
+				.then((response) => response.json())
 				.then((data) => {
 					socket.socket.emit('update', inputValue)
 				})
@@ -110,7 +110,6 @@ const WindowChat: React.FC = () => {
 				});
 	
 		}
-		console.log("in handle")
 		setInputValue("")
 	}
 
