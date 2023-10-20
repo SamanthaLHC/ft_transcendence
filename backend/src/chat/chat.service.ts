@@ -144,6 +144,19 @@ export class ChatService {
 	}
 
 	async updateChannel(channel: UpdateChannelDto, userId: number) {
-
+		console.log("channel name", channel.channel)
+		const chan = await this.prisma.channels.findFirst({
+			where: {
+				name: channel.channel,
+			}
+		})
+		if (!chan)
+			return ({})
+		const ret = await this.prisma.messages.findMany({
+			where: {
+                channelId: chan.id,
+            },
+		})
+		return (ret);
 	}
 }
