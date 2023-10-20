@@ -23,8 +23,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 		let findSocket = this.sockets.find(sockets => sockets.socket === socket)
 		let pos = this.sockets.indexOf(findSocket);
-		console.log("coucou chat " + pos)
-		socket.emit('lalalalala', "coucou")
+		console.log("hello chat ")
 	}
 	
 	handleDisconnect(@ConnectedSocket() client: Socket) {
@@ -39,14 +38,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		let findSocket = this.sockets.find(sockets => sockets.socket === client)
 		if (findSocket.room !== "") {
 			findSocket.socket.leave(findSocket.room)
-			console.log ("Change from ", findSocket.room, " to ", new_room)
 		}
 		findSocket.socket.join(new_room)
 		console.log("Joining " + new_room)
-		console.log("Before change " + findSocket.room)
 		findSocket.room = new_room
-		let findSocket2 = this.sockets.find(sockets => sockets.socket === client)
-		console.log("After change " + findSocket2.room)
+		client.emit("update_front", new_room)
 	}
 	
 	@SubscribeMessage('get_channel')

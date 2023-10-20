@@ -30,39 +30,7 @@ const WindowChat: React.FC = () => {
 		});
 
 		socket.socket.on('update_front', (channelName) => {
-			console.log('I must update', channelName);
-			const body = {
-				channel: channelName,
-			};
-			console.log(body)
-
-			const req = new Request("http://localhost:3000/chat/channel/update/", {
-				method: "POST",
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-					"Content-Type": "application/json", // Specify content type
-				},
-				body: JSON.stringify(body),
-			})
-			fetch(req)
-				.then((response) => response.json())
-				.then((data) => {
-					console.log(data)
-					const fetchedMessages = data.map((item: any) => {
-						console.log("item: ", item.sender.name)
-						const tmp = item.sender.name + ": " + item.content
-						console.log("tmp: ", tmp)
-						return { msg: tmp };
-					});
-					console.log("messages before: ", messages)
-					messages.push({msg: "test"})
-					setMessages(fetchedMessages);
-					console.log("messages: ", messages)
-				})
-				.catch((error) => {
-					console.error("Error updating channel " + channelName + ":", error);
-				});
-
+			updateMessages(channelName);
 		}); 
 
 		return () => {
@@ -72,15 +40,48 @@ const WindowChat: React.FC = () => {
 		};
 	  }, []);
 
+	const updateMessages = (channelName: string) => {
+		console.log('I must update', channelName);
+		const body = {
+			channel: channelName,
+		};
+
+		const req = new Request("http://localhost:3000/chat/channel/update/", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+				"Content-Type": "application/json", // Specify content type
+			},
+			body: JSON.stringify(body),
+		})
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				const fetchedMessages = data.map((item: any) => {
+					const tmp = item.sender.name + ": " + item.content
+					return { msg: tmp };
+				});
+				setMessages(fetchedMessages);
+			})
+			.catch((error) => {
+				console.error("Error updating channel " + channelName + ":", error);
+			});
+	}
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if (inputValue !== "") {
+		if (inputValue != "\n" && inputValue !== "") {
 			emitMsg()
+		} else {
+			setInputValue("")
 		}
 	}
+	
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (event.key === 'Enter' && inputValue != "") {
+		if (event.key === 'Enter' && inputValue != "\n" && inputValue !== "") {
+			console.log("input", inputValue)
 			emitMsg();
+		} else {
+			setInputValue("")
 		}
 	}
 
@@ -116,19 +117,18 @@ const WindowChat: React.FC = () => {
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				Chan name (wip)
+				{ socket.room }
 			</div>
 			<div className='messages-area'>	{/* the conv space */}
 				<ul>
-				{messages.map((message) => (
-							<ListItem className="yellow" >
+				{messages.map((message, index) => (
+							<ListItem className="yellow" key={index} >
 									<Divider>
 										<ListItemText />
 										{message.msg}
 									</Divider>
 							</ListItem>
 						))}
-					{/* here, the messages sent */}
 				</ul>
 			</div>
 			<div id="input-area">
