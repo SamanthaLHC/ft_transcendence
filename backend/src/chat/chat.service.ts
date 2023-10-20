@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
@@ -144,7 +144,9 @@ export class ChatService {
 	}
 
 	async updateChannel(channel: UpdateChannelDto, userId: number) {
-		console.log("channel name", channel.channel)
+		console.log("channel name", userId)
+		if (await this.UserIsInChan(channel.channel, userId) == false)
+			throw new UnauthorizedException("User not in channel")
 		const chan = await this.prisma.channels.findFirst({
 			where: {
 				name: channel.channel,
@@ -167,5 +169,27 @@ export class ChatService {
 			},
 		})
 		return (ret);
+	}
+
+	async UserIsInChan(channel: string, userId: number): Promise<boolean>
+	{
+		const chan = await this.prisma.channels.findFirst({
+			where: {
+                        name : channel
+                    },
+			select:{
+				users: true
+			}
+		})
+		let i =0
+		while(chan.users[i])
+		{
+			if (chan.users[i].userId == userId)
+			{
+				return (true)
+			}
+			i++
+		}
+		return(false)
 	}
 }
