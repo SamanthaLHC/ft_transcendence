@@ -43,6 +43,7 @@ model Channels {
     privacy   Privacy
     owner     User             @relation(fields: [ownerId], references: [id])
     ownerId   Int
+    password  String? 
     createdAt DateTime         @default(now())
     users     UserChannelMap[]
     messages  Messages[]

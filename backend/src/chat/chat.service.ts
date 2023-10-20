@@ -3,10 +3,13 @@ import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class ChatService {
 	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway)	{}
+
+	saltOrRounds = 10;
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
@@ -66,6 +69,12 @@ export class ChatService {
 
 	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
 		newChannel.name = newChannel.name.toLowerCase();
+
+		if (newChannel.privacy === "PASSWORD_PROTECTED") {
+			newChannel.password = await bcrypt.hash(newChannel.password, this.saltOrRounds);
+		}
+
+		console.log(newChannel);
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
 				where: {
@@ -83,6 +92,8 @@ export class ChatService {
 					name: newChannel.name,
 					privacy: newChannel.privacy,
 					ownerId: userId,
+					// add password if privacy is PASSWORD_PROTECTED
+					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: newChannel.password }),
 				}
 			});
 			return channel;
