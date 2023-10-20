@@ -51,7 +51,10 @@ const Channels: React.FC = () => {
 					const fetchedChannels = data.map((item: any) => {
 						return { name: item.name };
 					});
+					console.log("feteched channels: ", fetchedChannels)
+					channels.push({name: "test"})
 					setChannels(fetchedChannels);
+					console.log ("channels: ", channels)
 				})
 				.catch((error) => {
 					console.error("Error fetching channels:", error);

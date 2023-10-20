@@ -154,8 +154,17 @@ export class ChatService {
 			return ({})
 		const ret = await this.prisma.messages.findMany({
 			where: {
-                channelId: chan.id,
-            },
+				channelId: chan.id,
+			},
+			select: {
+				sender: {
+					select : {
+						name: true
+					}
+				},
+				content: true,
+				createdAt: true,
+			},
 		})
 		return (ret);
 	}

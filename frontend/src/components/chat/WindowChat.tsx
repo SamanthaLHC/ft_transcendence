@@ -1,8 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
+import { ListItem, Divider, ListItemText } from '@mui/material';
+import { channel } from 'diagnostics_channel';
+
+interface Message {
+	msg: string
+}
 
 const WindowChat: React.FC = () => {
+	const [messages, setMessages] = useState<Message[]>([]);
 
 	const socket = useChatSocket()
 	const [inputValue, setInputValue] = useState('');
@@ -38,9 +45,19 @@ const WindowChat: React.FC = () => {
 				body: JSON.stringify(body),
 			})
 			fetch(req)
-				.then((response) => {console.log(response);response.json()})
+				.then((response) => response.json())
 				.then((data) => {
 					console.log(data)
+					const fetchedMessages = data.map((item: any) => {
+						console.log("item: ", item.sender.name)
+						const tmp = item.sender.name + ": " + item.content
+						console.log("tmp: ", tmp)
+						return { msg: tmp };
+					});
+					console.log("messages before: ", messages)
+					messages.push({msg: "test"})
+					setMessages(fetchedMessages);
+					console.log("messages: ", messages)
 				})
 				.catch((error) => {
 					console.error("Error updating channel " + channelName + ":", error);
@@ -48,17 +65,13 @@ const WindowChat: React.FC = () => {
 
 		}); 
 
-		// socket.socket.on('channel', (data) => {
-		// 	setChannelName(data)
-		// 	console.log('update channel', channelName);
-		// }); 
-
 		return () => {
 		  if (socket) {
 			socket.socket.disconnect();
 		  }
 		};
 	  }, []);
+
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		if (inputValue !== "") {
@@ -107,6 +120,14 @@ const WindowChat: React.FC = () => {
 			</div>
 			<div className='messages-area'>	{/* the conv space */}
 				<ul>
+				{messages.map((message) => (
+							<ListItem className="yellow" >
+									<Divider>
+										<ListItemText />
+										{message.msg}
+									</Divider>
+							</ListItem>
+						))}
 					{/* here, the messages sent */}
 				</ul>
 			</div>
