@@ -4,6 +4,7 @@ import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -57,5 +58,12 @@ export class ChatController {
 	@Delete('channel/leave/:channelId')
 	async leaveChannel(@Param('channelId') channelId: string, @Req() req) {
 		return await this.chatService.leaveChannel(+channelId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/update/')
+	async updateChannel(@Body() channel: UpdateChannelDto, @Req() req) :Promise<PrismaPromise<any>>{
+		console.log ("in control")
+		return await this.chatService.updateChannel(channel, req.user.sub);
 	}
 }

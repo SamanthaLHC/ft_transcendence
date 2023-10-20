@@ -6,7 +6,6 @@ const WindowChat: React.FC = () => {
 
 	const socket = useChatSocket()
 	const [inputValue, setInputValue] = useState('');
-	// const [channelName, setChannelName] = useState('');
 	const [cookies] = useCookies(["access_token"]);
 
 	//Socket
@@ -23,8 +22,30 @@ const WindowChat: React.FC = () => {
 		  console.log('Chat connected to server');
 		});
 
-		socket.socket.on('update_front', (data) => {
-			console.log('I must update', data);
+		socket.socket.on('update_front', (channelName) => {
+			console.log('I must update', channelName);
+			const body = {
+				channel: channelName,
+			};
+			console.log(body)
+
+			const req = new Request("http://localhost:3000/chat/channel/update/", {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+					"Content-Type": "application/json", // Specify content type
+				},
+				body: JSON.stringify(body),
+			})
+			fetch(req)
+				.then((response) => {console.log(response);response.json()})
+				.then((data) => {
+					console.log(data)
+				})
+				.catch((error) => {
+					console.error("Error updating channel " + channelName + ":", error);
+				});
+
 		}); 
 
 		// socket.socket.on('channel', (data) => {
@@ -56,15 +77,14 @@ const WindowChat: React.FC = () => {
 				msg: inputValue,
 				channel: socket.room,
 			};
-			const bodyjsson = JSON.stringify(body)
-			console.log(bodyjsson)
+			console.log(body)
 			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.room, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
 					"Content-Type": "application/json", // Specify content type
 				},
-				body: bodyjsson,
+				body: JSON.stringify(body),
 			})
 			fetch(req)
 				.then((response) => {console.log(response);response.json()})
