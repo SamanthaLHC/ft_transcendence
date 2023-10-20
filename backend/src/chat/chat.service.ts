@@ -4,6 +4,7 @@ import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Injectable()
 export class ChatService {
@@ -134,12 +135,15 @@ export class ChatService {
 					channelId: channel.id,
 				}
 			})
-			console.log ("End of service")
 		}
 		catch (e) {
 			Logger.log("Can't add msg");
 			return false
 		}
 		return false
+	}
+
+	async updateChannel(channel: UpdateChannelDto, userId: number) {
+
 	}
 }
