@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { ListItem, Divider, ListItemText } from '@mui/material';
@@ -10,10 +10,10 @@ interface Message {
 
 const WindowChat: React.FC = () => {
 	const [messages, setMessages] = useState<Message[]>([]);
-
 	const socket = useChatSocket()
 	const [inputValue, setInputValue] = useState('');
 	const [cookies] = useCookies(["access_token"]);
+	const messageRef = useRef<HTMLDivElement | null>(null);
 
 	//Socket
 	useEffect(() => {
@@ -34,11 +34,17 @@ const WindowChat: React.FC = () => {
 		}); 
 
 		return () => {
-		  if (socket) {
-			socket.socket.disconnect();
-		  }
+			if (socket) {
+				socket.socket.disconnect();
+			}
 		};
-	  }, []);
+	}, []);
+
+	useEffect( () => {
+		if (messageRef.current) {
+			messageRef.current.scrollTop = messageRef.current.scrollHeight;
+		}
+	}, [messages])
 
 	const updateMessages = (channelName: string) => {
 		console.log('I must update', channelName);
@@ -67,6 +73,7 @@ const WindowChat: React.FC = () => {
 				console.error("Error updating channel " + channelName + ":", error);
 			});
 	}
+
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
@@ -117,8 +124,8 @@ const WindowChat: React.FC = () => {
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
 				{ socket.room }
-			</div>
-			<div className='messages-area'>	{/* the conv space */}
+			</div >
+			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 				{messages.map((message, index) => (
 							<ListItem className="yellow" key={index} >
