@@ -33,7 +33,6 @@ const MatchHistory: React.FC = () => {
 
 					if (response.ok) {
 						const data = await response.json();
-						console.log(`Retrieved history: ${JSON.stringify(data)}`);
 						setGameHistory(data);
 
 					} else {
@@ -73,7 +72,6 @@ const MatchHistory: React.FC = () => {
 	};
 
 	useEffect(() => {
-		console.log("GETELEMBYID USEEFFECT");
 		const uniqueIds: Array<number> = gameHistory.reduce((ids: Array<number>, game) => {
 			if (ids.indexOf(game.gagnantId) === -1) {
 				ids.push(game.gagnantId);

@@ -12,7 +12,6 @@ import { useUser } from "../Context";
 
 const ProfilButton: React.FC = () => {
 
-	// console.log("Profil button call");
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const [cookies] = useCookies(["access_token"]);

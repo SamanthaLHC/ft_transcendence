@@ -14,8 +14,6 @@ const Ranking: React.FC = () => {
 
 	useEffect(() => {
 		const getRanking = async () => {
-			if (rankingData !== undefined)
-				return;
 			try {
 				const req = new Request("http://localhost:3000/users/get_class", {
 					method: "GET",
