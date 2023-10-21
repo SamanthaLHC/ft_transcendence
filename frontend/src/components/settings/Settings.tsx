@@ -6,6 +6,7 @@ import Friends from '../friends/Friends'
 import { useNavigate } from 'react-router-dom';
 import InvalidPopup from './InvalidPopup';
 import { useUser } from "../Context";
+import InvalidAvatarFilePopup from './InvalidAvatarFilePopup';
 
 const Settings: React.FC = () => {
 
@@ -14,6 +15,7 @@ const Settings: React.FC = () => {
 	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
+	const [isInvalidFileFormatPopupOpen, setIsInvalidFileFormatPopupOpen] = useState(false); // Handle file format error popup
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
@@ -143,11 +145,13 @@ const Settings: React.FC = () => {
 		}
 	};
 
+	const handleCloseInvalidFileFormatPopup = () => {
+		setIsInvalidFileFormatPopupOpen(false);
+	};
+
 	useEffect(() => {
 		if (file) {
 			uploadAvatar();
-		} else {
-			//pop up invalid file
 		}
 	}, [file]);
 
@@ -169,11 +173,11 @@ const Settings: React.FC = () => {
 					const responseStr = await response.text();
 					updateUserData(userData.id, userData.name, responseStr);
 				} else {
-					// setAvatarUploadError("Avatar upload failed. Please try again.");
+					setIsInvalidFileFormatPopupOpen(true)
 				}
 			} catch (error) {
 				console.error(error);
-				// setAvatarUploadError("An error occurred while uploading your avatar.");
+				setIsInvalidFileFormatPopupOpen(true)
 			}
 		}
 	};
@@ -220,6 +224,9 @@ const Settings: React.FC = () => {
 								onChange={handleFileChange}
 							/>
 						</div>
+						<InvalidAvatarFilePopup
+							isOpen={isInvalidFileFormatPopupOpen}
+							onClose={handleCloseInvalidFileFormatPopup} />
 					</div>
 				</div>
 			</div>
