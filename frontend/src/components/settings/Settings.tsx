@@ -12,7 +12,6 @@ const Settings: React.FC = () => {
 
 	const [cookies] = useCookies(['access_token']);
 	const [active2fa, setActive2fa] = useState<boolean>(false);
-	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
 	const [isInvalidFileFormatPopupOpen, setIsInvalidFileFormatPopupOpen] = useState(false); // Handle file format error popup
@@ -57,7 +56,6 @@ const Settings: React.FC = () => {
 			const datas = await response.json();
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
-			setImageUrl(imageUrl);
 			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
 			setActive2fa(true);
 		}
@@ -181,7 +179,6 @@ const Settings: React.FC = () => {
 			}
 		}
 	};
-
 
 	return (
 		<React.Fragment>

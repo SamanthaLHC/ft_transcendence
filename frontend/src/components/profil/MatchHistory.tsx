@@ -12,8 +12,7 @@ interface Game {
 
 const MatchHistory: React.FC = () => {
 	const [gameHistory, setGameHistory] = useState<Game[]>([]);
-	const [winnerNames, setWinnerNames] = useState<{ [key: number]: string }>({});
-	const [loserNames, setLoserNames] = useState<{ [key: number]: string }>({});
+	const [playerNames, setPlayerNames] = useState<{ [key: number]: string }>({});
 	const [cookies] = useCookies(['access_token']);
 	const { userData } = useUser();
 
@@ -34,7 +33,7 @@ const MatchHistory: React.FC = () => {
 
 					if (response.ok) {
 						const data = await response.json();
-						console.log(data);
+						console.log(`Retrieved history: ${JSON.stringify(data)}`);
 						setGameHistory(data);
 
 					} else {
@@ -46,7 +45,7 @@ const MatchHistory: React.FC = () => {
 			}
 		};
 		getMatch();
-	}, [cookies.access_token, userData]);
+	}, [userData]);
 
 	// Function to get user name by ID
 	const getUserNameById = async (idUser: number) => {
@@ -74,28 +73,26 @@ const MatchHistory: React.FC = () => {
 	};
 
 	useEffect(() => {
-		gameHistory.forEach((game, index) => {
-			// Fetch winner and loser names asynchronously
-			getUserNameById(game.gagnantId)
-				.then((winnerName) => {
-					setWinnerNames((prevWinnerNames) => ({
-						...prevWinnerNames,
-						[game.gagnantId]: winnerName,
+		console.log("GETELEMBYID USEEFFECT");
+		const uniqueIds: Array<number> = gameHistory.reduce((ids: Array<number>, game) => {
+			if (ids.indexOf(game.gagnantId) === -1) {
+				ids.push(game.gagnantId);
+			}
+			if (ids.indexOf(game.perdantId) === -1) {
+				ids.push(game.perdantId);
+			}
+			return ids;
+		}, []);
+		uniqueIds.forEach((playerId) => {
+			getUserNameById(playerId)
+				.then((name: string) => {
+					setPlayerNames((prevNames) => ({
+						...prevNames,
+						[playerId]: name,
 					}));
 				})
 				.catch((error) => {
 					console.error('Error fetching winner name:', error);
-				});
-
-			getUserNameById(game.perdantId)
-				.then((loserName) => {
-					setLoserNames((prevLoserNames) => ({
-						...prevLoserNames,
-						[game.perdantId]: loserName,
-					}));
-				})
-				.catch((error) => {
-					console.error('Error fetching loser name:', error);
 				});
 		});
 	}, [gameHistory]);
@@ -117,8 +114,8 @@ const MatchHistory: React.FC = () => {
 					{gameHistory.map((game, index) => (
 						<tr className="active-row" key={index}>
 							<td>{game.gameId}</td>
-							<td>{winnerNames[game.gagnantId]}</td>
-							<td>{loserNames[game.perdantId]}</td>
+							<td>{playerNames[game.gagnantId]}</td>
+							<td>{playerNames[game.perdantId]}</td>
 							<td>{game.scoreGagnant}</td>
 							<td>{game.scorePerdant}</td>
 						</tr>
