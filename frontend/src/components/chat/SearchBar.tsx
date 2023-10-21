@@ -5,19 +5,21 @@ import SearchIcon from '@mui/icons-material/Search';
 
 interface SearchBarProps {
 	onSearchChange: (query: string) => void;
+	updateChannels: (dummyState: boolean) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange, updateChannels }) => {
 	const [searchText, setSearchText] = useState('');
 
 	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const { value } = event.target;
 		setSearchText(value);
 		onSearchChange(value);
-	  };
-
+	};
+	
 	const handleClick = () => {
 		onSearchChange(searchText);
+		updateChannels(true);
 	}
 
 	return (
@@ -46,5 +48,3 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
 }
 
 export default SearchBar;
-
-// TODO gerer les query pour les recherches

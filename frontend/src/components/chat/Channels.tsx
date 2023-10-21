@@ -5,9 +5,8 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 import { useCookies } from "react-cookie";
+import CreateChannelForm from "./CreateChannelForm";
 
 interface Channel {
 	name: string;
@@ -18,6 +17,7 @@ const Channels: React.FC = () => {
 	const [channels, setChannels] = useState<Channel[]>([]);
 	const [cookies] = useCookies(["access_token"]);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [channelCreated, setChannelCreated] = useState(false);
 
 
 	const handleSearchChange = (query: string) => {
@@ -26,7 +26,7 @@ const Channels: React.FC = () => {
 
 	useEffect(() => {
 		async function getChannels() {
-
+			console.log("getChannels:", searchQuery);
 			let uri_str: string
 			if (searchQuery === '')
 				uri_str = 'http://localhost:3000/chat/channels/joined'
@@ -54,10 +54,51 @@ const Channels: React.FC = () => {
 				});
 		}
 
-		if (cookies.access_token) {
+		if (channelCreated) {
+			setChannelCreated(false);
+		}
+		else if (cookies.access_token) {
 			getChannels();
 		}
-	}, [cookies.access_token, searchQuery]);
+	}, [cookies.access_token, searchQuery, channelCreated]);
+
+	// handle create channel _________________________________________
+
+	const handleSubmit = (name: string, privacy: string, password?: string) => {
+		const body = {
+			name: name,
+			privacy: privacy,
+			password: password,
+		};
+		const req = new Request("http://localhost:3000/chat/channel/create", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+				"Content-Type": "application/json", // Specify content type
+			},
+			body: JSON.stringify(body),
+		});
+
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				if (data.message) { // if error
+					console.log("Error:", data.message);
+					alert(data.message);
+					return;
+				}
+				// TODO: change to new channel
+				setChannelCreated(true);
+				handleClose();
+			})
+			.catch((error) => {
+				console.error("Error fetching channels:", error);
+			});
+	}
+
+	const handleUpdateChannels = () => {
+		setChannelCreated(true);
+	}
 
 	// handle dropdown menu _________________________________________
 
@@ -90,7 +131,7 @@ const Channels: React.FC = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	// console.log(chan[0].name);
+	
 	return (
 		<React.Fragment>
 			<div
@@ -104,20 +145,13 @@ const Channels: React.FC = () => {
 						onClick={handleClick}>
 						<AddCircleIcon />
 					</IconButton>
-					<Menu
-						id="basic-menu"
-						anchorEl={anchorEl}
-						open={open}
-						onClose={handleClose}
-						MenuListProps={{
-							'aria-labelledby': 'basic-button',
-						}}>
-						<MenuItem > name: </MenuItem>
-						<MenuItem > public/private </MenuItem>
-						<MenuItem > password </MenuItem>
-					</Menu>
+					<CreateChannelForm
+						isOpen={open}
+						onSubmit={handleSubmit}
+					/>
+					
 				</h5>
-				<SearchBar onSearchChange={handleSearchChange} />
+				<SearchBar onSearchChange={handleSearchChange} updateChannels={handleUpdateChannels}/>
 
 				<div>
 					<ul className="typo yellow list">
