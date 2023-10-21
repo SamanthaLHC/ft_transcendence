@@ -69,11 +69,10 @@ export class ChatService {
 
 	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
 		newChannel.name = newChannel.name.toLowerCase();
-
+		let hashedPassword = null;
 		if (newChannel.privacy === "PASSWORD_PROTECTED") {
-			newChannel.password = await bcrypt.hash(newChannel.password, this.saltOrRounds);
+			hashedPassword = await bcrypt.hash(newChannel.password, this.saltOrRounds);
 		}
-
 		console.log(newChannel);
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
@@ -93,7 +92,7 @@ export class ChatService {
 					privacy: newChannel.privacy,
 					ownerId: userId,
 					// add password if privacy is PASSWORD_PROTECTED
-					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: newChannel.password }),
+					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword}),
 				}
 			});
 			return channel;
@@ -101,13 +100,45 @@ export class ChatService {
 		if (channel["message"])
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
-		this.joinChannel(channel.id, userId);
+		this.joinChannel(channel.id, userId, newChannel.password);
 		return channel;
 	}
 
-	async joinChannel(channelId: number, userId: number) {
+	// function who return true if user is in channel
+	async isUserInChannel(channelId: number, userId: number): Promise<boolean> {
+		const userChannelMap = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId }
+			}
+		});
+		return !!userChannelMap;
+	}
+
+	async joinChannel(channelId: number, userId: number, password?: string) {
+		console.log("password", password);
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
+
+		if (await this.isUserInChannel(channelId, userId)) {
+			console.log("User already in channel");
+			return;
+		}
+
+		const channel = await this.prisma.channels.findUnique({
+			where: {
+				id: channelId,
+			},
+		});
+		if (channel.privacy === "PASSWORD_PROTECTED") {
+			const hashedPassword : string = channel["password"];
+			console.log("hashedPassword", hashedPassword);
+			const passIsOk = await bcrypt.compare(password, hashedPassword);
+			if (!passIsOk) {
+				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
+				return { message: "Invalid password" };
+			}
+		}
+
 		const ret = await this.prisma.userChannelMap.create({
 			data: {
 				channelId: channelId,
