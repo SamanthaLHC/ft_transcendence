@@ -73,7 +73,6 @@ export class ChatService {
 		if (newChannel.privacy === "PASSWORD_PROTECTED") {
 			hashedPassword = await bcrypt.hash(newChannel.password, this.saltOrRounds);
 		}
-		console.log(newChannel);
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
 				where: {
@@ -115,7 +114,6 @@ export class ChatService {
 	}
 
 	async joinChannel(channelId: number, userId: number, password?: string) {
-		console.log("password", password);
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
@@ -131,7 +129,6 @@ export class ChatService {
 		});
 		if (channel.privacy === "PASSWORD_PROTECTED") {
 			const hashedPassword : string = channel["password"];
-			console.log("hashedPassword", hashedPassword);
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
 				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
