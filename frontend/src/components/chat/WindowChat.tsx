@@ -48,22 +48,20 @@ const WindowChat: React.FC = () => {
 
 	const updateMessages = (channelName: string) => {
 		console.log('I must update', channelName);
-		const body = {
-			channel: channelName,
-		};
 
-		const req = new Request("http://localhost:3000/chat/channel/update/", {
-			method: "POST",
+		const req = new Request("http://localhost:3000/chat/messages/" + channelName, {
+			method: "GET",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
-				"Content-Type": "application/json", // Specify content type
 			},
-			body: JSON.stringify(body),
 		})
 		fetch(req)
 			.then((response) => response.json())
 			.then((data) => {
+				if (data.message) // if error
+					return;
 				const fetchedMessages = data.map((item: any) => {
+					console.log("item: ", item)
 					const tmp = item.sender.name + ": " + item.content
 					return { msg: tmp };
 				});

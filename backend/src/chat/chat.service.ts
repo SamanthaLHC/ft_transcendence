@@ -50,6 +50,19 @@ export class ChatService {
 		return channel;
 	}
 
+	async getChannelById(channelId: number): Promise<PrismaPromise<any>> {
+		const channel = await this.prisma.channels.findUnique({
+			where: {
+				id: channelId,
+			}
+		});
+		if (!channel) {
+			Logger.log("Channel not found", channelId);
+			throw new NotFoundException("Channel not found");
+		}
+		return channel;
+	}
+
 	async findChannelBySearch(searchTerm: string): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
 			where: {
@@ -128,7 +141,7 @@ export class ChatService {
 		try {
 			console.log("in Service")
 			const channel = await this.getChannelByName(newMessage.channel) 
-			if (await this.UserIsInChan(channel.name, userId) == false) {
+			if (await this.isUserInChannel(channel.name, userId) == false) {
 				return false
 			}
 			const ret = await this.prisma.messages.create({
@@ -146,53 +159,43 @@ export class ChatService {
 		return false
 	}
 
-	async updateChannel(channel: UpdateChannelDto, userId: number) {
-		console.log("channel name", userId)
-		if (await this.UserIsInChan(channel.channel, userId) == false)
-			throw new UnauthorizedException("User not in channel")
-		const chan = await this.prisma.channels.findFirst({
-			where: {
-				name: channel.channel,
+	async getChannelMessages(channelName: string, userId: number) {
+		try {
+			const channel = await this.getChannelByName(channelName)
+			const channelId = channel.id
+			console.log(channelId)
+			if (await this.isUserInChannel(channelId, userId) == false) {
+				return {message: "You are not in this channel"}
 			}
-		})
-		if (!chan)
-			return ({})
-		const ret = await this.prisma.messages.findMany({
-			where: {
-				channelId: chan.id,
-			},
-			select: {
-				sender: {
-					select : {
-						name: true
-					}
+			const messages = await this.prisma.messages.findMany({
+				where: {
+					channelId: channelId
 				},
-				content: true,
-				createdAt: true,
-			},
-		})
-		return (ret);
+				select: {
+					sender: {
+						select: {
+							name: true,
+						}
+					},
+					content: true,
+					createdAt: true,
+				}
+			})
+			return messages
+		}
+		catch (e) {
+			Logger.log("Can't get messages", "ChatService");
+			console.log(e)
+			return {message: "Can't get messages", "error": e}
+		}
 	}
 
-	async UserIsInChan(channel: string, userId: number): Promise<boolean>
-	{
-		const chan = await this.prisma.channels.findFirst({
+	async isUserInChannel(channelId: number, userId: number): Promise<boolean> {
+		const userChannelMap = await this.prisma.userChannelMap.findUnique({
 			where: {
-                        name : channel
-                    },
-			select:{
-				users: true
+				id: { channelId: channelId, userId: userId }
 			}
-		})
-		let i =0
-		while(chan.users[i])
-		{
-			if (chan.users[i].userId == userId)
-			{
-				return (true)
-			}
-			i++
-		}
-		return(false)
+		});
+		return !!userChannelMap;
 	}
 }
