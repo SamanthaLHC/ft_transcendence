@@ -61,9 +61,11 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Post('channel/update/')
-	async updateChannel(@Body() channel: UpdateChannelDto, @Req() req) :Promise<PrismaPromise<any>>{
+	@Get('messages/:channelName')
+	async getChannelMessages(@Param('channelName') channelName: string, @Req() req) :Promise<PrismaPromise<any>>{
 		console.log ("in control update")
-		return await this.chatService.updateChannel(channel, req.user.sub);
+		console.log (channelName)
+		return await this.chatService.getChannelMessages(channelName, req.user.sub);
 	}
+
 }
