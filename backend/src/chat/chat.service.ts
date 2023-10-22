@@ -100,7 +100,7 @@ export class ChatService {
 		if (channel["message"])
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
-		this.joinChannel(channel.id, userId, newChannel.password);
+		await this.joinChannel(channel.id, userId, newChannel.password);
 		return channel;
 	}
 
