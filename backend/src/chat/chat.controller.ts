@@ -4,7 +4,6 @@ import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
-import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Controller('chat')
 export class ChatController {

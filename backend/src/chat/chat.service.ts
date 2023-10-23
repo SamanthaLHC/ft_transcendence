@@ -1,11 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcrypt';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
-import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Injectable()
 export class ChatService {
