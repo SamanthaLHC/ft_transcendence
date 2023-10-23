@@ -7,6 +7,7 @@ import { IconButton } from '@mui/material';
 import { Divider } from '@mui/material';
 import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
+import { useChatSocket } from '../Context';
 
 interface Channel {
 	name: string;
@@ -20,10 +21,13 @@ const Channels: React.FC = () => {
 	const [channelCreated, setChannelCreated] = useState(false);
 
 
+	const socket = useChatSocket()
+	
+	
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
 	};
-
+	
 	useEffect(() => {
 		async function getChannels() {
 			let uri_str: string
@@ -46,7 +50,10 @@ const Channels: React.FC = () => {
 					const fetchedChannels = data.map((item: any) => {
 						return { name: item.name };
 					});
+					console.log("feteched channels: ", fetchedChannels)
+					channels.push({name: "test"})
 					setChannels(fetchedChannels);
+					console.log ("channels: ", channels)
 				})
 				.catch((error) => {
 					console.error("Error fetching channels:", error);
@@ -110,6 +117,9 @@ const Channels: React.FC = () => {
 	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		const name = event.currentTarget.textContent
 		console.log("handleChannelClick:", name);
+		socket.socket.emit('change_room', name);
+		if (name)
+			socket.room = name
 		const req = new Request("http://localhost:3000/chat/channel/" + name, {
 			method: "GET",
 			headers: {
