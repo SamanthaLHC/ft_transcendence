@@ -4,9 +4,7 @@ import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import { useNavigate } from 'react-router-dom';
-import InvalidPopup from './InvalidPopup';
 import { useUser } from "../Context";
-import InvalidAvatarFilePopup from './InvalidAvatarFilePopup';
 
 const Settings: React.FC = () => {
 
@@ -96,10 +94,6 @@ const Settings: React.FC = () => {
 	//                           handle change name
 	//______________________________________________________________________________________
 
-	const handleCloseInvalidNamePopup = () => {
-		setIsInvalidNamePopupOpen(false);
-	};
-
 	const handleTextareaKeyPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === 'Enter') {
 			e.preventDefault(); // prevent newline to be added
@@ -120,7 +114,7 @@ const Settings: React.FC = () => {
 				try {
 					const response = await fetch(req);
 					if (!response.ok) {
-						setIsInvalidNamePopupOpen(true);
+						alert("Invalid Name. Already exist or is not between 1 and 15 caracters.");
 					}
 					else {
 						updateUserData(userData.id, inputValue, userData.photo);
@@ -141,10 +135,6 @@ const Settings: React.FC = () => {
 		if (e.target.files && e.target.files.length > 0) {
 			setFile(e.target.files[0]);
 		}
-	};
-
-	const handleCloseInvalidFileFormatPopup = () => {
-		setIsInvalidFileFormatPopupOpen(false);
 	};
 
 	useEffect(() => {
@@ -171,11 +161,11 @@ const Settings: React.FC = () => {
 					const responseStr = await response.text();
 					updateUserData(userData.id, userData.name, responseStr);
 				} else {
-					setIsInvalidFileFormatPopupOpen(true)
+					alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
 				}
 			} catch (error) {
 				console.error(error);
-				setIsInvalidFileFormatPopupOpen(true)
+				alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
 			}
 		}
 	};
@@ -195,9 +185,6 @@ const Settings: React.FC = () => {
 								onKeyDown={handleTextareaKeyPress}
 							/>
 						</div >
-						<InvalidPopup
-							isOpen={isInvalidNamePopupOpen}
-							onClose={handleCloseInvalidNamePopup} />
 						<div className='btn-pos '>
 							<button className="btn-size" onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
 						</div>
@@ -221,9 +208,6 @@ const Settings: React.FC = () => {
 								onChange={handleFileChange}
 							/>
 						</div>
-						<InvalidAvatarFilePopup
-							isOpen={isInvalidFileFormatPopupOpen}
-							onClose={handleCloseInvalidFileFormatPopup} />
 					</div>
 				</div>
 			</div>
