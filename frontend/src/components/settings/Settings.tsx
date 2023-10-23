@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect, ChangeEvent } from 'react'
+import { useState, useEffect } from 'react'
 import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
@@ -11,8 +11,6 @@ const Settings: React.FC = () => {
 	const [cookies] = useCookies(['access_token']);
 	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
-	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
-	const [isInvalidFileFormatPopupOpen, setIsInvalidFileFormatPopupOpen] = useState(false); // Handle file format error popup
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
