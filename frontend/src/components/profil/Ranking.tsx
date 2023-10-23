@@ -5,6 +5,7 @@ interface RankingData {
 	id: number;
 	login: string;
 	name: string;
+	nbwin: number
 }
 
 const Ranking: React.FC = () => {
@@ -44,6 +45,7 @@ const Ranking: React.FC = () => {
 						<tr>
 							<th>Rank</th>
 							<th>Name</th>
+							<th>Wins</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -51,6 +53,7 @@ const Ranking: React.FC = () => {
 							<tr className="active-row" key={index}>
 								<td>{index + 1}</td>
 								<td>{item.name}</td>
+								<td>{item.nbwin}</td>
 							</tr>
 						))}
 					</tbody>
