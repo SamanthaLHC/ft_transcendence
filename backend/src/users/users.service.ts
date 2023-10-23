@@ -66,18 +66,18 @@ export class UsersService {
             throw new NotFoundException(`Aucun user avec l'id ${id_num} ou aucun match effectue`)
     }
 
-    async searchUser(dto: SearchDto) {
+    async searchUser(dto: string) {
         const userlist = await this.prisma.user.findMany({
             where: {
                 OR: [
                     {
                         login : {
-                            startsWith: dto.search,
+                            startsWith: dto,
                           },
                     },
                     {
                         name : {
-                            contains: dto.search,
+                            contains: dto,
                           },
                     }
                 ]
@@ -147,8 +147,9 @@ export class UsersService {
         });
     }
 
-    async getstatusrelation(dto: rmRelationDto, source_id:number)
+    async getstatusrelation(target_id: string, source_id:number)
     {
+        let target_id_num =+ target_id
         const relation = await this.prisma.relationships.findFirst({
             where: { 
                 AND: [
@@ -156,7 +157,7 @@ export class UsersService {
                         userId : source_id
                     },
                     {
-                        targetId: dto.target_id
+                        targetId: target_id_num
                     }
                 ]
              },

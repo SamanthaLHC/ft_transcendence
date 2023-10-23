@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SearchDto, addRelationDto, rmRelationDto, upNameDto } from './dto';
@@ -53,8 +53,8 @@ export class UsersController {
 
     @Get('search')
     @UseGuards(AuthGuard)
-    async SearchUser(@Body() dto: SearchDto) {
-        return this.usersService.searchUser(dto)
+    async SearchUser(@Query('search') searchTerm: string) {
+        return this.usersService.searchUser(searchTerm)
     }
 
     @Post('addup_relation')
@@ -65,8 +65,8 @@ export class UsersController {
 
     @Get('status_relation')
     @UseGuards(AuthGuard)
-    async getstatusfriend(@Body() dto: rmRelationDto, @Req() req){
-        return this.usersService.getstatusrelation(dto, req.user.sub);
+    async getstatusfriend(@Query('id') id: string, @Req() req){
+        return this.usersService.getstatusrelation(id, req.user.sub);
     }
 
     @Get('get_friend')
