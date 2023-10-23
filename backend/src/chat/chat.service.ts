@@ -131,6 +131,10 @@ export class ChatService {
 			},
 		});
 		if (channel.privacy === "PASSWORD_PROTECTED") {
+			if (!password) {
+				Logger.log(`Password required for channel [${channelId}]`, "ChatService");
+				return { message: "Password required" };
+			}
 			const hashedPassword : string = channel["password"];
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
