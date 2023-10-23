@@ -141,8 +141,7 @@ export class ChatService {
 		try {
 			console.log("in Service")
 			const channel = await this.getChannelByName(newMessage.channel) 
-			const channelId = channel.id
-			if (await this.isUserInChannel(channelId, userId) == false) {
+			if (await this.isUserInChannel(channel.id, userId) == false) {
 				return false
 			}
 			const ret = await this.prisma.messages.create({
