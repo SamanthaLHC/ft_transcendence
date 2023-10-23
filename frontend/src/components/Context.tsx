@@ -1,4 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
+import {io, Socket} from "socket.io-client";
+import DefaultEventsMap from "socket.io-client"
+
+// Context for User info
 
 interface UserData {
     name: string;
@@ -36,3 +40,34 @@ export const useUser = (): UserContextType => {
     }
     return context;
 };
+
+// Context for Chat socket
+
+interface ChatSocketType {
+	socket: Socket
+	room: string
+}
+
+export const socket = io('http://localhost:3000/chat', {autoConnect: false});
+export const ChatSocketContext = React.createContext<ChatSocketType>({socket: socket, room: ""});
+
+export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+	const [chatSocketData, setSocketData] = useState<ChatSocketType>({
+		socket: socket,
+		room: "",
+	})
+    return (
+        <ChatSocketContext.Provider value={chatSocketData}>
+            {children}
+        </ChatSocketContext.Provider>
+    );
+};
+
+export const useChatSocket = (): ChatSocketType => {
+    const context = useContext(ChatSocketContext);
+    if (!context) {
+        throw new Error("useChatSocket must be used within a UserProvider");
+    }
+    return context;
+};
+
