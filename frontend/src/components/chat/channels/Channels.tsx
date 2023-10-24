@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
 import SearchBar from './SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import { IconButton } from '@mui/material';
-import { Divider } from '@mui/material';
 import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
-import { useChatSocket } from '../../Context';
 import ChannelButton from "./ChannelButton";
 
 interface Channel {
@@ -21,10 +17,6 @@ const Channels: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [channelCreated, setChannelCreated] = useState(false);
-
-
-	const socket = useChatSocket()
-	
 	
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
@@ -52,9 +44,7 @@ const Channels: React.FC = () => {
 					const fetchedChannels = data.map((item: any) => {
 						return { name: item.name };
 					});
-					console.log("fetched channels: ", fetchedChannels)
 					setChannels(fetchedChannels);
-					console.log ("channels: ", channels)
 				})
 				.catch((error) => {
 					console.error("Error fetching channels:", error);
