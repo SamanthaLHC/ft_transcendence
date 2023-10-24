@@ -53,7 +53,7 @@ const Settings: React.FC = () => {
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
 			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
-			setActive2fa(true);
+			// setActive2fa(true);
 		}
 		catch (error) {
 			console.error(error);

@@ -24,6 +24,21 @@ const TwoFa = () => {
 
 	const onChange = (value: string) => setOtp(value);
 
+	const handleClose = async () => {
+		try {
+			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
+				method: 'POST',
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+			navigate("/home");
+		}
+		catch (error) {
+			console.error(error);
+		}
+	}
+
 	const handleClick = async () => {
 		if (otp) {
 			const obj = {
@@ -70,6 +85,8 @@ const TwoFa = () => {
 					<button className='btn-size qr-image' onClick={() => setShowInvalidOTP(false)}>Close</button>
 				</div>
 			)}
+			<button className='btn-size qr-image' onClick={handleClose}>cancel</button>
+
 		</div>
 	);
 }
