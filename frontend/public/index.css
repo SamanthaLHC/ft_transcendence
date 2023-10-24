@@ -410,6 +410,13 @@ textarea {
 	padding-left: 150px;
 }
 
+.photo-pos {
+	text-align: center;
+	padding: 5px;
+	margin: 42px;
+	padding-left: 42px;
+}
+
 .btn-size {
 	padding: 15px 15px;
 }

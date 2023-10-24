@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, Query } from '@nestjs/common';
-=======
-import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, FileTypeValidator, ParseFilePipe } from '@nestjs/common';
->>>>>>> dev
+import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, FileTypeValidator, ParseFilePipe, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SearchDto, addRelationDto, rmRelationDto, upNameDto } from './dto';

@@ -24,53 +24,13 @@ const Friends: React.FC = () => {
 	const [searchQuery, setSearchQuery] = useState("");
 	let navToFriendProfil = useNavigate();
 
-	const changeToFriendProfil = () => {
-		let pathFriendProfil = '/friend';
+	const changeToFriendProfil = (id:number) => {
+		let pathFriendProfil = '/friend?id=' + id;
 		navToFriendProfil(pathFriendProfil);
 	}
 
-
 	const handleclick = async (e: MouseEvent, id:number) => {
-		let uri_str: string
-		uri_str = 'http://localhost:3000/users/status_relation?id=' + id
-		const reqe = new Request(uri_str, {
-					method: "GET",
-					headers: {
-						"Authorization": `Bearer ${cookies.access_token}`,
-					},
-				});
-				try {
-					const response = await fetch(reqe);
-					const datas = await response.json();
-					if (datas) {
-						if (datas.status === "FRIEND")
-							changeToFriendProfil()
-					}
-				} catch (error) {
-					
-				}
-		const obj = {
-			target_id: id,
-			status: "FRIEND"
-		};
-		console.log(obj)
-		const req = new Request('http://localhost:3000/users/addup_relation', {
-					method: "POST",
-					headers: {
-						"content-type": "application/json",
-						"Authorization": `Bearer ${cookies.access_token}`,
-					},
-					body: JSON.stringify(obj),
-				});
-				try {
-					const response = await fetch(req);
-					const datas = await response.json();
-					if (datas) {
-						console.log(datas)	
-					}
-				} catch (error) {
-					
-				}
+		changeToFriendProfil(id)
 	}
 
 	const handleSearchChange = (query: string) => {
