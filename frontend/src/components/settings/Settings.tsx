@@ -4,17 +4,14 @@ import { useCookies } from "react-cookie";
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import { useNavigate } from 'react-router-dom';
-import InvalidPopup from './InvalidPopup';
 import { useUser } from "../Context";
-
 
 const Settings: React.FC = () => {
 
 	const [cookies] = useCookies(['access_token']);
 	const [active2fa, setActive2fa] = useState<boolean>(false);
-	const [imageUrl, setImageUrl] = useState<string>(''); // handle qr code conversion
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
-	const [isInvalidNamePopupOpen, setIsInvalidNamePopupOpen] = useState(false); //handle popup
+	const [file, setFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 
@@ -23,7 +20,6 @@ const Settings: React.FC = () => {
 	//______________________________________________________________________________________
 
 	useEffect(() => {
-
 		const initTwofa = async () => {
 			try {
 				const req: Request = new Request('http://localhost:3000/users/2fa/state', {
@@ -42,7 +38,7 @@ const Settings: React.FC = () => {
 			}
 		};
 		initTwofa();
-	}, [setActive2fa]);
+	}, [cookies.access_token, setActive2fa]);
 
 	const enableTwofa = async () => {
 		try {
@@ -52,12 +48,10 @@ const Settings: React.FC = () => {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
-
 			const response = await fetch(req);
 			const datas = await response.json();
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
-			setImageUrl(imageUrl);
 			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
 			setActive2fa(true);
 		}
@@ -98,15 +92,9 @@ const Settings: React.FC = () => {
 	//                           handle change name
 	//______________________________________________________________________________________
 
-	// ONGOING try createContext et useContexte to update PP and change name
-	const handleCloseInvalidNamePopup = () => {
-		setIsInvalidNamePopupOpen(false);
-	};
-
 	const handleTextareaKeyPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === 'Enter') {
 			e.preventDefault(); // prevent newline to be added
-
 
 			if (inputValue) {
 				const obj = {
@@ -124,10 +112,10 @@ const Settings: React.FC = () => {
 				try {
 					const response = await fetch(req);
 					if (!response.ok) {
-						setIsInvalidNamePopupOpen(true);
+						alert("Invalid Name. Already exist or is not between 1 and 15 caracters.");
 					}
 					else {
-						updateUserData(inputValue, userData.photo);
+						updateUserData(userData.id, inputValue, userData.photo);
 					}
 				} catch (error) {
 					console.error(error);
@@ -137,12 +125,55 @@ const Settings: React.FC = () => {
 		}
 	};
 
+	//______________________________________________________________________________________
+	//                           handle change avatar
+	//______________________________________________________________________________________
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			setFile(e.target.files[0]);
+		}
+	};
+
+	useEffect(() => {
+		if (file) {
+			uploadAvatar();
+		}
+	}, [file]);
+
+	const uploadAvatar = async () => {
+		if (file) {
+			const formData = new FormData();
+			formData.append('file', file);
+			try {
+				const req = new Request("http://localhost:3000/users/upload", {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+					body: formData,
+				});
+
+				const response = await fetch(req);
+				if (response.ok) {
+					const responseStr = await response.text();
+					updateUserData(userData.id, userData.name, responseStr);
+				} else {
+					alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+				}
+			} catch (error) {
+				console.error(error);
+				alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+			}
+		}
+	};
+
 	return (
 		<React.Fragment>
 			<Header />
 			<div id="container">
 				<Friends />
-				<div id='settings-content'>
+				<div className='content-page'>
 					<div className='list-items'>
 						<div className='change-name'>
 							<h3 className='typo-settings'> Change your name: </h3>
@@ -152,9 +183,6 @@ const Settings: React.FC = () => {
 								onKeyDown={handleTextareaKeyPress}
 							/>
 						</div >
-						<InvalidPopup
-							isOpen={isInvalidNamePopupOpen}
-							onClose={handleCloseInvalidNamePopup} />
 						<div className='btn-pos '>
 							<button className="btn-size" onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
 						</div>
@@ -167,7 +195,16 @@ const Settings: React.FC = () => {
 					</div>
 					<div className='list-items'>
 						<div className='btn-pos'>
-							<button className="btn-size" >Change your avatar</button>
+							<button className="btn-size" onClick={() => document.getElementById('fileInput')?.click()}>
+								Change your avatar
+							</button>
+							<input
+								id="fileInput"
+								type="file"
+								accept="image/png,image/jpeg,image/gif"
+								style={{ display: 'none' }}
+								onChange={handleFileChange}
+							/>
 						</div>
 					</div>
 				</div>

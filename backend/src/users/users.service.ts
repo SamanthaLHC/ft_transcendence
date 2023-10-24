@@ -6,9 +6,9 @@ import { SearchDto, addRelationDto, rmRelationDto } from './dto';
 
 @Injectable()
 export class UsersService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private prisma: PrismaService) { }
     async getUserFromId(id: string) {
-        var id_num:number = +id
+        var id_num: number = +id
         if (!id_num)
             throw new BadRequestException()
         const user = await this.prisma.user.findFirst({
@@ -19,7 +19,9 @@ export class UsersService {
                 id: true,
                 login: true,
                 name: true,
-                photo: true
+                photo: true,
+                nbwin: true,
+                nbloose: true
             }
         })
         if (user)
@@ -29,7 +31,7 @@ export class UsersService {
     }
 
     async getState2fa(id: string) {
-        var id_num:number = +id
+        var id_num: number = +id
         if (!id_num)
             throw new BadRequestException()
         const user = await this.prisma.user.findFirst({
@@ -47,12 +49,15 @@ export class UsersService {
     }
 
     async getHistoFromId(id: string) {
-        var id_num:number = +id
+        var id_num: number = +id
+        console.log("id reçu ", id);
+        if (!id_num)
+            throw new BadRequestException()
         const hist = await this.prisma.gameHistory.findMany({
             where: {
                 OR: [
                     {
-                        gagnantId : id_num
+                        gagnantId: id_num
                     },
                     {
                         perdantId: id_num
@@ -89,9 +94,8 @@ export class UsersService {
                 photo: true
             }
         })
-        if (userlist[0])
-        {
-            
+        if (userlist[0]) {
+
             return userlist;
         }
         else
@@ -102,48 +106,48 @@ export class UsersService {
         if (source_id === dto.target_id)
             throw new BadRequestException("source_id et target_id sont identique");
         const source = await this.prisma.user.findFirst({
-            where: { id: source_id}
+            where: { id: source_id }
         })
         const target = await this.prisma.user.findFirst({
-            where: { id: dto.target_id}
+            where: { id: dto.target_id }
         })
         if (!source || !target)
             throw new NotFoundException("user non trouve")
         await this.prisma.relationships.deleteMany({
-            where: { 
+            where: {
                 AND: [
                     {
-                        userId : source.id
+                        userId: source.id
                     },
                     {
                         targetId: target.id
                     }
                 ]
-             },
-          })
+            },
+        })
     }
 
-    async addrelation(dto: addRelationDto, source_id: number) { 
+    async addrelation(dto: addRelationDto, source_id: number) {
         if (source_id === dto.target_id)
             throw new BadRequestException("source_id et target_id sont identique");
-        if(dto.status != "FRIEND" && dto.status != "BLOCKED")
+        if (dto.status != "FRIEND" && dto.status != "BLOCKED")
             throw new BadRequestException("status doit etre FRIEND ou BLOCKED");
         const source = await this.prisma.user.findFirst({
-            where: { id: source_id}
+            where: { id: source_id }
         })
         const target = await this.prisma.user.findFirst({
-            where: { id: dto.target_id}
+            where: { id: dto.target_id }
         })
         if (!source || !target)
             throw new NotFoundException("user non trouve")
         await this.prisma.relationships.upsert({
-            where: { id: {userId: source.id, targetId: target.id} },
+            where: { id: { userId: source.id, targetId: target.id } },
             create: {
                 userId: source.id,
                 targetId: target.id,
                 status: dto.status
             },
-            update: { status: dto.status}
+            update: { status: dto.status }
         });
     }
 
@@ -151,25 +155,24 @@ export class UsersService {
     {
         let target_id_num =+ target_id
         const relation = await this.prisma.relationships.findFirst({
-            where: { 
+            where: {
                 AND: [
                     {
-                        userId : source_id
+                        userId: source_id
                     },
                     {
                         targetId: target_id_num
                     }
                 ]
-             },
-          })
+            },
+        })
         if (relation)
-          return ({ status: relation.status})
+            return ({ status: relation.status })
         else
-          throw new NotFoundException("aucune relation avec ces ids");
+            throw new NotFoundException("aucune relation avec ces ids");
     }
 
-    async getclassement()
-    {
+    async getclassement() {
         const classement = await this.prisma.user.findMany({
             orderBy: {
                 nbwin: 'desc',
@@ -182,23 +185,22 @@ export class UsersService {
                 nbwin: true,
                 nbloose: true
             }
-          })
+        })
         return (classement)
     }
 
-    async getlistfriend(source_id:number)
-    {
+    async getlistfriend(source_id: number) {
         const relation = await this.prisma.relationships.findMany({
-            where: { 
+            where: {
                 AND: [
                     {
-                        userId : source_id
+                        userId: source_id
                     },
                     {
                         status: "FRIEND"
                     }
                 ]
-             },
+            },
             select: {
                 target: {
                     select: {
@@ -211,16 +213,16 @@ export class UsersService {
                     }
                 }
             }
-          })
+        })
         if (relation[0])
-          return (relation)
+            return (relation)
         else
-          throw new NotFoundException("aucune relation avec ces ids");
+            throw new NotFoundException("aucune relation avec ces ids");
     }
 
     async turnOnTwoFactorAuthentication(userId: number) {
         const user = await this.prisma.user.findFirst({
-            where: { id: userId}
+            where: { id: userId }
         })
         return await this.generateTwoFactorAuthenticationSecret(user.name, userId)
     }
@@ -228,54 +230,55 @@ export class UsersService {
     async turnOffTwoFactorAuthentication(userId: number) {
         await this.prisma.user.update({
             where: { id: userId },
-            data: { deuxfa: false,
-                    deuxfasecret: null },
-          })
-      }
+            data: {
+                deuxfa: false,
+                deuxfasecret: null
+            },
+        })
+    }
 
     async generateTwoFactorAuthenticationSecret(userLogin: string, userId: number) {
         const secret = authenticator.generateSecret();
-    
+
         const otpauthUrl = authenticator.keyuri(userLogin, 'ft_transcendence', secret);
-    
+
         await this.prisma.user.update({
             where: { id: userId },
             data: { deuxfa: true, deuxfasecret: secret },
-          })
-    
+        })
+
         return {
-          secret,
-          otpauthUrl
+            secret,
+            otpauthUrl
         }
-      }
+    }
 
-      async generateQrCodeDataURL(otpAuthUrl: string) {
+    async generateQrCodeDataURL(otpAuthUrl: string) {
         return toDataURL(otpAuthUrl);
-      }
+    }
 
-      async updateAvatar(id: number, url: string) {
+    async updateAvatar(id: number, url: string) {
         await this.prisma.user.update({
             where: { id: id },
-            data: {photo: url}
+            data: { photo: url }
         })
-      }
-      async updateName(id: number, name: string) {
+        return url;
+    }
+    async updateName(id: number, name: string) {
         if (name.length > 15)
             throw new BadRequestException("Name too long: should be between 1 and 15 caracters")
         const user = await this.prisma.user.findFirst({
-            where: { name: name},
+            where: { name: name },
         })
-        if (!user)
-        {
+        if (!user) {
             await this.prisma.user.update({
                 where: { id: id },
-                data: {name: name}
+                data: { name: name }
             })
         }
-        else
-        {
+        else {
             throw new ConflictException("Un utilisateur a deja ce nom !")
         }
-      }
+    }
 }
 

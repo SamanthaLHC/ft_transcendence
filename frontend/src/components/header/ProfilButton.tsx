@@ -12,7 +12,6 @@ import { useUser } from "../Context";
 
 const ProfilButton: React.FC = () => {
 
-	// console.log("Profil button call");
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 	const [cookies] = useCookies(["access_token"]);
@@ -59,11 +58,9 @@ const ProfilButton: React.FC = () => {
 
 	// handle bearer token cookie and set user datas______________________
 
-
 	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
 		async function getUserInfo() {
-
 			const req: Request = new Request('http://localhost:3000/users/me', {
 				method: "GET",
 				headers: {
@@ -75,7 +72,11 @@ const ProfilButton: React.FC = () => {
 			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
-				updateUserData(datas.name, datas.photo);
+				if (userData.id != datas.id
+					|| userData.name != datas.name
+					|| userData.photo != datas.photo) {
+					updateUserData(datas.id, datas.name, datas.photo);
+				}
 			}
 			else {
 				changeToLogin();
@@ -94,7 +95,7 @@ const ProfilButton: React.FC = () => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 				onClick={handleClick}>
-				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Avatar alt="profil picture" src={userData.photo} />
 				<Divider>
 					<Typography>
 						{userData.name}

@@ -3,7 +3,8 @@ import { ChatService } from './chat.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
-
+import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -28,16 +29,24 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
+	@Post('channel/create')
+	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto, @Req() req) {
+		return await this.chatService.createChannelIfNotExists(newChannel, req.user.sub);
+	}
+	
+	@UseGuards(AuthGuard)
+	@Post('channel/msg/:channelName')
+	async addNewMessage(@Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
+		console.log ("in control")
+		return await this.chatService.addNewMessage(newMessage, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
 	@Get('channel')
 	async findChannelBySearch(@Query('search') searchTerm: string) {
 		return await this.chatService.findChannelBySearch(searchTerm);
 	}
 
-	@UseGuards(AuthGuard)
-	@Post('channel/create')
-	async createChannelIfNotExists(@Body() newChannel : CreateChannelDto, @Req() req) {
-		return await this.chatService.createChannelIfNotExists(newChannel, req.user.sub);
-	}
 
 	@UseGuards(AuthGuard)
 	@Post('channel/join/:channelId')
@@ -50,4 +59,13 @@ export class ChatController {
 	async leaveChannel(@Param('channelId') channelId: string, @Req() req) {
 		return await this.chatService.leaveChannel(+channelId, req.user.sub);
 	}
+
+	@UseGuards(AuthGuard)
+	@Get('messages/:channelName')
+	async getChannelMessages(@Param('channelName') channelName: string, @Req() req) :Promise<PrismaPromise<any>>{
+		console.log ("in control getChannelMessages")
+		console.log (channelName)
+		return await this.chatService.getChannelMessages(channelName, req.user.sub);
+	}
+
 }
