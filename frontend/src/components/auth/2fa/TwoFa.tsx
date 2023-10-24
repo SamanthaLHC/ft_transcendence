@@ -20,7 +20,7 @@ const TwoFa = () => {
 		if (!cookies.access_token) {
 			navigate("/");
 		}
-	}, [cookies.access_token]);
+	}, [cookies.access_token, navigate]);
 
 	const onChange = (value: string) => setOtp(value);
 
