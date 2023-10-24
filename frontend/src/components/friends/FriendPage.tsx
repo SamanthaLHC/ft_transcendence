@@ -20,6 +20,11 @@ const Profil: React.FC = () => {
 		navToHome(pathHome);
 	}
 
+	const changeToProfile = () => {
+		let pathHome: string = '/profil';
+		navToHome(pathHome);
+	}
+
 	function getId(): string | null {
 		let url_str: string = window.location.search;
 		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
@@ -30,6 +35,27 @@ const Profil: React.FC = () => {
 	}
 
 	useEffect(() => {
+		const checkme = async (id:string) => {
+			try {
+				let id_num:number = +id
+				const req: Request = new Request('http://localhost:3000/users/me', {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+				});
+
+				const response = await fetch(req);
+				const datas = await response.json();
+				console.log(datas)
+				if (datas.id == id_num) {
+					changeToProfile()
+				}
+			}
+			catch (error) {
+				console.error(error);
+			}
+		}
 		const initstatusfa = async (id: string) => {
 			try {
 				const req: Request = new Request('http://localhost:3000/users/status_relation?id=' + id, {
@@ -41,6 +67,7 @@ const Profil: React.FC = () => {
 
 				const response = await fetch(req);
 				const datas = await response.json();
+				console.log(datas)
 				if (datas.statusCode != 404) {
 					if (datas.status == "FRIEND") {
 						setFriend(true)
@@ -63,7 +90,10 @@ const Profil: React.FC = () => {
 		};
 		let id = getId()
 		if (id)
+		{
+			checkme(id)
 			initstatusfa(id);
+		}
 	}, [cookies.access_token, setFriend, setblock]);
 
 	const navToLogin: NavigateFunction = useNavigate();
