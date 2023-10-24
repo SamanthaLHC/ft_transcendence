@@ -14,11 +14,18 @@ const Profil: React.FC = () => {
 	const [friend, setFriend] = useState<boolean>(false);
 	const [block, setblock] = useState<boolean>(false);
 
+	const navToHome = useNavigate();
+	const changeToHome = () => {
+		let pathHome: string = '/Home';
+		navToHome(pathHome);
+	}
+
 	function getId(): string | null {
 		let url_str: string = window.location.search;
 		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
 		let code_param: string | null = strToSearch.get("id");
-		console.log(code_param)
+		if (!code_param)
+			changeToHome()
 		return code_param;
 	}
 
@@ -81,7 +88,7 @@ const Profil: React.FC = () => {
 				setUserInfos(datas);
 			}
 			else {
-				changeToLogin();
+				changeToHome();
 			}
 		}
 		let id = getId()
@@ -201,7 +208,7 @@ const Profil: React.FC = () => {
 						<button className="btn-size" >Direct Message</button>
 						</div>
 						<div className='btn-pos'>
-						<button className="btn-size" >Invite game</button>
+						<button className="btn-size" >Invite Game</button>
 						</div>
 					</div>
 					<div className='list-items'>
