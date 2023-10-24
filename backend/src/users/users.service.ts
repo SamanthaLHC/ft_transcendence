@@ -72,19 +72,19 @@ export class UsersService {
             throw new NotFoundException(`Aucun user avec l'id ${id_num} ou aucun match effectue`)
     }
 
-    async searchUser(dto: SearchDto) {
+    async searchUser(dto: string) {
         const userlist = await this.prisma.user.findMany({
             where: {
                 OR: [
                     {
-                        login: {
-                            startsWith: dto.search,
-                        },
+                        login : {
+                            startsWith: dto,
+                          },
                     },
                     {
-                        name: {
-                            contains: dto.search,
-                        },
+                        name : {
+                            contains: dto,
+                          },
                     }
                 ]
             },
@@ -152,7 +152,9 @@ export class UsersService {
         });
     }
 
-    async getstatusrelation(dto: rmRelationDto, source_id: number) {
+    async getstatusrelation(target_id: string, source_id:number)
+    {
+        let target_id_num =+ target_id
         const relation = await this.prisma.relationships.findFirst({
             where: {
                 AND: [
@@ -160,7 +162,7 @@ export class UsersService {
                         userId: source_id
                     },
                     {
-                        targetId: dto.target_id
+                        targetId: target_id_num
                     }
                 ]
             },
@@ -201,7 +203,16 @@ export class UsersService {
                 ]
             },
             select: {
-                targetId: true
+                target: {
+                    select: {
+                        id: true,
+                        login: true,
+                        name: true,
+                        photo: true,
+                        nbwin: true,
+                        nbloose: true
+                    }
+                }
             }
         })
         if (relation[0])
