@@ -41,13 +41,17 @@ const TwoFa = () => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
+				console.log(datas);
 				if (datas.status === 302) {
+					console.log("DATAS STATUS IS 302");
 					setCookie("access_token", datas.access_token, { path: "/" });
 					const tmp = new URL(datas.url);
+					console.log("URL IS: ", tmp.pathname);
 					navigate(tmp.pathname);
 				}
 				else {
 					setShowInvalidOTP(true);
+					console.log("INVALID OTP: ", otp);
 				}
 			} catch (error) {
 				console.error(error);
