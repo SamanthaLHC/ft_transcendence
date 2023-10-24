@@ -7,6 +7,7 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { createReadStream } from 'fs';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { AuthDto } from 'src/auth/dto';
 
 @Controller('users')
 export class UsersController {
@@ -39,6 +40,12 @@ export class UsersController {
         return {
             otpAuthUrl: await this.usersService.generateQrCodeDataURL(ret.otpauthUrl),
         };
+    }
+
+    @Post('2fa/validate')
+    @UseGuards(AuthGuard)
+    async val2fa(@Body() dto: AuthDto, @Req() req) {
+        return await this.usersService.validate2fa(dto, req.user.sub);
     }
 
     @Post('2fa/turn-off')

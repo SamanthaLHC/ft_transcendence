@@ -1,8 +1,9 @@
-import { BadRequestException, ConflictException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { toDataURL } from 'qrcode';
 import { SearchDto, addRelationDto, rmRelationDto } from './dto';
+import { Auth2faDto } from 'src/auth/dto';
 
 @Injectable()
 export class UsersService {
@@ -233,7 +234,7 @@ export class UsersService {
 
         await this.prisma.user.update({
             where: { id: userId },
-            data: { deuxfa: true, deuxfasecret: secret },
+            data: { deuxfa: false, deuxfasecret: secret },
         })
 
         return {
@@ -241,6 +242,34 @@ export class UsersService {
             otpauthUrl
         }
     }
+
+    async validate2fa(dto: Auth2faDto, userId: number) {
+        const user = await this.prisma.user.findFirst({
+			where: {
+				id: userId,
+			},
+		})
+		const isCodeValid = this.isTwoFactorAuthenticationCodeValid(
+			dto.code,
+			user.deuxfasecret,
+		);
+		if (!isCodeValid)
+			throw new UnauthorizedException();
+        else
+        {
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: { deuxfa: true },
+            })
+        }
+    }
+
+    isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, secret: string) {
+		return authenticator.verify({
+			token: twoFactorAuthenticationCode,
+			secret: secret,
+		});
+	}
 
     async generateQrCodeDataURL(otpAuthUrl: string) {
         return toDataURL(otpAuthUrl);
