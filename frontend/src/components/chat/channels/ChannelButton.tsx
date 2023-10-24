@@ -1,5 +1,5 @@
 
-import React, { Component, useState } from "react";
+import React from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
@@ -22,9 +22,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 	console.log(channel)
 
 	const handleChannelClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		console.log("in handleChannelClick", event.currentTarget)
 		const name = channel.name
-		console.log("handleChannelClick:", name);
 		socket.socket.emit('change_room', name);
 		if (name)
 			socket.room = name
