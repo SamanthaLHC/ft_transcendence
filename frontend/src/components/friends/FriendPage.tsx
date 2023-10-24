@@ -94,7 +94,7 @@ const Profil: React.FC = () => {
 			checkme(id)
 			initstatusfa(id);
 		}
-	}, [cookies.access_token, setFriend, setblock]);
+	}, [cookies.access_token, setFriend, setblock, getId]);
 
 	const navToLogin: NavigateFunction = useNavigate();
 	const changeToLogin = () => {
