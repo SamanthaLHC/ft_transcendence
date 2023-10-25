@@ -92,7 +92,8 @@ export class UsersService {
                 id: true,
                 login: true,
                 name: true,
-                photo: true
+                photo: true,
+                status: true
             }
         })
         if (userlist[0]) {

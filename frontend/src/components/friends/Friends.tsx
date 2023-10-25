@@ -84,7 +84,7 @@ const Friends: React.FC = () => {
 					.then((data) => {
 						if (data.statusCode != 404) {
 							const fetchedUsers = data.map((item: any) => {
-								return { name: item.name, id: item.id, photo: item.photo };
+								return { name: item.name, id: item.id, photo: item.photo, status: item.status};
 							});
 							setUsers(fetchedUsers);
 						}
