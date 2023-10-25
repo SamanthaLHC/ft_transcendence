@@ -67,8 +67,7 @@ const Profil: React.FC = () => {
 
 				const response = await fetch(req);
 				const datas = await response.json();
-				console.log(datas)
-				if (datas.statusCode != 404) {
+				if (datas) {
 					if (datas.status == "FRIEND") {
 						setFriend(true)
 						setblock(false)
@@ -77,11 +76,11 @@ const Profil: React.FC = () => {
 						setFriend(false)
 						setblock(true)
 					}
-				}
-				else
-				{
-					setFriend(false)
-					setblock(false)
+					else
+					{
+						setFriend(false)
+						setblock(false)
+					}
 				}
 			}
 			catch (error) {

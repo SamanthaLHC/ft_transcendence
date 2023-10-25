@@ -168,8 +168,8 @@ export class UsersService {
         })
         if (relation)
             return ({ status: relation.status })
-        else
-            throw new NotFoundException("aucune relation avec ces ids");
+		else
+			return ({ status: "NONE" })
     }
 
     async getclassement() {
@@ -214,10 +214,7 @@ export class UsersService {
                 }
             }
         })
-        if (relation[0])
-            return (relation)
-        else
-            throw new NotFoundException("aucune relation avec ces ids");
+        return (relation)
     }
 
     async turnOnTwoFactorAuthentication(userId: number) {
