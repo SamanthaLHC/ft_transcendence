@@ -10,11 +10,6 @@ interface ImgProps {
 const TwoFaQRCodePage: React.FC<ImgProps> = () => {
 
 	const { imageUrl } = useParams();
-	// const navigate = useNavigate();
-
-	// const handleRedirect = () => {
-	// 	navigate('/home');
-	// };
 
 	return (
 		<div className='qr-center'>
@@ -25,7 +20,6 @@ const TwoFaQRCodePage: React.FC<ImgProps> = () => {
 					alt="QR Code"
 				/>
 				<EnableTwoFa />
-				{/* <button className='btn-size' onClick={handleRedirect}>Back to home</button> */}
 			</div>
 		</div>
 	);
