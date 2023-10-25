@@ -56,27 +56,27 @@ const WindowChat: React.FC = () => {
 	}, [messages])
 
 
-	useEffect( () => {
-		const req = new Request("http://localhost:3000/chat/channel/" + socket.channel.name, {
-			method: "GET",
-			headers: {
-				Authorization: `Bearer ${cookies.access_token}`,
-			},
-		})
-		fetch(req)
-			.then((response) => response.json())
-			.then((data) => {
-				console.log("data:", data);
-			})
-			.catch((error) => {
-				console.error("Error fetching channels:", error);
-			});
-	}, [socket])
+	// useEffect( () => {
+	// 	const req = new Request("http://localhost:3000/chat/channel/" + socket.channel.name, {
+	// 		method: "GET",
+	// 		headers: {
+	// 			Authorization: `Bearer ${cookies.access_token}`,
+	// 		},
+	// 	})
+	// 	fetch(req)
+	// 		.then((response) => response.json())
+	// 		.then((data) => {
+	// 			console.log("data:", data);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error("Error fetching channels:", error);
+	// 		});
+	// }, [socket])
 
 	const updateMessages = () => {
-		console.log('I must update', socket.channel.name);
+		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
 
-		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.name, {
+		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
@@ -88,7 +88,6 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					console.log("item: ", item)
 					const tmp = item.sender.name + ": " + item.content
 					return { msg: tmp };
 				});
@@ -98,7 +97,6 @@ const WindowChat: React.FC = () => {
 				console.error("Error updating channel " + socket.channel.name + ":", error);
 			});
 	}
-
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
@@ -122,9 +120,8 @@ const WindowChat: React.FC = () => {
 		if (socket.channel.name !== "") {
 			const body = {
 				msg: inputValue,
-				channel: socket.channel.name,
 			};
-			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.channel.name, {
+			const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
