@@ -14,7 +14,6 @@ const TwoFa = () => {
 	const navigate = useNavigate();
 	const [cookies, setCookie] = useCookies(["access_token"]);
 	const [otp, setOtp] = useState('');
-	const [showInvalidOTP, setShowInvalidOTP] = useState(false);
 
 	useEffect(() => {
 		if (!cookies.access_token) {
@@ -23,21 +22,6 @@ const TwoFa = () => {
 	}, [cookies.access_token, navigate]);
 
 	const onChange = (value: string) => setOtp(value);
-
-	const handleClose = async () => {
-		try {
-			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
-				method: 'POST',
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			});
-			navigate("/home");
-		}
-		catch (error) {
-			console.error(error);
-		}
-	}
 
 	const handleClick = async () => {
 		if (otp) {
@@ -56,22 +40,19 @@ const TwoFa = () => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				console.log(datas);
 				if (datas.status === 302) {
-					console.log("DATAS STATUS IS 302");
 					setCookie("access_token", datas.access_token, { path: "/" });
 					const tmp = new URL(datas.url);
-					console.log("URL IS: ", tmp.pathname);
 					navigate(tmp.pathname);
 				}
 				else {
-					setShowInvalidOTP(true);
-					console.log("INVALID OTP: ", otp);
+					alert("INVALID OTP");
 				}
 			} catch (error) {
 				console.error(error);
 			}
 		}
+
 	};
 
 	return (
@@ -79,14 +60,6 @@ const TwoFa = () => {
 			<h1 className='typo-friends yellow'>Enter the code provided by google authenticator</h1>
 			<OtpInput value={otp} valueLength={6} onChange={onChange} />
 			<button className='btn-size qr-image' onClick={handleClick}>validate</button>
-			{showInvalidOTP && (
-				<div className='popup'>
-					<p>Invalid code. Please try again</p>
-					<button className='btn-size qr-image' onClick={() => setShowInvalidOTP(false)}>Close</button>
-				</div>
-			)}
-			<button className='btn-size qr-image' onClick={handleClose}>cancel</button>
-
 		</div>
 	);
 }
