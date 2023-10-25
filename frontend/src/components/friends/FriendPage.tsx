@@ -3,14 +3,16 @@ import ducky from '../../assets/duck-no.gif'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import MatchHistory from './MatchHistory'
-import { Avatar, Divider, Typography } from '@mui/material'
+import { Avatar, Badge, Divider, Typography, styled } from '@mui/material'
 import { useCookies } from 'react-cookie'
 import { NavigateFunction, useNavigate } from 'react-router-dom'
 import WinsAndLoses from './WinsAndLoses'
+import Statusconnect from './Statusconnect'
+import { userInfo } from 'os'
 
 const Profil: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
-	const [userInfos, setUserInfos] = useState<{ name: string, photo: string } | null>(null);
+	const [userInfos, setUserInfos] = useState<{ name: string, photo: string, status: string } | null>(null);
 	const [friend, setFriend] = useState<boolean>(false);
 	const [block, setblock] = useState<boolean>(false);
 
@@ -124,7 +126,7 @@ const Profil: React.FC = () => {
 		let id = getId()
 		if (id)
 			getUserInfo(id);
-	}, [cookies.access_token]);
+	}, [cookies.access_token, getId()]);
 	if (!userInfos) {
 		return null
 	}
@@ -223,7 +225,8 @@ const Profil: React.FC = () => {
 				<div className='content-page'>
 					<div className='list-items'>
 						<div className='photo-pos'>
-							<Avatar alt="profil picture" src={userInfos.photo} sx={{ width: 210, height: 210 }} />
+							<Statusconnect photo={userInfos.photo} status={userInfos.status}/>
+							
 						</div>
 						<div className='typo-friends yellow'>
 							{userInfos.name}

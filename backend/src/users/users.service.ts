@@ -21,7 +21,8 @@ export class UsersService {
                 name: true,
                 photo: true,
                 nbwin: true,
-                nbloose: true
+                nbloose: true,
+                status: true
             }
         })
         if (user)
@@ -209,7 +210,8 @@ export class UsersService {
                         name: true,
                         photo: true,
                         nbwin: true,
-                        nbloose: true
+                        nbloose: true,
+                        status: true
                     }
                 }
             }

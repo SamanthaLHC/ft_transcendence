@@ -26,6 +26,7 @@ model User {
     messages              Messages[]
     relationshipsAsUser   Relationships[]  @relation("UserRelationships")
     relationshipsAsTarget Relationships[]  @relation("TargetRelationships")
+    status                Status_connect   @default(CONNECTED)
 }
 
 model GameHistory {
@@ -87,6 +88,12 @@ enum Privacy {
     PUBLIC
     PRIVATE
     PASSWORD_PROTECTED
+}
+
+enum Status_connect {
+    CONNECTED
+    DISCONNECTED
+    INGAME
 }
 
 enum Status {

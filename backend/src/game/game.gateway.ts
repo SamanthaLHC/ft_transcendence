@@ -107,6 +107,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
         this.server.to((this.rooms.length - 1).toString()).emit("update", this.rooms[this.rooms.length - 1].data)
         console.log("starting game on room ", this.rooms.length - 1)
+        this.gameService.set_status("INGAME", user.id, this.rooms[this.rooms.length - 1].data.jgaucheid)
         this.startgame(this.rooms.length - 1)
       }
     }

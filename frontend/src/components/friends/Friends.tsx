@@ -9,11 +9,13 @@ import rubber from '../../assets/duck_in_lake.png'
 import SearchBar from './SearchBar';
 import { useEffect, useState, MouseEvent} from 'react';
 import { useCookies } from 'react-cookie';
+import Statusconnectlist from './Statusconnectlist';
 
 interface User {
 	name: string;
 	id: number;
 	photo: string;
+	status: string;
   }
 
 const Friends: React.FC = () => {
@@ -56,7 +58,7 @@ const Friends: React.FC = () => {
 						let i = 0
 						while(datas[i])
 						{
-							usersData.push({name: datas[i].target.name, id: datas[i].target.id, photo: datas[i].target.photo})
+							usersData.push({name: datas[i].target.name, id: datas[i].target.id, photo: datas[i].target.photo, status: datas[i].target.status})
 							i++
 						}
 						setUsers(usersData)
@@ -116,7 +118,7 @@ const Friends: React.FC = () => {
 								<ListItem className='yellow' key={user.name}>
 									<ListItemAvatar>
 										<button className='profil-button' onClick={(event) => handleclick(event, user.id)}>
-											<Avatar alt="Profile Picture" src={user.photo} />
+											<Statusconnectlist photo={user.photo} status={user.status}/>
 											<Divider>
 												<ListItemText />
 												{user.name}
