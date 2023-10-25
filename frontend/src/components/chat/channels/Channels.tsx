@@ -45,7 +45,7 @@ const Channels: React.FC = () => {
 				.then((response) => response.json())
 				.then((data) => {
 					const fetchedChannels = data.map((item: any) => {
-						return { name: item.name };
+						return item as Channel;
 					});
 					setChannels(fetchedChannels);
 				})
