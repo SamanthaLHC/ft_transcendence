@@ -41,20 +41,27 @@ export const useUser = (): UserContextType => {
     return context;
 };
 
+
 // Context for Chat socket
 
+interface Channel {
+	id: number;
+	name: string;
+	privacy: string;
+}
+
 interface ChatSocketType {
-	socket: Socket
-	room: string
+	socket: Socket;
+	channel: Channel;
 }
 
 export const socket = io('http://localhost:3000/chat', {autoConnect: false});
-export const ChatSocketContext = React.createContext<ChatSocketType>({socket: socket, room: ""});
+export const ChatSocketContext = React.createContext<ChatSocketType>({socket: socket, channel: {id: -1, name: "", privacy: ""}});
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [chatSocketData, setSocketData] = useState<ChatSocketType>({
+	const [chatSocketData] = useState<ChatSocketType>({
 		socket: socket,
-		room: "",
+		channel: {id: -1, name: "", privacy: ""},
 	})
     return (
         <ChatSocketContext.Provider value={chatSocketData}>
@@ -70,4 +77,3 @@ export const useChatSocket = (): ChatSocketType => {
     }
     return context;
 };
-

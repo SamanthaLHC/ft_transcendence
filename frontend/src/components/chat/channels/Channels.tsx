@@ -5,10 +5,12 @@ import { IconButton } from '@mui/material';
 import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
 import ChannelButton from "./ChannelButton";
+import { useChatSocket } from "../../Context";
 
 interface Channel {
 	id: number;
 	name: string;
+	privacy: string;
 }
 
 const Channels: React.FC = () => {
@@ -17,7 +19,8 @@ const Channels: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [channelCreated, setChannelCreated] = useState(false);
-	
+	const socket = useChatSocket()
+
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
 	};
@@ -83,7 +86,8 @@ const Channels: React.FC = () => {
 					alert(data.message);
 					return;
 				}
-				// TODO: change to new channel
+				socket.socket.emit('change_room', data.name);
+				socket.channel = data
 				setChannelCreated(true);
 				handleClose();
 			})

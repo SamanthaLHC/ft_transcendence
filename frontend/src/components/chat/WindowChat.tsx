@@ -2,11 +2,20 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { ListItem, Divider, ListItemText } from '@mui/material';
-import { channel } from 'diagnostics_channel';
 
 interface Message {
 	msg: string
 }
+
+interface Channel {
+	id: number;
+	name: string;
+}
+
+interface WindowChatProps {
+	channel: Channel;
+}
+
 
 const WindowChat: React.FC = () => {
 	const [messages, setMessages] = useState<Message[]>([]);
@@ -29,9 +38,9 @@ const WindowChat: React.FC = () => {
 		  console.log('Chat connected to server');
 		});
 
-		socket.socket.on('update_front', (channelName) => {
-			updateMessages(channelName);
-		}); 
+		socket.socket.on('update_front', () => {
+			updateMessages();
+		});
 
 		return () => {
 			if (socket) {
@@ -46,10 +55,28 @@ const WindowChat: React.FC = () => {
 		}
 	}, [messages])
 
-	const updateMessages = (channelName: string) => {
-		console.log('I must update', channelName);
 
-		const req = new Request("http://localhost:3000/chat/messages/" + channelName, {
+	useEffect( () => {
+		const req = new Request("http://localhost:3000/chat/channel/" + socket.channel.name, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+			},
+		})
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log("data:", data);
+			})
+			.catch((error) => {
+				console.error("Error fetching channels:", error);
+			});
+	}, [socket])
+
+	const updateMessages = () => {
+		console.log('I must update', socket.channel.name);
+
+		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.name, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
@@ -68,13 +95,13 @@ const WindowChat: React.FC = () => {
 				setMessages(fetchedMessages);
 			})
 			.catch((error) => {
-				console.error("Error updating channel " + channelName + ":", error);
+				console.error("Error updating channel " + socket.channel.name + ":", error);
 			});
 	}
 
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+		if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
 			emitMsg()
 		} else {
 			setInputValue("")
@@ -83,7 +110,7 @@ const WindowChat: React.FC = () => {
 	
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter') {
-			if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+			if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
 				emitMsg();
 			} else {
 				setInputValue("")
@@ -92,12 +119,12 @@ const WindowChat: React.FC = () => {
 	}
 
 	const emitMsg = () => {
-		if (socket.room !== "") {
+		if (socket.channel.name !== "") {
 			const body = {
 				msg: inputValue,
-				channel: socket.room,
+				channel: socket.channel.name,
 			};
-			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.room, {
+			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.channel.name, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -121,7 +148,7 @@ const WindowChat: React.FC = () => {
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ socket.room }
+				{ socket.channel.name }
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
