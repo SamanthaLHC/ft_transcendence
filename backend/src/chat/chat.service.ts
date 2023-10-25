@@ -14,9 +14,11 @@ export class ChatService {
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
-			// select: {
-			// 	name: true,
-			// },
+			select: {
+				id: true,
+				name: true,
+				privacy: true,
+			}
 		});
 		return channels;
 	}
@@ -29,7 +31,9 @@ export class ChatService {
 			select: {
 				channel: {
 					select: {
+						id: true,
 						name: true,
+						privacy: true,
 					}
 				}
 			},
@@ -74,7 +78,9 @@ export class ChatService {
 				}
 			},
 			select: {
+				id: true,
 				name: true,
+				privacy: true,
 			}
 		});
 		return channels;
