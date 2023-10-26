@@ -12,6 +12,7 @@ const Settings: React.FC = () => {
 	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
+	const [oldfile, setOldFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 
@@ -135,17 +136,12 @@ const Settings: React.FC = () => {
 		}
 	};
 
+	
 	useEffect(() => {
-		if (file) {
-			uploadAvatar();
-		}
-	}, [file]);
-
-	const uploadAvatar = async () => {
-		if (file) {
-			const formData = new FormData();
-			formData.append('file', file);
-			try {
+		const uploadAvatar = async () => {
+			if (file) {
+				const formData = new FormData();
+				formData.append('file', file);
 				const req = new Request("http://localhost:3000/users/upload", {
 					method: "POST",
 					headers: {
@@ -153,20 +149,33 @@ const Settings: React.FC = () => {
 					},
 					body: formData,
 				});
-
-				const response = await fetch(req);
-				if (response.ok) {
-					const responseStr = await response.text();
-					updateUserData(userData.id, userData.name, responseStr);
-				} else {
-					alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
-				}
-			} catch (error) {
-				console.error(error);
-				alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+				fetch(req)
+					.then((response) => {
+						if (response.ok) {
+							const responseStr = response.text();
+							return responseStr
+						} else {
+							alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+							return null
+						}
+					})
+					.then((data) => {
+						if (data) {
+							updateUserData(userData.id, userData.name, data);
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+						alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+					})
 			}
+		};
+		if (file && file !== oldfile) {
+			uploadAvatar()
+			setOldFile(file)
 		}
-	};
+	}, [file, oldfile, cookies.access_token, userData, updateUserData]);
+
 
 	return (
 		<React.Fragment>
