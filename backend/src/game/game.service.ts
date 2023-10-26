@@ -5,12 +5,12 @@ import { PrismaService } from 'src/prisma/prisma.service';
 @Injectable()
 export class GameService {
     constructor (private prisma: PrismaService) {}
-    async set_status(status: string, idone:number, idtwo:number){
+    async set_status(status: string, id:number){
         if (status == "INGAME")
         {
             await this.prisma.user.updateMany({
                 where: {
-                    id: { in: [idone, idtwo] },
+                    id: id,
                 },
                 data: {
                 status: "INGAME",
@@ -23,7 +23,7 @@ export class GameService {
                 where: { 
                     AND: [
                         {
-                            id: { in: [idone, idtwo] },
+                            id: id,
                         },
                         {
                             status: "INGAME"
@@ -37,7 +37,6 @@ export class GameService {
         }
     }
     async finish_game(dat:Data) {
-        this.set_status("CONNECTED", dat.jdroiteid, dat.jgaucheid)
         if (dat.scoredroite > dat.scoregauche)
         {
             await this.prisma.gameHistory.create({

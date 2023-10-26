@@ -107,7 +107,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
         this.server.to((this.rooms.length - 1).toString()).emit("update", this.rooms[this.rooms.length - 1].data)
         console.log("starting game on room ", this.rooms.length - 1)
-        this.gameService.set_status("INGAME", user.id, this.rooms[this.rooms.length - 1].data.jgaucheid)
+        this.gameService.set_status("INGAME", user.id)
+        this.gameService.set_status("INGAME", this.rooms[this.rooms.length - 1].data.jgaucheid)
         this.startgame(this.rooms.length - 1)
       }
     }
@@ -127,10 +128,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
     })
     const roomid = this.getroombyuser(user)
-    if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
+    if (roomid != -1 && this.rooms[roomid].data)
     {
-      this.rooms.pop()
+      if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
+      {
+        this.rooms.pop()
+      }
     }
+    this.gameService.set_status("CONNECTED", user.id)
     console.log (`user disconnect : ${user.name}`)
   }
 
