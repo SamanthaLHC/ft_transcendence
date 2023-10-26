@@ -371,7 +371,7 @@ textarea {
 	border-radius: 25px;
 	background-color: #d3a313;
 	margin-bottom: 3px;
-	word-break: break-all;
+	overflow-wrap: break-word;
 }
 
 .other-message{
@@ -380,7 +380,7 @@ textarea {
 	border-radius: 25px;
 	background-color: #e7e333;
 	margin-bottom: 3px;
-	word-break: break-all;
+	overflow-wrap: break-word;
 	
 }
 

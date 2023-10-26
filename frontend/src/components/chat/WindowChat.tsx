@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
-import { ListItem, Divider, ListItemText } from '@mui/material';
-import { channel } from 'diagnostics_channel';
+import { useUser } from "../Context";
 
 interface Message {
+	sender: string
 	msg: string
 }
 
@@ -14,6 +14,7 @@ const WindowChat: React.FC = () => {
 	const [inputValue, setInputValue] = useState('');
 	const [cookies] = useCookies(["access_token"]);
 	const messageRef = useRef<HTMLDivElement | null>(null);
+	const { userData } = useUser();
 
 	//Socket
 	useEffect(() => {
@@ -61,11 +62,14 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					console.log("item: ", item)
-					const tmp = item.sender.name + ": " + item.content
-					return { msg: tmp };
+					const tmp = {
+						sender: item.sender.name,
+						msg: ": " + item.content,
+					}
+					return tmp;
 				});
 				setMessages(fetchedMessages);
+				console.log("messages :", messages)
 			})
 			.catch((error) => {
 				console.error("Error updating channel " + channelName + ":", error);
@@ -126,8 +130,8 @@ const WindowChat: React.FC = () => {
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 					{messages.map((message, index) => (
-						<li key={index} className={index % 2 === 0 ? 'my-message typo-message' : 'other-message typo-message'}>
-							<span>{message.msg}</span>
+						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<span>{message.sender + message.msg}</span>
 						</li>
 					))}
 				</ul>
