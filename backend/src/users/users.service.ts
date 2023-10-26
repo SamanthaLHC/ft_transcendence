@@ -6,7 +6,6 @@ import { SearchDto, addRelationDto, rmRelationDto } from './dto';
 
 @Injectable()
 export class UsersService {
-	originalFileName: string
     constructor(private prisma: PrismaService) { }
     async getUserFromId(id: string) {
         var id_num: number = +id
@@ -248,20 +247,11 @@ export class UsersService {
     }
 
     async updateAvatar(id: number, url: string, originalname: string) {
-		if (originalname == this.originalFileName) {
-			const oldurl = await this.prisma.user.findFirst({
-				where: {id: id},
-				select: {photo: true}
-			})
-			return oldurl.photo
-		} else {
-			this.originalFileName = originalname
-			await this.prisma.user.update({
-				where: { id: id },
-				data: { photo: url }
-			})
-			return url;
-		}
+		await this.prisma.user.update({
+			where: { id: id },
+			data: { photo: url }
+		})
+		return url;
     }
     async updateName(id: number, name: string) {
         if (name.length > 15)

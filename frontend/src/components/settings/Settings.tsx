@@ -135,11 +135,16 @@ const Settings: React.FC = () => {
 		}
 	};
 
+	useEffect(() => {
+		if (file) {
+			uploadAvatar();
+		}
+	}, [file]);
+
 	const uploadAvatar = async () => {
 		if (file) {
 			const formData = new FormData();
 			formData.append('file', file);
-			console.log("file ", file)
 			try {
 				const req = new Request("http://localhost:3000/users/upload", {
 					method: "POST",
@@ -148,15 +153,10 @@ const Settings: React.FC = () => {
 					},
 					body: formData,
 				});
-				
 				const response = await fetch(req);
 				if (response.ok) {
 					const responseStr = await response.text();
-					console.log("responseStr ", responseStr)
-					console.log("photo ", userData.photo)
-					if (responseStr !== userData.photo) {
-						updateUserData(userData.id, userData.name, responseStr);
-					}
+					updateUserData(userData.id, userData.name, responseStr);
 				} else {
 					alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
 				}
@@ -167,9 +167,6 @@ const Settings: React.FC = () => {
 		}
 	};
 
-	useEffect(() => {
-		uploadAvatar();
-	}, [file, uploadAvatar]);
 	
 	return (
 		<React.Fragment>

@@ -107,7 +107,7 @@ export class UsersController {
             throw new BadRequestException("Error: No file sent")
         if(file.mimetype == "image/png" || file.mimetype == "image/gif" || file.mimetype == "image/jpeg")
         {
-            return this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`, file.originalname)
+            return this.usersService.updateAvatar(req.user.sub, `http://localhost:3000/users/avatar/${file.filename}`)
         }
         else
             throw new BadRequestException("Pas une image ou un gif")
