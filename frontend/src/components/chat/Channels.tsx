@@ -30,7 +30,6 @@ const Channels: React.FC = () => {
 	
 	useEffect(() => {
 		async function getChannels() {
-			console.log("getChannels:", searchQuery);
 			let uri_str: string
 			if (searchQuery === '')
 				uri_str = 'http://localhost:3000/chat/channels/joined'
@@ -90,7 +89,6 @@ const Channels: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.message) { // if error
-					console.log("Error:", data.message);
 					alert(data.message);
 					return;
 				}

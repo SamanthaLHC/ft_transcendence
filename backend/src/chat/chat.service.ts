@@ -1,14 +1,16 @@
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
+import * as bcrypt from 'bcrypt';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
-import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Injectable()
 export class ChatService {
 	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway)	{}
+
+	saltOrRounds = 10;
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
@@ -80,6 +82,10 @@ export class ChatService {
 
 	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
 		newChannel.name = newChannel.name.toLowerCase();
+		let hashedPassword = null;
+		if (newChannel.privacy === "PASSWORD_PROTECTED") {
+			hashedPassword = await bcrypt.hash(newChannel.password, this.saltOrRounds);
+		}
 		const channel = await this.prisma.$transaction(async (tx) => {
 			const existingChannel = await tx.channels.findUnique({
 				where: {
@@ -97,6 +103,8 @@ export class ChatService {
 					name: newChannel.name,
 					privacy: newChannel.privacy,
 					ownerId: userId,
+					// add password if privacy is PASSWORD_PROTECTED
+					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword}),
 				}
 			});
 			return channel;
@@ -104,13 +112,37 @@ export class ChatService {
 		if (channel["message"])
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
-		this.joinChannel(channel.id, userId);
+		await this.joinChannel(channel.id, userId, newChannel.password);
 		return channel;
 	}
 
-	async joinChannel(channelId: number, userId: number) {
+	async joinChannel(channelId: number, userId: number, password?: string) {
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
+
+		if (await this.isUserInChannel(channelId, userId)) {
+			console.log("User already in channel");
+			return;
+		}
+
+		const channel = await this.prisma.channels.findUnique({
+			where: {
+				id: channelId,
+			},
+		});
+		if (channel.privacy === "PASSWORD_PROTECTED") {
+			if (!password) {
+				Logger.log(`Password required for channel [${channelId}]`, "ChatService");
+				return { message: "Password required" };
+			}
+			const hashedPassword : string = channel["password"];
+			const passIsOk = await bcrypt.compare(password, hashedPassword);
+			if (!passIsOk) {
+				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
+				return { message: "Invalid password" };
+			}
+		}
+
 		const ret = await this.prisma.userChannelMap.create({
 			data: {
 				channelId: channelId,
