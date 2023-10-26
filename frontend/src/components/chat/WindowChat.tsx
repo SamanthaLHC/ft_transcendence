@@ -22,16 +22,16 @@ const WindowChat: React.FC = () => {
 		//   });
 		socket.socket.connect()
 		// setSocket(socketInstance);
-	  
+
 		// listen for events emitted by the server
-	  
+
 		socket.socket.on('connect', () => {
-		  console.log('Chat connected to server');
+			console.log('Chat connected to server');
 		});
 
 		socket.socket.on('update_front', (channelName) => {
 			updateMessages(channelName);
-		}); 
+		});
 
 		return () => {
 			if (socket) {
@@ -40,7 +40,7 @@ const WindowChat: React.FC = () => {
 		};
 	}, []);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (messageRef.current) {
 			messageRef.current.scrollTop = messageRef.current.scrollHeight;
 		}
@@ -80,7 +80,7 @@ const WindowChat: React.FC = () => {
 			setInputValue("")
 		}
 	}
-	
+
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter') {
 			if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
@@ -113,7 +113,7 @@ const WindowChat: React.FC = () => {
 				.catch((error) => {
 					console.error("Error sending message:", error);
 				});
-	
+
 		}
 		setInputValue("")
 	}
@@ -121,34 +121,21 @@ const WindowChat: React.FC = () => {
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ socket.room }
+				{socket.room}
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
-				{messages.map((message, index) => (
-							index%2? (
-							<ListItem className="my_message typo-message" key={index} >
-									<Divider>
-										<ListItemText />
-										{message.msg}
-									</Divider>
-							</ListItem>
-							) : (
-								<ListItem className="other_message typo-message" key={index} >
-								<Divider>
-									<ListItemText />
-									{message.msg}
-								</Divider>
-							</ListItem>
-
-							)
-						))}
+					{messages.map((message, index) => (
+						<li key={index} className={index % 2 === 0 ? 'my-message typo-message' : 'other-message typo-message'}>
+							<span>{message.msg}</span>
+						</li>
+					))}
 				</ul>
 			</div>
 			<div id="input-area">
 				<textarea id="inputMsg" name="inputMsg" value={inputValue}
-								onChange={(e) => setInputValue(e.target.value)}
-								onKeyDown={handleSendKey}/>
+					onChange={(e) => setInputValue(e.target.value)}
+					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
 			</div>
 		</div>

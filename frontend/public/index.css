@@ -365,20 +365,23 @@ textarea {
 }
 
 
-.my_message {
-	/* width: 90% !important; */
-	padding: 10px !important;
+.my-message{
+	width: 95%;
+	padding: 10px;
 	border-radius: 25px;
 	background-color: #d3a313;
+	margin-bottom: 3px;
+	word-break: break-all;
 }
 
-.other_message {
-	/* width: 90% !important; */
-
-	display: block !important;
-	padding: 10px !important;
+.other-message{
+	width: 95%;
+	padding: 10px;
 	border-radius: 25px;
 	background-color: #e7e333;
+	margin-bottom: 3px;
+	word-break: break-all;
+	
 }
 
 .typo-message {
