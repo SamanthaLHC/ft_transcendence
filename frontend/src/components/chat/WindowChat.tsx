@@ -126,12 +126,22 @@ const WindowChat: React.FC = () => {
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 				{messages.map((message, index) => (
-							<ListItem className="yellow" key={index} >
+							index%2? (
+							<ListItem className="my_message typo-message" key={index} >
 									<Divider>
 										<ListItemText />
 										{message.msg}
 									</Divider>
 							</ListItem>
+							) : (
+								<ListItem className="other_message typo-message" key={index} >
+								<Divider>
+									<ListItemText />
+									{message.msg}
+								</Divider>
+							</ListItem>
+
+							)
 						))}
 				</ul>
 			</div>
