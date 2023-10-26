@@ -64,7 +64,7 @@ const WindowChat: React.FC = () => {
 				const fetchedMessages = data.map((item: any) => {
 					const tmp = {
 						sender: item.sender.name,
-						msg: ": " + item.content,
+						msg: item.content,
 					}
 					return tmp;
 				});
@@ -131,7 +131,7 @@ const WindowChat: React.FC = () => {
 				<ul>
 					{messages.map((message, index) => (
 						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<span>{message.sender + message.msg}</span>
+							<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
 						</li>
 					))}
 				</ul>

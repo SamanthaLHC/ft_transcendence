@@ -395,9 +395,9 @@ textarea {
 
 .typo-message {
 	font-size: medium;
-	color: #000000;
+	color: #080d17;
 	font-family: "Andika";
-	font-weight: bold;
+	/* font-weight: bold; */
 }
 
 /*_______________________________________________________________________________________*/
