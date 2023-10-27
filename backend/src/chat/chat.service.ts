@@ -14,9 +14,11 @@ export class ChatService {
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
-			// select: {
-			// 	name: true,
-			// },
+			select: {
+				id: true,
+				name: true,
+				privacy: true,
+			}
 		});
 		return channels;
 	}
@@ -29,7 +31,9 @@ export class ChatService {
 			select: {
 				channel: {
 					select: {
+						id: true,
 						name: true,
+						privacy: true,
 					}
 				}
 			},
@@ -37,19 +41,6 @@ export class ChatService {
 
 		const channels = userChannelMaps.map(userChannelMap => userChannelMap.channel);
 		return channels;
-	}
-
-	async getChannelByName(channelName: string): Promise<PrismaPromise<any>> {
-		const channel = await this.prisma.channels.findUnique({
-			where: {
-				name: channelName,
-			}
-		});
-		if (!channel) {
-			Logger.log("Channel not found", channelName);
-			throw new NotFoundException("Channel not found");
-		}
-		return channel;
 	}
 
 	async getChannelById(channelId: number): Promise<PrismaPromise<any>> {
@@ -74,7 +65,9 @@ export class ChatService {
 				}
 			},
 			select: {
+				id: true,
 				name: true,
+				privacy: true,
 			}
 		});
 		return channels;
@@ -169,18 +162,17 @@ export class ChatService {
 		}
 	}
 
-	async addNewMessage(newMessage: NewMessageDto, userId: number) {
+	async addNewMessage( channelId: number, newMessage: NewMessageDto, userId: number) {
 		try {
 			console.log("in Service")
-			const channel = await this.getChannelByName(newMessage.channel) 
-			if (await this.isUserInChannel(channel.id, userId) == false) {
+			if (await this.isUserInChannel(channelId, userId) == false) {
 				return false
 			}
 			const ret = await this.prisma.messages.create({
 				data: {
 					content: newMessage.msg,
 					senderId: userId,
-					channelId: channel.id,
+					channelId: channelId,
 				}
 			})
 		}
@@ -191,11 +183,8 @@ export class ChatService {
 		return false
 	}
 
-	async getChannelMessages(channelName: string, userId: number) {
+	async getChannelMessages(channelId: number, userId: number) {
 		try {
-			const channel = await this.getChannelByName(channelName)
-			const channelId = channel.id
-			console.log(channelId)
 			if (await this.isUserInChannel(channelId, userId) == false) {
 				return {message: "You are not in this channel"}
 			}
