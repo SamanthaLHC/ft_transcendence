@@ -246,7 +246,7 @@ export class UsersService {
         return toDataURL(otpAuthUrl);
     }
 
-    async updateAvatar(id: number, url: string, originalname: string) {
+    async updateAvatar(id: number, url: string) {
 		await this.prisma.user.update({
 			where: { id: id },
 			data: { photo: url }
