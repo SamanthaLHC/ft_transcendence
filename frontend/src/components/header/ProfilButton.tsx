@@ -14,7 +14,7 @@ const ProfilButton: React.FC = () => {
 
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	const [cookies, setCookies] = useCookies(["access_token"]);
+	const [cookies, removeCookie] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState(null);
 	const { userData, updateUserData } = useUser();
 
@@ -52,8 +52,7 @@ const ProfilButton: React.FC = () => {
 	// handle log out __________________________________________________
 
 	const LogOut = () => {
-		//TODO clear cookies !
-		// setCookies(null);
+		// document.cookie = '"access_token"; Max-Age=0; secure ';
 		changeToLogin();
 	}
 
