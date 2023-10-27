@@ -103,12 +103,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.rooms[this.rooms.length - 1].data.jdscockid = socket.id
         console.log(this.rooms[this.rooms.length - 1].data)
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
+        this.gameService.set_status("INGAME", user.id)
+        this.gameService.set_status("INGAME", this.rooms[this.rooms.length - 1].data.jgaucheid)
         await new Promise(f => setTimeout(f, 2000));
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
         this.server.to((this.rooms.length - 1).toString()).emit("update", this.rooms[this.rooms.length - 1].data)
         console.log("starting game on room ", this.rooms.length - 1)
-        this.gameService.set_status("INGAME", user.id)
-        this.gameService.set_status("INGAME", this.rooms[this.rooms.length - 1].data.jgaucheid)
         this.startgame(this.rooms.length - 1)
       }
     }
