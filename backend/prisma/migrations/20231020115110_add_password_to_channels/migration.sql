@@ -8,7 +8,3 @@
 -- AlterTable
 ALTER TABLE "Channel" ADD COLUMN     "password" TEXT;
 
--- AlterTable
-ALTER TABLE "UserChannel" DROP CONSTRAINT "UserChannel_pkey",
-DROP COLUMN "id",
-ADD CONSTRAINT "UserChannel_pkey" PRIMARY KEY ("channelId", "userId");

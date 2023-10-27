@@ -112,7 +112,7 @@ type CanvasProps = {
     let {innerWidth, innerHeight} = window;
     return (
         <div>
-            <canvas ref={canvasRef} width={innerWidth/2} height={innerWidth/2/2} />
+            <canvas ref={canvasRef} width={innerWidth/1.5} height={innerWidth/1.5/2} />
         </div>
     )
 };
