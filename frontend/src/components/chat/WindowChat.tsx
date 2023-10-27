@@ -30,8 +30,8 @@ const WindowChat: React.FC = () => {
 			console.log('Chat connected to server');
 		});
 
-		socket.socket.on('update_front', (channelName) => {
-			updateMessages(channelName);
+		socket.socket.on('update_front', () => {
+			updateMessages();
 		});
 
 		return () => {
@@ -47,10 +47,10 @@ const WindowChat: React.FC = () => {
 		}
 	}, [messages])
 
-	const updateMessages = (channelName: string) => {
-		console.log('I must update', channelName);
+	const updateMessages = () => {
+		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
 
-		const req = new Request("http://localhost:3000/chat/messages/" + channelName, {
+		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
@@ -72,13 +72,12 @@ const WindowChat: React.FC = () => {
 				console.log("messages :", messages)
 			})
 			.catch((error) => {
-				console.error("Error updating channel " + channelName + ":", error);
+				console.error("Error updating channel " + socket.channel.name + ":", error);
 			});
 	}
 
-
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+		if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
 			emitMsg()
 		} else {
 			setInputValue("")
@@ -87,7 +86,7 @@ const WindowChat: React.FC = () => {
 
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter') {
-			if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+			if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
 				emitMsg();
 			} else {
 				setInputValue("")
@@ -96,12 +95,11 @@ const WindowChat: React.FC = () => {
 	}
 
 	const emitMsg = () => {
-		if (socket.room !== "") {
+		if (socket.channel.name !== "") {
 			const body = {
 				msg: inputValue,
-				channel: socket.room,
 			};
-			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.room, {
+			const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -129,7 +127,7 @@ const WindowChat: React.FC = () => {
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{socket.room}
+				{ socket.channel.name }
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
