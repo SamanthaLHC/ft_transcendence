@@ -29,6 +29,8 @@ type CanvasProps = {
     imgpad.src = pad
     let imgpadd = new Image();
     imgpadd.src = pad
+    let oldposjdroite = 4
+    let oldposjgauche = 4
     const drawgauchepad = (rect: CanvasRenderingContext2D, wight: number, height: number) => {
         rect.fillStyle = 'red';
         rect.fillRect(0, data.jgauche*height/10, 2*wight/100, 20*height/100);
@@ -62,6 +64,18 @@ type CanvasProps = {
         }
     }
 
+    const drawback = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
+        ctx.fillStyle = '#000000';
+        console.log("D", data.jgauche*height/10)
+        ctx.fillRect(0, 0, 2*wight/100, data.jgauche*height/10);
+        ctx.fillRect(0, (data.jgauche*height/10)+10*wight/100, 2*wight/100, height);
+        ctx.fillRect(2*wight/100, 0, (wight-2*wight/100)-2*wight/100, height);
+
+
+        ctx.fillRect((wight-2*wight/100)-2*wight/100, 0, (wight-2*wight/100)-2*wight/100, data.jdroite*height/10);
+        ctx.fillRect((wight-2*wight/100)-2*wight/100, (data.jdroite*height/10)+10*wight/100, wight, height);
+    }
+
     const drawpaddroitebag = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
         imgpadd.onload = () => {
             ctx.drawImage(imgpadd, wight-2*wight/100, data.jdroite*height/10, 2*wight/100, 20*height/100)
@@ -70,20 +84,23 @@ type CanvasProps = {
         const canvas = canvasRef.current;
         if (canvas) {
             const context = canvas.getContext('2d');
+            console.log("ici")
             if (context) {
-                context.clearRect(0, 0, canvas.width, canvas.height)
+                // context.clearRect(0, 0, canvas.width, canvas.height)
                 context.beginPath()
-                context.fillStyle = '#000000';
-                context.fillRect(0, 0, canvas.width, canvas.height);
-                drawmidline(context, canvas.width, canvas.height);
                 if (!canardmod)
                 {
+                    context.fillStyle = '#000000';
+                    context.fillRect(0, 0, canvas.width, canvas.height);
+                    drawmidline(context, canvas.width, canvas.height);
                     drawgauchepad(context, canvas.width, canvas.height);
                     drawdroitepad(context, canvas.width, canvas.height);
                     drawballe(context, canvas.width, canvas.height);
                 }
                 else
                 {
+                    drawback(context, canvas.width, canvas.height);
+                    drawmidline(context, canvas.width, canvas.height);
                     drawcanard(context, canvas.width, canvas.height);
                     drawpadgauchebag(context, canvas.width, canvas.height);
                     drawpaddroitebag(context, canvas.width, canvas.height);

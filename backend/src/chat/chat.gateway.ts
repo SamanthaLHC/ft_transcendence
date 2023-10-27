@@ -4,7 +4,7 @@ import { Socket, Server } from 'socket.io';
 import { ChatSocketDto } from './dto/chat_socket.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: "chat"})
+@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	sockets: [ChatSocketDto];
 
