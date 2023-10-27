@@ -1,10 +1,9 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { ChannelPasswordDTO, CreateChannelDto } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
-import { UpdateChannelDto } from './dto/update-channel/update-channel.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -50,8 +49,8 @@ export class ChatController {
 
 	@UseGuards(AuthGuard)
 	@Post('channel/join/:channelId')
-	async joinChannel(@Param('channelId') channelId: string, @Req() req) {
-		return await this.chatService.joinChannel(+channelId, req.user.sub);
+	async joinChannel(@Param('channelId') channelId: string, @Req() req, @Body() body?: ChannelPasswordDTO) {
+		return await this.chatService.joinChannel(+channelId, req.user.sub, body.password);
 	}
 
 	@UseGuards(AuthGuard)

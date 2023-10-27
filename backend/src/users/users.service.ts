@@ -1,8 +1,9 @@
-import { BadRequestException, ConflictException, HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, HttpException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { authenticator } from 'otplib';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { toDataURL } from 'qrcode';
 import { SearchDto, addRelationDto, rmRelationDto } from './dto';
+import { Auth2faDto } from 'src/auth/dto';
 
 @Injectable()
 export class UsersService {
@@ -71,19 +72,19 @@ export class UsersService {
             throw new NotFoundException(`Aucun user avec l'id ${id_num} ou aucun match effectue`)
     }
 
-    async searchUser(dto: SearchDto) {
+    async searchUser(dto: string) {
         const userlist = await this.prisma.user.findMany({
             where: {
                 OR: [
                     {
-                        login: {
-                            startsWith: dto.search,
-                        },
+                        login : {
+                            startsWith: dto,
+                          },
                     },
                     {
-                        name: {
-                            contains: dto.search,
-                        },
+                        name : {
+                            contains: dto,
+                          },
                     }
                 ]
             },
@@ -151,7 +152,9 @@ export class UsersService {
         });
     }
 
-    async getstatusrelation(dto: rmRelationDto, source_id: number) {
+    async getstatusrelation(target_id: string, source_id:number)
+    {
+        let target_id_num =+ target_id
         const relation = await this.prisma.relationships.findFirst({
             where: {
                 AND: [
@@ -159,15 +162,15 @@ export class UsersService {
                         userId: source_id
                     },
                     {
-                        targetId: dto.target_id
+                        targetId: target_id_num
                     }
                 ]
             },
         })
         if (relation)
             return ({ status: relation.status })
-        else
-            throw new NotFoundException("aucune relation avec ces ids");
+		else
+			return ({ status: "NONE" })
     }
 
     async getclassement() {
@@ -200,13 +203,19 @@ export class UsersService {
                 ]
             },
             select: {
-                targetId: true
+                target: {
+                    select: {
+                        id: true,
+                        login: true,
+                        name: true,
+                        photo: true,
+                        nbwin: true,
+                        nbloose: true
+                    }
+                }
             }
         })
-        if (relation[0])
-            return (relation)
-        else
-            throw new NotFoundException("aucune relation avec ces ids");
+        return (relation)
     }
 
     async turnOnTwoFactorAuthentication(userId: number) {
@@ -233,7 +242,7 @@ export class UsersService {
 
         await this.prisma.user.update({
             where: { id: userId },
-            data: { deuxfa: true, deuxfasecret: secret },
+            data: { deuxfa: false, deuxfasecret: secret },
         })
 
         return {
@@ -241,6 +250,34 @@ export class UsersService {
             otpauthUrl
         }
     }
+
+    async validate2fa(dto: Auth2faDto, userId: number) {
+        const user = await this.prisma.user.findFirst({
+			where: {
+				id: userId,
+			},
+		})
+		const isCodeValid = this.isTwoFactorAuthenticationCodeValid(
+			dto.code,
+			user.deuxfasecret,
+		);
+		if (!isCodeValid)
+			throw new UnauthorizedException();
+        else
+        {
+            await this.prisma.user.update({
+                where: { id: userId },
+                data: { deuxfa: true },
+            })
+        }
+    }
+
+    isTwoFactorAuthenticationCodeValid(twoFactorAuthenticationCode: string, secret: string) {
+		return authenticator.verify({
+			token: twoFactorAuthenticationCode,
+			secret: secret,
+		});
+	}
 
     async generateQrCodeDataURL(otpAuthUrl: string) {
         return toDataURL(otpAuthUrl);
