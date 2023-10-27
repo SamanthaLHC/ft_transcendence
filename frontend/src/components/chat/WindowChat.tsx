@@ -14,62 +14,59 @@ const WindowChat: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const messageRef = useRef<HTMLDivElement | null>(null);
 
-	//Socket
+
 	useEffect(() => {
-		// , {
-		// 	autoConnect: false,
-		//   });
+		const updateMessages = (channelName: string) => {
+			console.log('I must update', channelName);
+
+			const req = new Request("http://localhost:3000/chat/messages/" + channelName, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			})
+			fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.message) // if error
+						return;
+					const fetchedMessages = data.map((item: any) => {
+						console.log("item: ", item)
+						const tmp = item.sender.name + ": " + item.content
+						return { msg: tmp };
+					});
+					setMessages(fetchedMessages);
+				})
+				.catch((error) => {
+					console.error("Error updating channel " + channelName + ":", error);
+				});
+		}
+
+		console.log("socket: ", socket.socket)
 		socket.socket.connect()
-		// setSocket(socketInstance);
-	  
-		// listen for events emitted by the server
-	  
+
 		socket.socket.on('connect', () => {
-		  console.log('Chat connected to server');
+			console.log('Chat connected to server');
 		});
 
 		socket.socket.on('update_front', (channelName) => {
+			console.log("in update front")
 			updateMessages(channelName);
-		}); 
+		});
 
 		return () => {
-			if (socket) {
+			if (socket.socket) {
 				socket.socket.disconnect();
 			}
 		};
-	}, []);
+	}, [socket.socket, cookies.access_token]);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (messageRef.current) {
 			messageRef.current.scrollTop = messageRef.current.scrollHeight;
 		}
 	}, [messages])
 
-	const updateMessages = (channelName: string) => {
-		console.log('I must update', channelName);
-
-		const req = new Request("http://localhost:3000/chat/messages/" + channelName, {
-			method: "GET",
-			headers: {
-				Authorization: `Bearer ${cookies.access_token}`,
-			},
-		})
-		fetch(req)
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.message) // if error
-					return;
-				const fetchedMessages = data.map((item: any) => {
-					console.log("item: ", item)
-					const tmp = item.sender.name + ": " + item.content
-					return { msg: tmp };
-				});
-				setMessages(fetchedMessages);
-			})
-			.catch((error) => {
-				console.error("Error updating channel " + channelName + ":", error);
-			});
-	}
 
 
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -79,7 +76,7 @@ const WindowChat: React.FC = () => {
 			setInputValue("")
 		}
 	}
-	
+
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter') {
 			if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
@@ -112,7 +109,7 @@ const WindowChat: React.FC = () => {
 				.catch((error) => {
 					console.error("Error sending message:", error);
 				});
-	
+
 		}
 		setInputValue("")
 	}
@@ -120,24 +117,24 @@ const WindowChat: React.FC = () => {
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ socket.room }
+				{socket.room}
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
-				{messages.map((message, index) => (
-							<ListItem className="yellow" key={index} >
-									<Divider>
-										<ListItemText />
-										{message.msg}
-									</Divider>
-							</ListItem>
-						))}
+					{messages.map((message, index) => (
+						<ListItem className="yellow" key={index} >
+							<Divider>
+								<ListItemText />
+								{message.msg}
+							</Divider>
+						</ListItem>
+					))}
 				</ul>
 			</div>
 			<div id="input-area">
 				<textarea id="inputMsg" name="inputMsg" value={inputValue}
-								onChange={(e) => setInputValue(e.target.value)}
-								onKeyDown={handleSendKey}/>
+					onChange={(e) => setInputValue(e.target.value)}
+					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
 			</div>
 		</div>
