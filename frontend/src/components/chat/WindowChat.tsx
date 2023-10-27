@@ -7,16 +7,6 @@ interface Message {
 	msg: string
 }
 
-interface Channel {
-	id: number;
-	name: string;
-}
-
-interface WindowChatProps {
-	channel: Channel;
-}
-
-
 const WindowChat: React.FC = () => {
 	const [messages, setMessages] = useState<Message[]>([]);
 	const socket = useChatSocket()
@@ -54,24 +44,6 @@ const WindowChat: React.FC = () => {
 			messageRef.current.scrollTop = messageRef.current.scrollHeight;
 		}
 	}, [messages])
-
-
-	// useEffect( () => {
-	// 	const req = new Request("http://localhost:3000/chat/channel/" + socket.channel.name, {
-	// 		method: "GET",
-	// 		headers: {
-	// 			Authorization: `Bearer ${cookies.access_token}`,
-	// 		},
-	// 	})
-	// 	fetch(req)
-	// 		.then((response) => response.json())
-	// 		.then((data) => {
-	// 			console.log("data:", data);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error("Error fetching channels:", error);
-	// 		});
-	// }, [socket])
 
 	const updateMessages = () => {
 		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
