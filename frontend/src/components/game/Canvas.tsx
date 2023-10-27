@@ -54,7 +54,7 @@ type CanvasProps = {
 
     const drawcanard = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
         imgballe.onload = () => {
-            ctx.drawImage(imgballe, data.posballex*wight/100-(wight/50/2), data.posballey*height/100-(wight/50/2), wight/50, wight/50)
+            ctx.drawImage(imgballe, data.posballex*wight/100-(wight/30/2), data.posballey*height/100-(wight/30/2), wight/30, wight/30)
         }
     }
 
@@ -112,7 +112,7 @@ type CanvasProps = {
     let {innerWidth, innerHeight} = window;
     return (
         <div>
-            <canvas ref={canvasRef} width={innerWidth/2} height={innerWidth/2/2} />
+            <canvas ref={canvasRef} width={innerWidth/1.5} height={innerWidth/1.5/2} />
         </div>
     )
 };
