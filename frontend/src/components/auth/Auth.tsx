@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
+import { useAuth, useUser } from "../Context";
 
 function getCode(): string | null {
 	let url_str: string = window.location.search;
@@ -14,8 +15,7 @@ const AuthProcess: React.FC = () => {
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
 	const [authDone, setAuthDone] = useState(false);
-	const navigate = useNavigate();
-
+	const { isAuth, updateAuthStatus } = useAuth; // Destructure the properties
 	useEffect(() => {
 		async function getTok(): Promise<void> {
 
@@ -37,6 +37,7 @@ const AuthProcess: React.FC = () => {
 					if (datas.status === 302) {
 						setCookie("access_token", datas.access_token, { path: "/" }); //autorise les pages qui commencent par /
 						setAuthDone(true);
+
 						const tmp = new URL(datas.url);
 						navigate(tmp.pathname);
 					}
