@@ -2,7 +2,7 @@ import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisco
 import { Socket, Server } from 'socket.io';
 import { ChatSocketDto } from './dto/chat_socket.dto';
 
-@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: "chat"})
+@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	sockets: [ChatSocketDto];
 

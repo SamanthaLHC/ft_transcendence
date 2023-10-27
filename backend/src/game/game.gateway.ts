@@ -103,6 +103,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.rooms[this.rooms.length - 1].data.jdscockid = socket.id
         console.log(this.rooms[this.rooms.length - 1].data)
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
+        this.gameService.set_status("INGAME", user.id)
+        this.gameService.set_status("INGAME", this.rooms[this.rooms.length - 1].data.jgaucheid)
         await new Promise(f => setTimeout(f, 2000));
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
         this.server.to((this.rooms.length - 1).toString()).emit("update", this.rooms[this.rooms.length - 1].data)
@@ -126,10 +128,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
     })
     const roomid = this.getroombyuser(user)
-    if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
+    if (roomid != -1 && this.rooms[roomid].data)
     {
-      this.rooms.pop()
+      if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
+      {
+        this.rooms.pop()
+      }
     }
+    this.gameService.set_status("CONNECTED", user.id)
     console.log (`user disconnect : ${user.name}`)
   }
 
