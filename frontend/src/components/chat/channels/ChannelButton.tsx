@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import { useChatSocket } from '../../Context';
 import { useCookies } from "react-cookie";
 import { join } from "path";
+import PasswordDialog from "./PasswordDialog";
 
 interface Channel {
 	id: number;
@@ -20,22 +21,28 @@ interface ChannelButtonProps {
 const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 	const socket = useChatSocket()
 	const [cookies] = useCookies(["access_token"]);
+	const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
 	
 	const changeChannel = (channel : Channel) => {
 		socket.socket.emit('change_room', channel.name);
 		socket.channel = channel
 	}
 	
-	const joinChannel = (channel : Channel) => {
+	const joinChannel = (channel : Channel, password? : string) => {
 
 		console.log('I must join', channel.name, '(ID:', channel.id, ')');
 		const body = {
 			password: 'kfjv',
 			privacy: channel.privacy,
 		};
-		// console.log(JSON.stringify(body));
 		if (channel.privacy === "PASSWORD_PROTECTED") {
-			// TODO: ask for password and add it to body
+			if (password)
+				body.password = password;
+			else
+			{
+				setPasswordDialogOpen(true);
+				return;
+			}
 		}
 		const req = new Request("http://localhost:3000/chat/channel/join/" + channel.id, {
 			method: "POST",
@@ -65,16 +72,28 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 		joinChannel(channel);
 	}
 
+	const handlePasswordJoin = (password: string) => {
+		// Appeler ici la fonction pour rejoindre le canal avec le mot de passe
+		joinChannel(channel, password);
+		// Assurez-vous de fermer le dialogue après avoir traité le mot de passe
+		setPasswordDialogOpen(false);
+	  };
+
 	return (
 		<ListItem className="yellow">
-			<button className="profil-button" onClick={handleChannelClick}>
-				<Divider>
-					<ListItemText />
-					{channel.name}
-				</Divider>
-			</button>
+		  <button className="profil-button" onClick={handleChannelClick}>
+			<Divider>
+			  <ListItemText />
+			  {channel.name}
+			</Divider>
+		  </button>
+		  <PasswordDialog
+			open={isPasswordDialogOpen}
+			onClose={() => setPasswordDialogOpen(false)}
+			onJoin={handlePasswordJoin}
+		  />
 		</ListItem>
-	);
+	  );
 };
 
 export default ChannelButton;

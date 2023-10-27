@@ -132,7 +132,7 @@ export class ChatService {
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
 				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
-				return { message: "Invalid password" };
+				return { message: "Invalid password",  };
 			}
 		}
 
