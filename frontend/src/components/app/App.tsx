@@ -11,7 +11,6 @@ import Error from "../error/Error";
 import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
 import TwoFa from "../auth/2fa/TwoFa";
 import { ChatSocketProvider, UserProvider } from "../Context"
-import { useUser } from "../Context"; // Correct import path
 
 const App: React.FC = () => {
 

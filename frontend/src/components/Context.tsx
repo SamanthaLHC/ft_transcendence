@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
 import {io, Socket} from "socket.io-client";
-import DefaultEventsMap from "socket.io-client"
 
 // Context for User info
 
@@ -54,7 +53,7 @@ export const socket = io('http://localhost:3000/chat', {autoConnect: false});
 export const ChatSocketContext = React.createContext<ChatSocketType>({socket: socket, room: ""});
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [chatSocketData, setSocketData] = useState<ChatSocketType>({
+	const [chatSocketData] = useState<ChatSocketType>({
 		socket: socket,
 		room: "",
 	})

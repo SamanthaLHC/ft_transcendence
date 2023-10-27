@@ -15,8 +15,6 @@ let finish = false
 let id = ""
 
 const Game: React.FC = () => {
-	let logindroite = ""
-	let logingauche = ""
 	const [cookies] = useCookies(["access_token"]);
 	const navToHome = useNavigate();
 	const gamefinish = () => {

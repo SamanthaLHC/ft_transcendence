@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { ListItem, Divider, ListItemText } from '@mui/material';
-import { channel } from 'diagnostics_channel';
 
 interface Message {
 	msg: string

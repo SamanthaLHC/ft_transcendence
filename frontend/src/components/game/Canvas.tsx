@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import duck from '../../assets/duck.png'
 import pad from '../../assets/pad.png'
 
@@ -92,7 +92,7 @@ type CanvasProps = {
                 context.closePath()
             }
         }
-    let {innerWidth, innerHeight} = window;
+    let {innerWidth} = window;
     return (
         <div>
             <canvas ref={canvasRef} width={innerWidth/2} height={innerWidth/2/2} />
