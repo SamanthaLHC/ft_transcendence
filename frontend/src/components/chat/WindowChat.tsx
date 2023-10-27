@@ -112,7 +112,11 @@ const WindowChat: React.FC = () => {
 			fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
-					socket.socket.emit('update', inputValue)
+					if (data.message) {
+						alert("Error sending message: " + data.message)
+					} else {
+						socket.socket.emit('update', inputValue)
+					}
 				})
 				.catch((error) => {
 					console.error("Error sending message:", error);

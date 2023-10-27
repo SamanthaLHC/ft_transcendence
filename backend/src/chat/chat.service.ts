@@ -8,7 +8,7 @@ import { NewMessageDto } from './dto/new-message/new-message.dto';
 
 @Injectable()
 export class ChatService {
-	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway)	{}
+	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway) { }
 
 	saltOrRounds = 10;
 
@@ -104,7 +104,7 @@ export class ChatService {
 					privacy: newChannel.privacy,
 					ownerId: userId,
 					// add password if privacy is PASSWORD_PROTECTED
-					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword}),
+					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword }),
 				}
 			});
 			return channel;
@@ -135,7 +135,7 @@ export class ChatService {
 				Logger.log(`Password required for channel [${channelId}]`, "ChatService");
 				return { message: "Password required" };
 			}
-			const hashedPassword : string = channel["password"];
+			const hashedPassword: string = channel["password"];
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
 				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
@@ -170,23 +170,25 @@ export class ChatService {
 	}
 
 	async addNewMessage(newMessage: NewMessageDto, userId: number) {
-		try {
-			console.log("in Service")
-			const channel = await this.getChannelByName(newMessage.channel) 
-			if (await this.isUserInChannel(channel.id, userId) == false) {
+		if (/[^\s]+/.test(newMessage.msg)) {
+			try {
+				console.log("in Service", newMessage.msg, "| end of message")
+				const channel = await this.getChannelByName(newMessage.channel)
+				if (await this.isUserInChannel(channel.id, userId) == false) {
+					return false
+				}
+				const ret = await this.prisma.messages.create({
+					data: {
+						content: newMessage.msg,
+						senderId: userId,
+						channelId: channel.id,
+					}
+				})
+			}
+			catch (e) {
+				Logger.log("Can't add msg");
 				return false
 			}
-			const ret = await this.prisma.messages.create({
-				data: {
-					content: newMessage.msg,
-					senderId: userId,
-					channelId: channel.id,
-				}
-			})
-		}
-		catch (e) {
-			Logger.log("Can't add msg");
-			return false
 		}
 		return false
 	}
@@ -197,7 +199,7 @@ export class ChatService {
 			const channelId = channel.id
 			console.log(channelId)
 			if (await this.isUserInChannel(channelId, userId) == false) {
-				return {message: "You are not in this channel"}
+				return { message: "You are not in this channel" }
 			}
 			const messages = await this.prisma.messages.findMany({
 				where: {
@@ -218,7 +220,7 @@ export class ChatService {
 		catch (e) {
 			Logger.log("Can't get messages", "ChatService");
 			console.log(e)
-			return {message: "Can't get messages", "error": e}
+			return { message: "Can't get messages", "error": e }
 		}
 	}
 
