@@ -114,8 +114,8 @@ export class ChatService {
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
 		if (await this.isUserInChannel(channelId, userId)) {
-			console.log("User already in channel");
-			return;
+			Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
+			return { message: "User already in channel" };
 		}
 
 		const channel = await this.prisma.channels.findUnique({
@@ -143,6 +143,7 @@ export class ChatService {
 			}
 		});
 		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
+		return ret;
 	}
 
 	async leaveChannel(channelId: number, userId: number) {

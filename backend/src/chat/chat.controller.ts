@@ -44,7 +44,8 @@ export class ChatController {
 
 	@UseGuards(AuthGuard)
 	@Post('channel/join/:channelId')
-	async joinChannel(@Param('channelId') channelId: string, @Req() req, @Body() body?: ChannelPasswordDTO) {
+	async joinChannel(@Param('channelId') channelId: string, @Body() body: ChannelPasswordDTO, @Req() req) {
+		console.log ("in control joinChannel: ", body.privacy)
 		return await this.chatService.joinChannel(+channelId, req.user.sub, body.password);
 	}
 
