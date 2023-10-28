@@ -361,9 +361,9 @@ textarea {
 	padding: 15px;
 	overflow-y: auto;
 	scrollbar-width: none;
+	white-space: break-spaces;
 	/* background-color: #ebebeb; */
 }
-
 
 .my-message{
 	max-width: 75%;
@@ -390,7 +390,6 @@ textarea {
 	overflow-wrap: break-word;
 	float: left;
 	clear: both;
-	
 }
 
 .typo-message {
