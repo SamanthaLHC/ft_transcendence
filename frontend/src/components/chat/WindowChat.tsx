@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
-import { ListItem, Divider, ListItemText } from '@mui/material';
+import { useUser } from "../Context";
 
 interface Message {
+	sender: string
 	msg: string
 }
 
@@ -13,6 +14,7 @@ const WindowChat: React.FC = () => {
 	const [inputValue, setInputValue] = useState('');
 	const [cookies] = useCookies(["access_token"]);
 	const messageRef = useRef<HTMLDivElement | null>(null);
+	const { userData } = useUser();
 
 	//Socket
 	useEffect(() => {
@@ -21,11 +23,11 @@ const WindowChat: React.FC = () => {
 		//   });
 		socket.socket.connect()
 		// setSocket(socketInstance);
-	  
+
 		// listen for events emitted by the server
-	  
+
 		socket.socket.on('connect', () => {
-		  console.log('Chat connected to server');
+			console.log('Chat connected to server');
 		});
 
 		socket.socket.on('update_front', () => {
@@ -39,7 +41,7 @@ const WindowChat: React.FC = () => {
 		};
 	}, []);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (messageRef.current) {
 			messageRef.current.scrollTop = messageRef.current.scrollHeight;
 		}
@@ -60,10 +62,14 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					const tmp = item.sender.name + ": " + item.content
-					return { msg: tmp };
+					const tmp = {
+						sender: item.sender.name,
+						msg: item.content,
+					}
+					return tmp;
 				});
 				setMessages(fetchedMessages);
+				console.log("messages :", messages)
 			})
 			.catch((error) => {
 				console.error("Error updating channel " + socket.channel.name + ":", error);
@@ -77,7 +83,7 @@ const WindowChat: React.FC = () => {
 			setInputValue("")
 		}
 	}
-	
+
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter') {
 			if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
@@ -104,12 +110,16 @@ const WindowChat: React.FC = () => {
 			fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
-					socket.socket.emit('update', inputValue)
+					if (data.message) {
+						alert("Error sending message: " + data.message)
+					} else {
+						socket.socket.emit('update', inputValue)
+					}
 				})
 				.catch((error) => {
 					console.error("Error sending message:", error);
 				});
-	
+
 		}
 		setInputValue("")
 	}
@@ -121,20 +131,17 @@ const WindowChat: React.FC = () => {
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
-				{messages.map((message, index) => (
-							<ListItem className="yellow" key={index} >
-									<Divider>
-										<ListItemText />
-										{message.msg}
-									</Divider>
-							</ListItem>
-						))}
+					{messages.map((message, index) => (
+						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
+						</li>
+					))}
 				</ul>
 			</div>
 			<div id="input-area">
-				<textarea id="inputMsg" name="inputMsg" value={inputValue}
-								onChange={(e) => setInputValue(e.target.value)}
-								onKeyDown={handleSendKey}/>
+				<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
+					onChange={(e) => setInputValue(e.target.value)}
+					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
 			</div>
 		</div>
