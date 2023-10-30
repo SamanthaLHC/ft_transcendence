@@ -141,6 +141,7 @@ useEffect(() => {
 	}
 }, [file]);
 
+
 const uploadAvatar = async () => {
 	if (file) {
 		const formData = new FormData();
@@ -165,6 +166,7 @@ const uploadAvatar = async () => {
 			console.error(error);
 			alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
 		}
+
 	}
 };
 
