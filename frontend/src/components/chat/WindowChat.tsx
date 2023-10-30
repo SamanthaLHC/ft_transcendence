@@ -139,7 +139,7 @@ const WindowChat: React.FC = () => {
 				</ul>
 			</div>
 			<div id="input-area">
-				<textarea id="inputMsg" name="inputMsg" value={inputValue}
+				<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
 					onChange={(e) => setInputValue(e.target.value)}
 					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
