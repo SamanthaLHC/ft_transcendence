@@ -57,8 +57,10 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 			fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
-					if (data.message) // if error
+					if (data.message) { // if error
 						console.log(data.message);
+						alert(data.message);
+					}
 					else {
 						console.log('successfully joined');
 						changeChannel(channel);
