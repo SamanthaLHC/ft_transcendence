@@ -29,8 +29,6 @@ type CanvasProps = {
     imgpad.src = pad
     let imgpadd = new Image();
     imgpadd.src = pad
-    let oldposjdroite = 4
-    let oldposjgauche = 4
     const drawgauchepad = (rect: CanvasRenderingContext2D, wight: number, height: number) => {
         rect.fillStyle = 'red';
         rect.fillRect(0, data.jgauche*height/10, 2*wight/100, 20*height/100);

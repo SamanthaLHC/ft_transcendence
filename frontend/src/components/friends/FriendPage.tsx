@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import ducky from '../../assets/duck-no.gif'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import MatchHistory from './MatchHistory'
-import { Avatar, Badge, Divider, Typography, styled } from '@mui/material'
 import { useCookies } from 'react-cookie'
-import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import WinsAndLoses from './WinsAndLoses'
 import Statusconnect from './Statusconnect'
-import { userInfo } from 'os'
 
 const Profil: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
@@ -22,10 +19,6 @@ const Profil: React.FC = () => {
 		navToHome(pathHome);
 	}
 
-	const changeToProfile = () => {
-		let pathHome: string = '/profil';
-		navToHome(pathHome);
-	}
 
 	function getId(): string | null {
 		let url_str: string = window.location.search;
@@ -37,9 +30,15 @@ const Profil: React.FC = () => {
 	}
 
 	useEffect(() => {
-		const checkme = async (id:string) => {
+
+
+		const changeToProfile = () => {
+			let pathHome: string = '/profil';
+			navToHome(pathHome);
+		}
+		const checkme = async (id: string) => {
 			try {
-				let id_num:number = +id
+				let id_num: number = +id
 				const req: Request = new Request('http://localhost:3000/users/me', {
 					method: 'GET',
 					headers: {
@@ -50,7 +49,7 @@ const Profil: React.FC = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				console.log(datas)
-				if (datas.id == id_num) {
+				if (datas.id === id_num) {
 					changeToProfile()
 				}
 			}
@@ -70,16 +69,15 @@ const Profil: React.FC = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
-					if (datas.status == "FRIEND") {
+					if (datas.status === "FRIEND") {
 						setFriend(true)
 						setblock(false)
 					}
-					else if (datas.status == "BLOCKED") {
+					else if (datas.status === "BLOCKED") {
 						setFriend(false)
 						setblock(true)
 					}
-					else
-					{
+					else {
 						setFriend(false)
 						setblock(false)
 					}
@@ -90,18 +88,11 @@ const Profil: React.FC = () => {
 			}
 		};
 		let id = getId()
-		if (id)
-		{
+		if (id) {
 			checkme(id)
 			initstatusfa(id);
 		}
-	}, [cookies.access_token, setFriend, setblock, getId]);
-
-	const navToLogin: NavigateFunction = useNavigate();
-	const changeToLogin = () => {
-		let pathLogin: string = '/';
-		navToLogin(pathLogin);
-	}
+	}, [cookies.access_token, setFriend, setblock, getId, navToHome]);
 
 
 	useEffect(() => {
@@ -125,12 +116,12 @@ const Profil: React.FC = () => {
 		let id = getId()
 		if (id)
 			getUserInfo(id);
-	}, [cookies.access_token, getId()]);
+	}, [cookies.access_token, getId, changeToHome]);
 	if (!userInfos) {
 		return null
 	}
 
-	const addrelation = async (id:number, status: string) => {
+	const addrelation = async (id: number, status: string) => {
 		const obj = {
 			target_id: id,
 			status: status
@@ -181,16 +172,14 @@ const Profil: React.FC = () => {
 	const handleClickfriend = () => {
 		let id = getId()
 		if (!id)
-			return 
-		let id_num:number = +id
-		if (!friend)
-		{
+			return
+		let id_num: number = +id
+		if (!friend) {
 			addrelation(id_num, "FRIEND")
 			setFriend(true)
 			setblock(false)
 		}
-		else
-		{
+		else {
 			setFriend(false)
 			setblock(false)
 			removerelation(id_num)
@@ -200,16 +189,14 @@ const Profil: React.FC = () => {
 	const handleClickblock = () => {
 		let id = getId()
 		if (!id)
-			return 
-		let id_num:number = +id
-		if (!block)
-		{
+			return
+		let id_num: number = +id
+		if (!block) {
 			addrelation(id_num, "BLOCKED")
 			setFriend(false)
 			setblock(true)
 		}
-		else
-		{
+		else {
 			setFriend(false)
 			setblock(false)
 			removerelation(id_num)
@@ -224,23 +211,23 @@ const Profil: React.FC = () => {
 				<div className='content-page'>
 					<div className='list-items'>
 						<div className='photo-pos'>
-							<Statusconnect photo={userInfos.photo} status={userInfos.status}/>
-							
+							<Statusconnect photo={userInfos.photo} status={userInfos.status} />
+
 						</div>
 						<div className='typo-friends yellow'>
 							{userInfos.name}
 						</div>
 						<div className='btn-pos'>
-						<button className="btn-size" onClick={handleClickfriend}> {friend ? "Remove friend" : "add Friend"}</button>
+							<button className="btn-size" onClick={handleClickfriend}> {friend ? "Remove friend" : "add Friend"}</button>
 						</div>
 						<div className='btn-pos'>
-						<button className="btn-size" onClick={handleClickblock}>{block ? "Unblock" : "block"}</button>
+							<button className="btn-size" onClick={handleClickblock}>{block ? "Unblock" : "block"}</button>
 						</div>
 						<div className='btn-pos'>
-						<button className="btn-size" >Direct Message</button>
+							<button className="btn-size" >Direct Message</button>
 						</div>
 						<div className='btn-pos'>
-						<button className="btn-size" >Invite Game</button>
+							<button className="btn-size" >Invite Game</button>
 						</div>
 					</div>
 					<div className='list-items'>

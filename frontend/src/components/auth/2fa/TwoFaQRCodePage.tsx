@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { useParams } from 'react-router-dom';
 import EnableTwoFa from './EnableTwoFa';
 
