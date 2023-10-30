@@ -11,6 +11,7 @@ interface Channel {
 	id: number;
 	name: string;
 	privacy: string;
+	joined: boolean;
 }
 
 const Channels: React.FC = () => {
@@ -40,10 +41,10 @@ const Channels: React.FC = () => {
 				},
 			});
 
-
 			return fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
+					console.log(data);
 					const fetchedChannels = data.map((item: any) => {
 						return item as Channel;
 					});

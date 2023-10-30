@@ -1,10 +1,9 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChannelPasswordDTO, CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
-import { channel } from 'diagnostics_channel';
 
 @Controller('chat')
 export class ChatController {
@@ -37,15 +36,13 @@ export class ChatController {
 
 	@UseGuards(AuthGuard)
 	@Get('channel')
-	async findChannelBySearch(@Query('search') searchTerm: string) {
-		return await this.chatService.findChannelBySearch(searchTerm);
+	async findChannelBySearch(@Query('search') searchTerm: string, @Req() req) {
+		return await this.chatService.findChannelBySearch(searchTerm, req.user.sub);
 	}
-
 
 	@UseGuards(AuthGuard)
 	@Post('channel/join/:channelId')
-	async joinChannel(@Param('channelId') channelId: string, @Body() body: ChannelPasswordDTO, @Req() req) {
-		console.log ("in control joinChannel: ", body.privacy)
+	async joinChannel(@Param('channelId') channelId: string, @Body() body: JoinChannelPasswordDTO, @Req() req) {
 		return await this.chatService.joinChannel(+channelId, req.user.sub, body.password);
 	}
 

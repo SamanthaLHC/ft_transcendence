@@ -38,8 +38,9 @@ export class ChatService {
 				}
 			},
 		});
-
+		
 		const channels = userChannelMaps.map(userChannelMap => userChannelMap.channel);
+		channels.forEach(channel => channel["joined"] = true);
 		return channels;
 	}
 
@@ -56,21 +57,35 @@ export class ChatService {
 		return channel;
 	}
 
-	async findChannelBySearch(searchTerm: string): Promise<PrismaPromise<any>> {
+	// returns all channels that match the search term and a boolean indicating if the user is in the channel
+	async findChannelBySearch(searchTerm: string, userId: number): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
 			where: {
 				name: {
 					contains: searchTerm,
 					mode: 'insensitive'
-				}
+				},
 			},
 			select: {
 				id: true,
 				name: true,
 				privacy: true,
+				users: {
+					select: {
+						userId: true,
+					}
+				}
 			}
 		});
-		return channels;
+		const ret = channels.map(channel => {
+			return {
+				id: channel.id,
+				name: channel.name,
+				privacy: channel.privacy,
+				joined: channel.users.some(user => user.userId === userId),
+				}
+		});
+		return ret;
 	}
 
 	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
@@ -113,10 +128,10 @@ export class ChatService {
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
-		if (await this.isUserInChannel(channelId, userId)) {
-			Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
-			return { message: "User already in channel" };
-		}
+		// if (await this.isUserInChannel(channelId, userId)) {
+		// 	Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
+		// 	return { message: "User already in channel" };
+		// }
 
 		const channel = await this.prisma.channels.findUnique({
 			where: {
