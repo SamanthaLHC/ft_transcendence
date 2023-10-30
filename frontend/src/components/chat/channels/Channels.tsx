@@ -31,16 +31,11 @@ const Channels: React.FC = () => {
 	}
 	const id = getId()
 	if (id) {
-		const body = {
-			targetId: +id
-		};
-		const req = new Request("http://localhost:3000/chat/channel/createMP", {
+		const req = new Request("http://localhost:3000/chat/channel/private/" + id, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
-				"Content-Type": "application/json", // Specify content type
 			},
-			body: JSON.stringify(body),
 		});
 
 		fetch(req)

@@ -102,7 +102,6 @@ export class ChatService {
 			});
 			if (existingChannel) {
 				Logger.log("Channel already exists", "ChatService");
-				Logger.log(existingChannel, "ChatService");
 				existingChannel["message"] = "This channel already exists";
 				return existingChannel;
 			}
@@ -238,25 +237,44 @@ export class ChatService {
 		return !!userChannelMap;
 	}
 
-	async createMP(targetId: number, userId: number) {
-        const chan = await this.prisma.channels.findMany({
-            where: {
-                privacy: "PRIVATE",
-                users: {
-                    every: {
-                        OR : [
-                            { userId: targetId },
-                            { userId: userId }
-                        ]
-                    }
-                }
-            }
-        });
-        if (chan.length === 0)
-		{
-			return {msg:"pas emcore"}
+	async createPrivateChannel(targetId: number, userId: number) {
+		let channel = await this.prisma.channels.findFirst({
+			where: {
+				privacy: "PRIVATE",
+				users: {
+					every: {
+						OR: [
+							{ userId: targetId },
+							{ userId: userId }
+						]
+					}
+				}
+			},
+			select: {
+				id: true,
+				name: true,
+				privacy: true,
+			}
+		});
+		if (channel) {
+			return channel;
 		}
-		else
-			return chan[0]
-    }
+		else {
+			while (!channel || channel["message"])
+			{
+				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+				console.log(channelName);
+				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
+				if (channel["message"]) {
+					console.log(channel["message"]);
+				}
+				else {
+					console.log("channel created");
+					console.log(channel);
+				}
+			}
+			await this.joinChannel(channel.id, targetId);
+			return channel;
+		}
+	}
 }

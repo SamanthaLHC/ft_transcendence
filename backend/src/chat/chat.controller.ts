@@ -48,9 +48,9 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Post('channel/createMP')
-	async createMP(@Body() body: CreateMpDTO, @Req() req) {
-		return await this.chatService.createMP(body.targetId, req.user.sub);
+	@Post('channel/private/:targetId')
+	async createPrivateChannel(@Param('targetId') targetId : string, @Req() req) {
+		return await this.chatService.createPrivateChannel(+targetId, req.user.sub);
 	}
 
 	@UseGuards(AuthGuard)
