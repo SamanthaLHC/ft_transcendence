@@ -4,6 +4,7 @@ import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel/c
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { CreateMpDTO } from './dto/CreateMPDTOP/CreateMpDTO.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -44,6 +45,18 @@ export class ChatController {
 	@Post('channel/join/:channelId')
 	async joinChannel(@Param('channelId') channelId: string, @Body() body: JoinChannelPasswordDTO, @Req() req) {
 		return await this.chatService.joinChannel(+channelId, req.user.sub, body.password);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/createMP')
+	async createMP(@Body() body: CreateMpDTO, @Req() req) {
+		return await this.chatService.createMP(body.targetId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Get('channel/:channelId')
+	async getChannelById(@Param('channelId') channelId: string) {
+		return await this.chatService.getChannelById(+channelId);
 	}
 
 	@UseGuards(AuthGuard)

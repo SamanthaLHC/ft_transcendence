@@ -38,7 +38,7 @@ export class ChatService {
 				}
 			},
 		});
-		
+
 		const channels = userChannelMaps.map(userChannelMap => userChannelMap.channel);
 		channels.forEach(channel => channel["joined"] = true);
 		return channels;
@@ -83,7 +83,7 @@ export class ChatService {
 				name: channel.name,
 				privacy: channel.privacy,
 				joined: channel.users.some(user => user.userId === userId),
-				}
+			}
 		});
 		return ret;
 	}
@@ -147,7 +147,7 @@ export class ChatService {
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
 				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
-				return { message: "Invalid password",  };
+				return { message: "Invalid password", };
 			}
 		}
 
@@ -237,4 +237,26 @@ export class ChatService {
 		});
 		return !!userChannelMap;
 	}
+
+	async createMP(targetId: number, userId: number) {
+        const chan = await this.prisma.channels.findMany({
+            where: {
+                privacy: "PRIVATE",
+                users: {
+                    every: {
+                        OR : [
+                            { userId: targetId },
+                            { userId: userId }
+                        ]
+                    }
+                }
+            }
+        });
+        if (chan.length === 0)
+		{
+			return {msg:"pas emcore"}
+		}
+		else
+			return chan[0]
+    }
 }

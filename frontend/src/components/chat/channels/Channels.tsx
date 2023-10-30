@@ -22,16 +22,52 @@ const Channels: React.FC = () => {
 	const [channelCreated, setChannelCreated] = useState(false);
 	const socket = useChatSocket()
 
+	function getId(): string | null {
+		let url_str: string = window.location.search;
+		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
+		let code_param: string | null = strToSearch.get("mpid");
+		console.log(code_param)
+		return code_param;
+	}
+	const id = getId()
+	if (id) {
+		const body = {
+			targetId: +id
+		};
+		const req = new Request("http://localhost:3000/chat/channel/createMP", {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+				"Content-Type": "application/json", // Specify content type
+			},
+			body: JSON.stringify(body),
+		});
+
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				if (data.name) { // if error
+					socket.socket.emit('change_room', data.name);
+					socket.channel = data
+				}
+				else
+					console.log("nop")
+			})
+			.catch((error) => {
+				console.error("Error fetching channels:", error);
+			});
+	}
+
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
 	};
-	
+
 	useEffect(() => {
 		async function getChannels() {
 			let uri_str: string
 			if (searchQuery === '')
 				uri_str = 'http://localhost:3000/chat/channels/joined'
-			else 
+			else
 				uri_str = 'http://localhost:3000/chat/channel?search=' + searchQuery
 
 			const req = new Request(uri_str, {
@@ -113,34 +149,34 @@ const Channels: React.FC = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	
+
 	return (
 		<React.Fragment>
-		  <div className="channels">
-			<h5 className="typo-channel yellow">
-			  Channels
-			  <IconButton
-				className="add-button"
-				aria-controls={open ? "basic-menu" : undefined}
-				aria-haspopup="true"
-				aria-expanded={open ? "true" : undefined}
-				onClick={handleClick}
-			  >
-				<AddCircleIcon />
-			  </IconButton>
-			  <CreateChannelForm isOpen={open} onSubmit={handleSubmit} />
-			</h5>
-			<SearchBar onSearchChange={handleSearchChange} updateChannels={handleUpdateChannels} />
-	
-			<div>
-			  <ul className="typo yellow list">
-				{channels.map((chan) => (
-				  <ChannelButton key={chan.name} channel={chan} />
-				))}
-			  </ul>
+			<div className="channels">
+				<h5 className="typo-channel yellow">
+					Channels
+					<IconButton
+						className="add-button"
+						aria-controls={open ? "basic-menu" : undefined}
+						aria-haspopup="true"
+						aria-expanded={open ? "true" : undefined}
+						onClick={handleClick}
+					>
+						<AddCircleIcon />
+					</IconButton>
+					<CreateChannelForm isOpen={open} onSubmit={handleSubmit} />
+				</h5>
+				<SearchBar onSearchChange={handleSearchChange} updateChannels={handleUpdateChannels} />
+
+				<div>
+					<ul className="typo yellow list">
+						{channels.map((chan) => (
+							<ChannelButton key={chan.name} channel={chan} />
+						))}
+					</ul>
+				</div>
 			</div>
-		  </div>
 		</React.Fragment>
-	  );
+	);
 }
 export default Channels;
