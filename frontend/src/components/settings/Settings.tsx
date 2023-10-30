@@ -54,7 +54,7 @@ const Settings: React.FC = () => {
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
 			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
-			setActive2fa(true);
+			// setActive2fa(true);
 		}
 		catch (error) {
 			console.error(error);
@@ -136,7 +136,7 @@ const Settings: React.FC = () => {
 		}
 	};
 
-	
+
 	useEffect(() => {
 		const uploadAvatar = async () => {
 			if (file) {
@@ -176,6 +176,43 @@ const Settings: React.FC = () => {
 		}
 	}, [file, oldfile, cookies.access_token, userData, updateUserData]);
 
+
+	//______________________________________________________________________________________
+	//                           handle change avatar
+	//______________________________________________________________________________________
+
+	useEffect(() => {
+		if (file) {
+			uploadAvatar();
+		}
+	}, [file]);
+
+	const uploadAvatar = async () => {
+		if (file) {
+			const formData = new FormData();
+			formData.append('file', file);
+			try {
+				const req = new Request("http://localhost:3000/users/upload", {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+					body: formData,
+				});
+
+				const response = await fetch(req);
+				if (response.ok) {
+					const responseStr = await response.text();
+					updateUserData(userData.id, userData.name, responseStr);
+				} else {
+					alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+				}
+			} catch (error) {
+				console.error(error);
+				alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+			}
+		}
+	};
 
 	return (
 		<React.Fragment>

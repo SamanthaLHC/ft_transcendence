@@ -68,8 +68,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     })
     if (!user)
       socket.disconnect
-    console.log (`user connect : ${user.name}`)
-    console.log(this.rooms)
     if(!this.rooms || this.rooms.length == 0)
     {
       this.rooms = []
@@ -77,7 +75,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       data = this.init_data()
       data.jgaucheid = user.id
       data.jgscockid = socket.id
-      console.log(data)
       this.rooms.push({id: 0, userone: user, usertwo: null, data: data})
       await this.server.in(socket.id).socketsJoin("0")
     }
@@ -88,7 +85,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         data = this.init_data()
         data.jgaucheid = user.id
         data.jgscockid = socket.id
-        console.log(data)
         this.rooms.push({id: this.rooms.length, userone: user, usertwo: null, data: data})
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
       }
@@ -101,12 +97,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.rooms[this.rooms.length - 1].usertwo = user
         this.rooms[this.rooms.length - 1].data.jdroiteid = user.id
         this.rooms[this.rooms.length - 1].data.jdscockid = socket.id
-        console.log(this.rooms[this.rooms.length - 1].data)
         await this.server.in(socket.id).socketsJoin((this.rooms.length - 1).toString())
+        this.gameService.set_status("INGAME", user.id)
+        this.gameService.set_status("INGAME", this.rooms[this.rooms.length - 1].data.jgaucheid)
         await new Promise(f => setTimeout(f, 2000));
         this.server.to((this.rooms.length - 1).toString()).emit("connect_room", `${this.rooms.length - 1}`)
         this.server.to((this.rooms.length - 1).toString()).emit("update", this.rooms[this.rooms.length - 1].data)
-        console.log("starting game on room ", this.rooms.length - 1)
         this.startgame(this.rooms.length - 1)
       }
     }
@@ -126,11 +122,14 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       },
     })
     const roomid = this.getroombyuser(user)
-    if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
+    if (roomid != -1 && this.rooms[roomid].data)
     {
-      this.rooms.pop()
+      if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id)
+      {
+        this.rooms.pop()
+      }
     }
-    console.log (`user disconnect : ${user.name}`)
+    this.gameService.set_status("CONNECTED", user.id)
   }
 
   getroombyuser(user: User): number
@@ -153,7 +152,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       this.rooms[roomid].data.speedballY = (Math.random() * (10 - 3 + 1) + 3) / 10 * -1
     else
       this.rooms[roomid].data.speedballY = (Math.random() * (10 - 3 + 1) + 3) / 10
-    console.log("speed balle ", this.rooms[roomid].data.speedballY)
     this.rooms[roomid].data.posballex = 50
     this.rooms[roomid].data.posballey = 50
   }
@@ -172,7 +170,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.rooms[roomid].data.speedballX = (Math.random() * (10 - 3 + 1) + 3) / 10
         this.resetgame(roomid)
         this.rooms[roomid].data.scoredroite++
-        console.log("score gauche ", this.rooms[roomid].data.scoregauche)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
       }
@@ -181,16 +178,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.rooms[roomid].data.speedballX = ((Math.random() * (10 - 3 + 1) + 3) / 10) * -1
         this.resetgame(roomid)
         this.rooms[roomid].data.scoregauche++
-        console.log("score droite ", this.rooms[roomid].data.scoredroite)
         this.server.to((roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
       }
       if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100)
       {
-        console.log("")
-        console.log("jdroite", (this.rooms[roomid].data.jdroite * 10))
-        console.log("jdroite", (this.rooms[roomid].data.jdroite * 10) + 20)
-        console.log("jdroite", this.rooms[roomid].data.posballey)
         if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey)
         {
           this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
@@ -204,7 +196,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
           else
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
           this.server.to((roomid).toString()).emit("colpad")
-          console.log("colision pad droite")
         }
       }
       else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3)
@@ -222,7 +213,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
             this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY -0.05
           this.rooms[roomid].data.posballex = 4
           this.server.to((roomid).toString()).emit("colpad")
-          console.log("colision pad gauche")
         }
       }
       if (this.rooms[roomid].data.posballey <= 0 || this.rooms[roomid].data.posballey >= 100)
@@ -232,7 +222,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         finish = true
       await new Promise(f => setTimeout(f, 33));
     }
-    console.log("finish game in room ", roomid)
     this.gameService.finish_game(this.rooms[roomid].data)
     this.server.to((roomid).toString()).emit("aff_win", this.rooms[roomid].data)
     await new Promise(f => setTimeout(f, 5000));
@@ -241,7 +230,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('OnKeyDownArrowDown')
   async handleMessage_down(@ConnectedSocket() socket: Socket) {
-    console.log("on down")
     const token = socket.handshake.auth.token;
     const payload = await this.jwtService.verifyAsync(
       token,
@@ -267,14 +255,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (this.rooms[id].data.jgauche < 8)
         this.rooms[id].data.jgauche = this.rooms[id].data.jgauche + 1
     }
-    else
-      console.log("error")
     this.server.to((id).toString()).emit("update", this.rooms[id].data)
   }
 
   @SubscribeMessage('OnKeyDownArrowUp')
   async handleMessage_up(@ConnectedSocket() socket: Socket) {
-    console.log("on up")
     const token = socket.handshake.auth.token;
     const payload = await this.jwtService.verifyAsync(
       token,
@@ -300,8 +285,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         if (this.rooms[id].data.jgauche > 0)
           this.rooms[id].data.jgauche = this.rooms[id].data.jgauche - 1
       }
-      else
-        console.log("error")
       this.server.to((id).toString()).emit("update", this.rooms[id].data)
   }
 }

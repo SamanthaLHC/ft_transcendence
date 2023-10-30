@@ -181,12 +181,15 @@ const Game: React.FC = () => {
 				<Header />
 				<div id="container">
 					<Friends />
-					<div className='btn-game'>
-						<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
-					</div>
-					<div className='image-center'>
-						<h2>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
-						<h2>Tu es a DROITE (bleu) ⬇️</h2>
+					<div className='content-profile'>
+						<div className='first-row'>
+
+							<div className='btn-game'>
+								<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
+							</div>
+							<h2 className='typo-friends yellow'>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
+							<h2 className='typo-friends yellow'>Tu es a DROITE (bleu) ⬇️</h2>
+						</div>
 						<Canvas data={data} canardmod={canardmod} />
 					</div>
 				</div>
@@ -200,12 +203,14 @@ const Game: React.FC = () => {
 				<Header />
 				<div id="container">
 					<Friends />
-					<div className='btn-game'>
-						<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
-					</div>
-					<div className='image-center'>
-						<h2>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
-						<h2>⬇️ Tu es a GAUCHE (rouge)</h2>
+					<div className='content-profile'>
+						<div className='first-row'>
+							<div className='btn-game'>
+								<button className="btn-size" onClick={handleClick}>{canardmod ? "Disable Canard mode" : "Enable Canard Mode"}</button>
+							</div>
+							<h2 className='typo-friends yellow'>{data["scoregauche"]} --------- {data["scoredroite"]}</h2>
+							<h2 className='typo-friends yellow'>⬇️ Tu es a GAUCHE (rouge)</h2>
+						</div>
 						<Canvas data={data} canardmod={canardmod} />
 					</div>
 				</div>
