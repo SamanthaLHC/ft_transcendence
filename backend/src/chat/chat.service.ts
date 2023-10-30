@@ -65,6 +65,10 @@ export class ChatService {
 					contains: searchTerm,
 					mode: 'insensitive'
 				},
+				// exclude private channels
+				privacy: {
+					not: "PRIVATE"
+				}
 			},
 			select: {
 				id: true,
