@@ -6,10 +6,12 @@ import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
 import ChannelButton from "./ChannelButton";
 import { useChatSocket } from "../../Context";
+import { useNavigate } from "react-router-dom";
 
 interface Channel {
 	id: number;
 	name: string;
+	displayname: string;
 	privacy: string;
 	joined: boolean;
 }
@@ -29,29 +31,13 @@ const Channels: React.FC = () => {
 		console.log(code_param)
 		return code_param;
 	}
-	const id = getId()
-	if (id) {
-		const req = new Request("http://localhost:3000/chat/channel/private/" + id, {
-			method: "POST",
-			headers: {
-				Authorization: `Bearer ${cookies.access_token}`,
-			},
-		});
 
-		fetch(req)
-			.then((response) => response.json())
-			.then((data) => {
-				if (data.name) { // if error
-					socket.socket.emit('change_room', data.name);
-					socket.channel = data
-				}
-				else
-					console.log("nop")
-			})
-			.catch((error) => {
-				console.error("Error fetching channels:", error);
-			});
+	const navToHome = useNavigate();
+	const tochat = () => {
+		let pathHome: string = '/chat';
+		navToHome(pathHome);
 	}
+
 
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
@@ -77,9 +63,41 @@ const Channels: React.FC = () => {
 				.then((data) => {
 					console.log(data);
 					const fetchedChannels = data.map((item: any) => {
-						return item as Channel;
+						let newchan:Channel = item
+						newchan.displayname = item.name
+						console.log("coucou ", newchan)
+						return newchan;
 					});
 					setChannels(fetchedChannels);
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		}
+
+		const id = getId()
+		if (id) {
+			const req = new Request("http://localhost:3000/chat/channel/private/create/" + id, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+
+			fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.name) {
+						tochat()
+						socket.socket.emit('change_room', data.name);
+						socket.channel = data
+						getChannels()
+					}
+					else
+					{
+						console.log("nop")
+						tochat()
+					}
 				})
 				.catch((error) => {
 					console.error("Error fetching channels:", error);
@@ -166,7 +184,7 @@ const Channels: React.FC = () => {
 				<div>
 					<ul className="typo yellow list">
 						{channels.map((chan) => (
-							<ChannelButton key={chan.name} channel={chan} />
+							<ChannelButton key={chan.id} channel={chan} />
 						))}
 					</ul>
 				</div>

@@ -1,11 +1,12 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import Divider from "@mui/material/Divider";
 import { useChatSocket } from '../../Context';
 import { useCookies } from "react-cookie";
 import PasswordDialog from "./PasswordDialog";
+import { useNavigate } from "react-router-dom";
 
 interface Channel {
 	id: number;
@@ -22,6 +23,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 	const socket = useChatSocket()
 	const [cookies] = useCookies(["access_token"]);
 	const [isPasswordDialogOpen, setPasswordDialogOpen] = useState(false);
+	const [displayName, setDisplayName] = useState("");
 
 	const changeChannel = (channel: Channel) => {
 		socket.socket.emit('change_room', channel.name);
@@ -90,12 +92,43 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 		setPasswordDialogOpen(false);
 	};
 
+	useEffect(() => {
+
+		const getnamedm = async (id: number) => {
+			const req = new Request("http://localhost:3000/chat/channel/private/getname/" + id, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+	
+			await fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data) { // if error
+						console.log("return ", data.name)
+						setDisplayName("[DM] " + data.name);
+						// socket.channel.name = "[DM] " + data.name
+					}
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		};
+        const fetchData = async () => {
+            if (channel.privacy === "PRIVATE") {
+                await getnamedm(channel.id);
+            }
+        };
+
+        fetchData();
+    }, [channel]);
 	return (
 		<ListItem className="yellow">
 			<button className="profil-button" onClick={handleChannelClick}>
 				<Divider>
 					<ListItemText />
-					{channel.name}
+					{displayName || channel.name}
 				</Divider>
 			</button>
 			<PasswordDialog
