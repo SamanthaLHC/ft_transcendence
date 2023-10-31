@@ -15,6 +15,7 @@ const WindowChat: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const messageRef = useRef<HTMLDivElement | null>(null);
 	const { userData } = useUser();
+	const [displayName, setDisplayName] = useState("");
 
 	//Socket
 	useEffect(() => {
@@ -123,11 +124,43 @@ const WindowChat: React.FC = () => {
 		}
 		setInputValue("")
 	}
+	useEffect(() => {
 
+		const getnamedm = async (id: number) => {
+			const req = new Request("http://localhost:3000/chat/channel/private/getname/" + id, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+	
+			await fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data) { // if error
+						console.log("return ", data.name)
+						setDisplayName("[DM] " + data.name);
+						// socket.channel.name = "[DM] " + data.name
+					}
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		};
+        const fetchData = async () => {
+            if (socket.channel.privacy === "PRIVATE") {
+                await getnamedm(socket.channel.id);
+            }
+			else
+				setDisplayName("");
+        };
+
+        fetchData();
+    }, [socket.channel]);
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ socket.channel.name }
+				{ displayName || socket.channel.name }
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
