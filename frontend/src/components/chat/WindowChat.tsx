@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
-import { ListItem, Divider, ListItemText } from '@mui/material';
-import { channel } from 'diagnostics_channel';
+import { useUser } from "../Context";
 
 interface Message {
+	sender: string
 	msg: string
 }
 
@@ -14,6 +14,8 @@ const WindowChat: React.FC = () => {
 	const [inputValue, setInputValue] = useState('');
 	const [cookies] = useCookies(["access_token"]);
 	const messageRef = useRef<HTMLDivElement | null>(null);
+	const { userData } = useUser();
+	const [displayName, setDisplayName] = useState("");
 
 	//Socket
 	useEffect(() => {
@@ -22,16 +24,16 @@ const WindowChat: React.FC = () => {
 		//   });
 		socket.socket.connect()
 		// setSocket(socketInstance);
-	  
+
 		// listen for events emitted by the server
-	  
+
 		socket.socket.on('connect', () => {
-		  console.log('Chat connected to server');
+			console.log('Chat connected to server');
 		});
 
-		socket.socket.on('update_front', (channelName) => {
-			updateMessages(channelName);
-		}); 
+		socket.socket.on('update_front', () => {
+			updateMessages();
+		});
 
 		return () => {
 			if (socket) {
@@ -40,16 +42,16 @@ const WindowChat: React.FC = () => {
 		};
 	}, []);
 
-	useEffect( () => {
+	useEffect(() => {
 		if (messageRef.current) {
 			messageRef.current.scrollTop = messageRef.current.scrollHeight;
 		}
 	}, [messages])
 
-	const updateMessages = (channelName: string) => {
-		console.log('I must update', channelName);
+	const updateMessages = () => {
+		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
 
-		const req = new Request("http://localhost:3000/chat/messages/" + channelName, {
+		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
@@ -61,29 +63,31 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					console.log("item: ", item)
-					const tmp = item.sender.name + ": " + item.content
-					return { msg: tmp };
+					const tmp = {
+						sender: item.sender.name,
+						msg: item.content,
+					}
+					return tmp;
 				});
 				setMessages(fetchedMessages);
+				console.log("messages :", messages)
 			})
 			.catch((error) => {
-				console.error("Error updating channel " + channelName + ":", error);
+				console.error("Error updating channel " + socket.channel.name + ":", error);
 			});
 	}
 
-
 	const handleSendClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+		if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
 			emitMsg()
 		} else {
 			setInputValue("")
 		}
 	}
-	
+
 	const handleSendKey = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
 		if (event.key === 'Enter') {
-			if (inputValue !== "\n" && inputValue !== "" && socket.room !== "") {
+			if (inputValue !== "\n" && inputValue !== "" && socket.channel.name !== "") {
 				emitMsg();
 			} else {
 				setInputValue("")
@@ -92,12 +96,11 @@ const WindowChat: React.FC = () => {
 	}
 
 	const emitMsg = () => {
-		if (socket.room !== "") {
+		if (socket.channel.name !== "") {
 			const body = {
 				msg: inputValue,
-				channel: socket.room,
 			};
-			const req = new Request("http://localhost:3000/chat/channel/msg/" + socket.room, {
+			const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -108,37 +111,70 @@ const WindowChat: React.FC = () => {
 			fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
-					socket.socket.emit('update', inputValue)
+					if (data.message) {
+						alert("Error sending message: " + data.message)
+					} else {
+						socket.socket.emit('update', inputValue)
+					}
 				})
 				.catch((error) => {
 					console.error("Error sending message:", error);
 				});
-	
+
 		}
 		setInputValue("")
 	}
+	useEffect(() => {
 
+		const getnamedm = async (id: number) => {
+			const req = new Request("http://localhost:3000/chat/channel/private/getname/" + id, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+	
+			await fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data) { // if error
+						console.log("return ", data.name)
+						setDisplayName("[DM] " + data.name);
+						// socket.channel.name = "[DM] " + data.name
+					}
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		};
+        const fetchData = async () => {
+            if (socket.channel.privacy === "PRIVATE") {
+                await getnamedm(socket.channel.id);
+            }
+			else
+				setDisplayName("");
+        };
+
+        fetchData();
+    }, [socket.channel]);
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ socket.room }
+				{ displayName || socket.channel.name }
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
-				{messages.map((message, index) => (
-							<ListItem className="yellow" key={index} >
-									<Divider>
-										<ListItemText />
-										{message.msg}
-									</Divider>
-							</ListItem>
-						))}
+					{messages.map((message, index) => (
+						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
+						</li>
+					))}
 				</ul>
 			</div>
 			<div id="input-area">
-				<textarea id="inputMsg" name="inputMsg" value={inputValue}
-								onChange={(e) => setInputValue(e.target.value)}
-								onKeyDown={handleSendKey}/>
+				<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
+					onChange={(e) => setInputValue(e.target.value)}
+					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
 			</div>
 		</div>

@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChannelPasswordDTO, CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
@@ -20,12 +20,6 @@ export class ChatController {
 	async findAllJoinedChannels(@Req() req) {
 		return await this.chatService.findAllJoinedChannels(req.user.sub);
 	}
-	
-	@UseGuards(AuthGuard)
-	@Get('channel/:channelName')
-	async getChannelByName(@Param('channelName') channelName: string) :Promise<PrismaPromise<any>>{
-		return await this.chatService.getChannelByName(channelName);
-	}
 
 	@UseGuards(AuthGuard)
 	@Post('channel/create')
@@ -34,23 +28,40 @@ export class ChatController {
 	}
 	
 	@UseGuards(AuthGuard)
-	@Post('channel/msg/:channelName')
-	async addNewMessage(@Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
+	@Post('new_message/:channelId')
+	async addNewMessage( @Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
 		console.log ("in control")
-		return await this.chatService.addNewMessage(newMessage, req.user.sub);
+		return await this.chatService.addNewMessage(+channelId, newMessage, req.user.sub);
 	}
 
 	@UseGuards(AuthGuard)
 	@Get('channel')
-	async findChannelBySearch(@Query('search') searchTerm: string) {
-		return await this.chatService.findChannelBySearch(searchTerm);
+	async findChannelBySearch(@Query('search') searchTerm: string, @Req() req) {
+		return await this.chatService.findChannelBySearch(searchTerm, req.user.sub);
 	}
-
 
 	@UseGuards(AuthGuard)
 	@Post('channel/join/:channelId')
-	async joinChannel(@Param('channelId') channelId: string, @Req() req, @Body() body?: ChannelPasswordDTO) {
+	async joinChannel(@Param('channelId') channelId: string, @Body() body: JoinChannelPasswordDTO, @Req() req) {
 		return await this.chatService.joinChannel(+channelId, req.user.sub, body.password);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/private/create/:targetId')
+	async createPrivateChannel(@Param('targetId') targetId : string, @Req() req) {
+		return await this.chatService.createPrivateChannel(+targetId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/private/getname/:targetId')
+	async getNamePrivateChannel(@Param('targetId') targetId : string, @Req() req) {
+		return await this.chatService.getNamePrivateChannel(+targetId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Get('channel/:channelId')
+	async getChannelById(@Param('channelId') channelId: string) {
+		return await this.chatService.getChannelById(+channelId);
 	}
 
 	@UseGuards(AuthGuard)
@@ -60,11 +71,11 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Get('messages/:channelName')
-	async getChannelMessages(@Param('channelName') channelName: string, @Req() req) :Promise<PrismaPromise<any>>{
+	@Get('messages/:channelId')
+	async getChannelMessages(@Param('channelId') channelId: string, @Req() req) :Promise<PrismaPromise<any>>{
 		console.log ("in control getChannelMessages")
-		console.log (channelName)
-		return await this.chatService.getChannelMessages(channelName, req.user.sub);
+		console.log (channelId)
+		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
 
 }

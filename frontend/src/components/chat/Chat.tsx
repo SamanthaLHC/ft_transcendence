@@ -2,7 +2,7 @@ import React from 'react'
 import { Divider } from '@mui/material'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
-import Channels from './Channels'
+import Channels from './channels/Channels'
 import WindowChat from './WindowChat';
 
 

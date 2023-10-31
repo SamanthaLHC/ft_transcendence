@@ -8,15 +8,17 @@ import { NewMessageDto } from './dto/new-message/new-message.dto';
 
 @Injectable()
 export class ChatService {
-	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway)	{}
+	constructor(private readonly prisma: PrismaService, private gateway: ChatGateway) { }
 
 	saltOrRounds = 10;
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
-			// select: {
-			// 	name: true,
-			// },
+			select: {
+				id: true,
+				name: true,
+				privacy: true,
+			}
 		});
 		return channels;
 	}
@@ -29,27 +31,17 @@ export class ChatService {
 			select: {
 				channel: {
 					select: {
+						id: true,
 						name: true,
+						privacy: true,
 					}
 				}
 			},
 		});
 
 		const channels = userChannelMaps.map(userChannelMap => userChannelMap.channel);
+		channels.forEach(channel => channel["joined"] = true);
 		return channels;
-	}
-
-	async getChannelByName(channelName: string): Promise<PrismaPromise<any>> {
-		const channel = await this.prisma.channels.findUnique({
-			where: {
-				name: channelName,
-			}
-		});
-		if (!channel) {
-			Logger.log("Channel not found", channelName);
-			throw new NotFoundException("Channel not found");
-		}
-		return channel;
 	}
 
 	async getChannelById(channelId: number): Promise<PrismaPromise<any>> {
@@ -65,19 +57,39 @@ export class ChatService {
 		return channel;
 	}
 
-	async findChannelBySearch(searchTerm: string): Promise<PrismaPromise<any>> {
+	// returns all channels that match the search term and a boolean indicating if the user is in the channel
+	async findChannelBySearch(searchTerm: string, userId: number): Promise<PrismaPromise<any>> {
 		const channels = await this.prisma.channels.findMany({
 			where: {
 				name: {
 					contains: searchTerm,
 					mode: 'insensitive'
+				},
+				// exclude private channels
+				privacy: {
+					not: "PRIVATE"
 				}
 			},
 			select: {
+				id: true,
 				name: true,
+				privacy: true,
+				users: {
+					select: {
+						userId: true,
+					}
+				}
 			}
 		});
-		return channels;
+		const ret = channels.map(channel => {
+			return {
+				id: channel.id,
+				name: channel.name,
+				privacy: channel.privacy,
+				joined: channel.users.some(user => user.userId === userId),
+			}
+		});
+		return ret;
 	}
 
 	async createChannelIfNotExists(newChannel: CreateChannelDto, userId: number): Promise<PrismaPromise<any>> {
@@ -94,7 +106,6 @@ export class ChatService {
 			});
 			if (existingChannel) {
 				Logger.log("Channel already exists", "ChatService");
-				Logger.log(existingChannel, "ChatService");
 				existingChannel["message"] = "This channel already exists";
 				return existingChannel;
 			}
@@ -104,7 +115,7 @@ export class ChatService {
 					privacy: newChannel.privacy,
 					ownerId: userId,
 					// add password if privacy is PASSWORD_PROTECTED
-					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword}),
+					...(newChannel.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword }),
 				}
 			});
 			return channel;
@@ -121,8 +132,8 @@ export class ChatService {
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
 		if (await this.isUserInChannel(channelId, userId)) {
-			console.log("User already in channel");
-			return;
+			Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
+			return { message: "User already in channel" };
 		}
 
 		const channel = await this.prisma.channels.findUnique({
@@ -135,11 +146,11 @@ export class ChatService {
 				Logger.log(`Password required for channel [${channelId}]`, "ChatService");
 				return { message: "Password required" };
 			}
-			const hashedPassword : string = channel["password"];
+			const hashedPassword: string = channel["password"];
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
 				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
-				return { message: "Invalid password" };
+				return { message: "Invalid password", };
 			}
 		}
 
@@ -150,6 +161,7 @@ export class ChatService {
 			}
 		});
 		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
+		return ret;
 	}
 
 	async leaveChannel(channelId: number, userId: number) {
@@ -169,35 +181,33 @@ export class ChatService {
 		}
 	}
 
-	async addNewMessage(newMessage: NewMessageDto, userId: number) {
-		try {
-			console.log("in Service")
-			const channel = await this.getChannelByName(newMessage.channel) 
-			if (await this.isUserInChannel(channel.id, userId) == false) {
+	async addNewMessage(channelId: number, newMessage: NewMessageDto, userId: number) {
+		if (/[^\s]+/.test(newMessage.msg)) {
+			try {
+				console.log("in Service")
+				if (await this.isUserInChannel(channelId, userId) == false) {
+					return false
+				}
+				const ret = await this.prisma.messages.create({
+					data: {
+						content: newMessage.msg.trim(),
+						senderId: userId,
+						channelId: channelId,
+					}
+				})
+			}
+			catch (e) {
+				Logger.log("Can't add msg");
 				return false
 			}
-			const ret = await this.prisma.messages.create({
-				data: {
-					content: newMessage.msg,
-					senderId: userId,
-					channelId: channel.id,
-				}
-			})
-		}
-		catch (e) {
-			Logger.log("Can't add msg");
-			return false
 		}
 		return false
 	}
 
-	async getChannelMessages(channelName: string, userId: number) {
+	async getChannelMessages(channelId: number, userId: number) {
 		try {
-			const channel = await this.getChannelByName(channelName)
-			const channelId = channel.id
-			console.log(channelId)
 			if (await this.isUserInChannel(channelId, userId) == false) {
-				return {message: "You are not in this channel"}
+				return { message: "You are not in this channel" }
 			}
 			const messages = await this.prisma.messages.findMany({
 				where: {
@@ -218,7 +228,7 @@ export class ChatService {
 		catch (e) {
 			Logger.log("Can't get messages", "ChatService");
 			console.log(e)
-			return {message: "Can't get messages", "error": e}
+			return { message: "Can't get messages", "error": e }
 		}
 	}
 
@@ -229,5 +239,77 @@ export class ChatService {
 			}
 		});
 		return !!userChannelMap;
+	}
+
+	async getNamePrivateChannel(targetId: number, userId: number) {
+		let channel = await this.prisma.channels.findFirst({
+			where:{
+				id: targetId
+			},
+			select:{
+				users: true
+			}
+		})
+		if (!channel)
+			throw new NotFoundException()
+		console.log(channel.users)
+		if(channel.users[0].userId == userId)
+		{
+			let user = await this.prisma.user.findFirst({
+				where:{
+					id: channel.users[1].userId
+				}
+			})
+			return {name: user.name}
+		}
+		else{
+			let user = await this.prisma.user.findFirst({
+				where:{
+					id: channel.users[0].userId
+				}
+			})
+			return {name: user.name}
+		}
+	}
+
+	async createPrivateChannel(targetId: number, userId: number) {
+		let channel = await this.prisma.channels.findFirst({
+			where: {
+				privacy: "PRIVATE",
+				users: {
+					every: {
+						OR: [
+							{ userId: targetId },
+							{ userId: userId }
+						]
+					}
+				}
+			},
+			select: {
+				id: true,
+				name: true,
+				privacy: true,
+			}
+		});
+		if (channel) {
+			return channel;
+		}
+		else {
+			while (!channel || channel["message"])
+			{
+				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
+				console.log(channelName);
+				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
+				if (channel["message"]) {
+					console.log(channel["message"]);
+				}
+				else {
+					console.log("channel created");
+					console.log(channel);
+				}
+			}
+			await this.joinChannel(channel.id, targetId);
+			return channel;
+		}
 	}
 }
