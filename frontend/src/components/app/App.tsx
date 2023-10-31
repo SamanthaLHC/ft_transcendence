@@ -10,7 +10,7 @@ import FriendPage from "../friends/FriendPage"
 import Error from "../error/Error";
 import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
 import TwoFa from "../auth/2fa/TwoFa";
-import { ChatSocketProvider, UserProvider, AuthProvider } from "../Context"
+import { ChatSocketProvider, UserProvider } from "../Context"
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useCookies } from 'react-cookie';
@@ -42,24 +42,22 @@ const App: React.FC = () => {
 	}, [cookies.access_token]);
 
 	return (
-		<AuthProvider>
-			<UserProvider>
-				<ChatSocketProvider>
-					<Routes>
-						<Route path={"/"} element={<Login />} />
-						<Route path={"/home"} element={<Home />} />
-						<Route path={"/chat"} element={<Chat />} />
-						<Route path={"/game"} element={<Game />} />
-						<Route path={"/settings"} element={<Settings />} />
-						<Route path={"/profil"} element={<Profil />} />
-						<Route path={"/friend"} element={<FriendPage />} />
-						<Route path={"/2fa"} element={<TwoFa />} />
-						<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
-						<Route path={"*"} element={<Error />} />
-					</Routes>
-				</ChatSocketProvider>
-			</UserProvider>
-		</AuthProvider>
+		<UserProvider>
+			<ChatSocketProvider>
+				<Routes>
+					<Route path={"/"} element={<Login />} />
+					<Route path={"/home"} element={<Home />} />
+					<Route path={"/chat"} element={<Chat />} />
+					<Route path={"/game"} element={<Game />} />
+					<Route path={"/settings"} element={<Settings />} />
+					<Route path={"/profil"} element={<Profil />} />
+					<Route path={"/friend"} element={<FriendPage />} />
+					<Route path={"/2fa"} element={<TwoFa />} />
+					<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
+					<Route path={"*"} element={<Error />} />
+				</Routes>
+			</ChatSocketProvider>
+		</UserProvider>
 	)
 }
 
