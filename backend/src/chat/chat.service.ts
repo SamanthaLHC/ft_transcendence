@@ -131,10 +131,10 @@ export class ChatService {
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
-		// if (await this.isUserInChannel(channelId, userId)) {
-		// 	Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
-		// 	return { message: "User already in channel" };
-		// }
+		if (await this.isUserInChannel(channelId, userId)) {
+			Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
+			return { message: "User already in channel" };
+		}
 
 		const channel = await this.prisma.channels.findUnique({
 			where: {
