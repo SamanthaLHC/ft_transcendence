@@ -8,15 +8,13 @@ import Friends from '../friends/Friends'
 import io from 'socket.io-client';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import Canvas from './Canvas'
+import Canvas from './CanvasF'
 
 let canardmod = false
 let finish = false
 let id = ""
 
-const Game: React.FC = () => {
-	let logindroite = ""
-	let logingauche = ""
+const GameF: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const navToHome = useNavigate();
 	const gamefinish = () => {
@@ -26,43 +24,32 @@ const Game: React.FC = () => {
 		navToHome(pathHome);
 	}
 	const [data, setData] = useState(null);
-	const getnamebyid = async (id: string): Promise<string> => {
-		try {
-			const req = new Request(`http://localhost:3000/users/id/${id}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			});
 
-			const response = await fetch(req);
-
-			if (response.ok) {
-				const user = await response.json();
-				return user.name
-			} else {
-				console.log("request failed");
-				return "Unknown";
-			}
-		} catch (error) {
-			console.error("An error occurred while fetching user data:", error);
-			return "Unknown";
-		}
+	function getId(): string | null {
+		let url_str: string = window.location.search;
+		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
+		let code_param: string | null = strToSearch.get("id");
+		if (!code_param)
+			gamefinish()
+		return code_param;
 	}
+
 	useEffect(() => {
 
-		const socket = io('http://localhost:3000/game', {
+		const socket = io('http://localhost:3000/fgame', {
 			autoConnect: false,
 		});
 		let token = cookies.access_token;
 		socket.auth = { token };
+		console.log("commect")
 		socket.connect()
 		// setSocket(socketInstance);
 
 		// listen for events emitted by the server
 
 		socket.on('connect', () => {
-			console.log('Connected to server');
+			console.log('Connected to server friend ', getId());
+			socket.emit('conection', getId())
 			id = socket.id
 		});
 
@@ -243,4 +230,4 @@ const Game: React.FC = () => {
 	}
 }
 
-export default Game;
+export default GameF;

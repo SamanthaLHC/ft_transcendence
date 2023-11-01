@@ -15,6 +15,7 @@ import { useUser } from "../Context"; // Correct import path
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useCookies } from 'react-cookie';
+import GameF from "../gamefriend/GameF";
 
 const App: React.FC = () => {
 
@@ -53,6 +54,7 @@ const App: React.FC = () => {
 				<Route path={"/profil"} element={<Profil />} />
 				<Route path={"/friend"} element={<FriendPage />} />
 				<Route path={"/2fa"} element={<TwoFa />} />
+				<Route path={"/gamefriend"} element={<GameF />} />
 				<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
 				<Route path={"*"} element={<Error />} />
 			</Routes>
