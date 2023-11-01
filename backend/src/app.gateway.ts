@@ -1,5 +1,5 @@
 import { JwtService } from "@nestjs/jwt";
-import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
+import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { PrismaService } from "./prisma/prisma.service";
 
@@ -35,7 +35,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     catch (e) {
       console.log("error jwt (connect): ", e)
-      socket.disconnect
     }
   }
 
@@ -66,7 +65,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
     catch (e) {
       console.log("error jwt (disconnect): ", e)
-      socket.disconnect
     }
   }
 }
