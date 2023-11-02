@@ -30,7 +30,13 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 		else
 		{
 		return (
-			<span><b>{message.sender + ":"}</b><br></br>{message.msg}<button className=""> ACCEPTER </button></span>
+			<span><b>{message.sender + ":"}</b><br></br>{message.msg}
+				<br></br>
+					<div className='btn-pos'>
+						<button className="btn-size" >Accept</button>
+						<button className="btn-size" >Refuse</button>
+					</div>
+			</span>
 		)
 		}
 	}
