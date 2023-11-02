@@ -1,10 +1,37 @@
 import React from 'react';
 import logo from '../../assets/duck.png';
 import AuthProcess from './Auth';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
 
 const clientid = process.env.REACT_APP_CLIENT_ID;
 
 const Login: React.FC = () => {
+	const [cookies, , removeCookie] = useCookies(["access_token"]);
+	const navigate = useNavigate();
+	
+	if (cookies.access_token) {
+		const req: Request = new Request('http://localhost:3000/users/me', {
+			method: "GET",
+			headers: {
+				"Authorization": `Bearer ${cookies.access_token}`,
+			},
+		});
+
+		fetch(req)
+			.then((response) => {
+				if (response.status === 200 || response.status === 304) {
+					navigate("/home");
+				}
+				else {
+					removeCookie("access_token", { path: "/" });
+				}
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+	}
+
 	return (
 	    <React.Fragment>
 			<AuthProcess />
