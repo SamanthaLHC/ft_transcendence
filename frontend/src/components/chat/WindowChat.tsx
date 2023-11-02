@@ -2,10 +2,16 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
+import MessageChat from './MessageChat';
 
 interface Message {
 	sender: string
 	msg: string
+}
+
+interface TypedMessage {
+	message: Message
+	type: string
 }
 
 const WindowChat: React.FC = () => {
@@ -157,6 +163,16 @@ const WindowChat: React.FC = () => {
 
         fetchData();
     }, [socket.channel]);
+
+	const addType = (message: Message, type: string) => {
+		let typedMessage :TypedMessage = {
+			message: message,
+			type: type
+		}
+		return typedMessage
+	}
+
+
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
@@ -166,7 +182,8 @@ const WindowChat: React.FC = () => {
 				<ul>
 					{messages.map((message, index) => (
 						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
+							<MessageChat typedMessage={addType(message, "GAME")}/>
+							{/* <span><b>{message.sender + ":"}</b><br></br>{message.msg}</span> */}
 						</li>
 					))}
 				</ul>
