@@ -53,6 +53,13 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
+	@Post('channel/private/game/:targetId')
+	async gamePrivateChannel(@Param('targetId') targetId : string, @Req() req) {
+		const channel = await this.chatService.createPrivateChannel(+targetId, req.user.sub);
+		return await this.chatService.gamePrivateChannel(+targetId, req.user.sub, channel.id)
+	}
+
+	@UseGuards(AuthGuard)
 	@Post('channel/private/getname/:targetId')
 	async getNamePrivateChannel(@Param('targetId') targetId : string, @Req() req) {
 		return await this.chatService.getNamePrivateChannel(+targetId, req.user.sub);

@@ -14,7 +14,10 @@ interface MessageProps {
 const MessageChat: React.FC<MessageProps> = ({ message }) => {
 
 	const { userData } = useUser();
-	console.log("mess type ",message.type)
+
+	const handleRefuseClick = () => {
+		
+	}
 	if (message.type === "MESSAGE") {
 		return (
 			<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
@@ -34,7 +37,7 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 				<br></br>
 					<div className='btn-pos'>
 						<button className="btn-size" >Accept</button>
-						<button className="btn-size" >Refuse</button>
+						<button className="btn-size" onClick={handleRefuseClick}>Refuse</button>
 					</div>
 			</span>
 		)
