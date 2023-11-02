@@ -29,6 +29,8 @@ const WindowChat: React.FC = () => {
 		// , {
 		// 	autoConnect: false,
 		//   });
+		let token = cookies.access_token;
+		socket.socket.auth = { token };
 		socket.socket.connect()
 		// setSocket(socketInstance);
 

@@ -45,6 +45,10 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 
 	const { userData } = useUser();
 	console.log("mess type ", message.type)
+
+	const handleRefuseClick = () => {
+		
+	}
 	if (message.type === "MESSAGE") {
 		return (
 			<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
@@ -82,6 +86,7 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 									<Button
 										size='small'
 										color='ochre'
+										onClick={handleRefuseClick}
 									>
 										Refuse
 									</Button>

@@ -314,4 +314,19 @@ export class ChatService {
 			return channel;
 		}
 	}
+
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
+	{
+		console.log("inv game ")
+		const ret = await this.prisma.messages.create({
+			data: {
+				content: "Tu veux jouer ?",
+				senderId: userId,
+				channelId: channelId,
+				type: "GAME"
+			}
+		})
+		return ret
+	}
+
 }
