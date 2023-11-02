@@ -166,15 +166,6 @@ const WindowChat: React.FC = () => {
         fetchData();
     }, [socket.channel]);
 
-	const addType = (message: Message, type: string) => {
-		let typedMessage :TypedMessage = {
-			message: message,
-			type: type
-		}
-		return typedMessage
-	}
-
-
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
