@@ -2,10 +2,12 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
+import MessageChat from './MessageChat';
 
 interface Message {
 	sender: string
 	msg: string
+	type: string
 }
 
 const WindowChat: React.FC = () => {
@@ -63,9 +65,10 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					const tmp = {
+					const tmp:Message = {
 						sender: item.sender.name,
 						msg: item.content,
+						type: item.type,
 					}
 					return tmp;
 				});
@@ -166,7 +169,7 @@ const WindowChat: React.FC = () => {
 				<ul>
 					{messages.map((message, index) => (
 						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
+							<MessageChat message={message}/>
 						</li>
 					))}
 				</ul>

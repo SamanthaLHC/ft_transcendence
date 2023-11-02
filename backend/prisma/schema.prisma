@@ -71,6 +71,7 @@ model Messages {
     channel   Channels @relation(fields: [channelId], references: [id])
     channelId Int
     createdAt DateTime @default(now())
+    type      Message_Type
 
     @@map("Message")
 }
@@ -95,6 +96,11 @@ enum Status_connect {
     CONNECTED
     DISCONNECTED
     INGAME
+}
+
+enum Message_Type {
+    MESSAGE
+    GAME
 }
 
 enum Status {

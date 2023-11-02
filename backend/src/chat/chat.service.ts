@@ -193,6 +193,7 @@ export class ChatService {
 						content: newMessage.msg.trim(),
 						senderId: userId,
 						channelId: channelId,
+						type: "MESSAGE"
 					}
 				})
 			}
@@ -221,6 +222,7 @@ export class ChatService {
 					},
 					content: true,
 					createdAt: true,
+					type: true,
 				}
 			})
 			return messages
