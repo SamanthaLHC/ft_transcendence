@@ -11,7 +11,6 @@ import Error from "../error/Error";
 import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
 import TwoFa from "../auth/2fa/TwoFa";
 import { ChatSocketProvider, UserProvider } from "../Context"
-import { useUser } from "../Context"; // Correct import path
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useCookies } from 'react-cookie';
@@ -36,12 +35,13 @@ const App: React.FC = () => {
 				console.log('Connected to server');
 			});
 			return () => {
-			if (socket) {
-				socket.disconnect();
-			}
+				if (socket) {
+					socket.disconnect();
+				}
 			}
 		}
 	}, [cookies.access_token]);
+
 	return (
 		<UserProvider>
 		<ChatSocketProvider>
