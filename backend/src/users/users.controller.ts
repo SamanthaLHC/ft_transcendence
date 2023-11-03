@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, FileTypeValidator, ParseFilePipe } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards, Post, Req, Body, Delete, UploadedFile, UseInterceptors, StreamableFile, Res, NotFoundException, BadRequestException, FileTypeValidator, ParseFilePipe, Query } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { SearchDto, addRelationDto, rmRelationDto, upNameDto } from './dto';
@@ -7,6 +7,7 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { createReadStream } from 'fs';
 import { Public } from 'src/auth/decorators/public.decorator';
+import { AuthDto } from 'src/auth/dto';
 
 @Controller('users')
 export class UsersController {
@@ -41,6 +42,12 @@ export class UsersController {
         };
     }
 
+    @Post('2fa/validate')
+    @UseGuards(AuthGuard)
+    async val2fa(@Body() dto: AuthDto, @Req() req) {
+        return await this.usersService.validate2fa(dto, req.user.sub);
+    }
+
     @Post('2fa/turn-off')
     @UseGuards(AuthGuard)
     async turnOffTwoFactorAuthentication(@Req() req) {
@@ -55,8 +62,8 @@ export class UsersController {
 
     @Get('search')
     @UseGuards(AuthGuard)
-    async SearchUser(@Body() dto: SearchDto) {
-        return this.usersService.searchUser(dto)
+    async SearchUser(@Query('search') searchTerm: string) {
+        return this.usersService.searchUser(searchTerm)
     }
 
     @Post('addup_relation')
@@ -67,8 +74,8 @@ export class UsersController {
 
     @Get('status_relation')
     @UseGuards(AuthGuard)
-    async getstatusfriend(@Body() dto: rmRelationDto, @Req() req) {
-        return this.usersService.getstatusrelation(dto, req.user.sub);
+    async getstatusfriend(@Query('id') id: string, @Req() req){
+        return this.usersService.getstatusrelation(id, req.user.sub);
     }
 
     @Get('get_friend')

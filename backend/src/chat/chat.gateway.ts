@@ -1,10 +1,8 @@
-import { Injectable } from '@nestjs/common';
 import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisconnect, WebSocketServer, MessageBody, ConnectedSocket } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { ChatSocketDto } from './dto/chat_socket.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 
-@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: "chat"})
+@WebSocketGateway({ cors: { origin:['http://localhost:8000'] }, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	sockets: [ChatSocketDto];
 
@@ -42,7 +40,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		findSocket.socket.join(new_room)
 		console.log("Joining " + new_room)
 		findSocket.room = new_room
-		client.emit("update_front", new_room)
+		client.emit("update_front")
 	}
 	
 	@SubscribeMessage('get_channel')
