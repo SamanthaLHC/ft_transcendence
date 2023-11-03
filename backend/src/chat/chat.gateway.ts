@@ -16,23 +16,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	async handleConnection(socket: Socket) {
 		const token = socket.handshake.auth.token;
-		const payload = await this.jwtService.verifyAsync(
-			token,
-			{
-				secret: process.env.JWTSECRET
-			}
-		);
-		const user = await this.prisma.user.findFirst({
-			where: {
-				id: payload.sub,
-			},
-		})
-		if (!user)
-			socket.disconnect
 		let newSocket = new ChatSocketDto()
 		newSocket.socket = socket
 		newSocket.room = ""
-		newSocket.user = (user.id).toString()
+		try {
+			const payload = await this.jwtService.verifyAsync(
+				token,
+				{
+					secret: process.env.JWTSECRET
+				}
+			);
+			const user = await this.prisma.user.findFirst({
+				where: {
+					id: payload.sub,
+				},
+			})
+			if (!user)
+				socket.disconnect
+			newSocket.user = (user.id).toString()
+		}
+		catch (e) {
+			console.log("error jwt (connect(chat)): ", e)
+		}
 		if (this.sockets === undefined) {
 			this.sockets = [newSocket]
 		} else {
