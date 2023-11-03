@@ -4,6 +4,7 @@ import { ChatSocketDto } from './dto/chat_socket.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatService } from './chat.service';
 import { JwtService } from '@nestjs/jwt';
+import { find } from 'rxjs';
 
 @WebSocketGateway({ cors: { origin: ['http://localhost:8000'] }, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -55,6 +56,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				content: "[INVITATION JEU] - La personne a quite le chat"
 			}
 		})
+		if (findSocket.room !== "") {
+			this.server.to(findSocket.room).emit("update_front", findSocket.room)
+		}
 		let pos = this.sockets.indexOf(findSocket);
 		let removedItem = this.sockets.splice(pos, 1);
 		console.log("User " + removedItem["user"] + " was disconnected from " + removedItem["socket"])
@@ -80,6 +84,17 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 	}
 
+	@SubscribeMessage('accepterinvgame')
+	async acceptergame(@MessageBody() messid: string, @ConnectedSocket() client: Socket) {
+		const message = await this.prisma.messages.findFirst({
+			where: {
+				id: +messid
+			}
+		}) 
+		let findSocket = this.sockets.find(sockets => sockets.user === (message.senderId).toString())
+		let clientSoc = this.sockets.find(sockets => sockets.socket === client)
+		findSocket.socket.emit("accgame", clientSoc.user)
+	}
 
 	@SubscribeMessage('update')
 	broadCast(@MessageBody() event: string, @ConnectedSocket() client: Socket) {

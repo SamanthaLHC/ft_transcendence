@@ -78,6 +78,18 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
+	@Post('gameinvite/refuser/:messageid')
+	async refuseinv(@Param('messageid') messageid: string, @Req() req) {
+		return await this.chatService.refuseinv(+messageid);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('gameinvite/accepter/:messageid')
+	async accepterinv(@Param('messageid') messageid: string, @Req() req) {
+		return await this.chatService.accepterinv(+messageid);
+	}
+
+	@UseGuards(AuthGuard)
 	@Get('messages/:channelId')
 	async getChannelMessages(@Param('channelId') channelId: string, @Req() req) :Promise<PrismaPromise<any>>{
 		console.log ("in control getChannelMessages")

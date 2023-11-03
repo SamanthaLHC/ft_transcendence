@@ -3,15 +3,13 @@ import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
 import MessageChat from './MessageChat';
+import { useNavigate } from 'react-router-dom';
 
 interface Message {
+	id: number
 	sender: string
+	senderId: number
 	msg: string
-	type: string
-}
-
-interface TypedMessage {
-	message: Message
 	type: string
 }
 
@@ -25,6 +23,11 @@ const WindowChat: React.FC = () => {
 	const [displayName, setDisplayName] = useState("");
 
 	//Socket
+
+	const navTo = useNavigate();
+	const changetogamefriend = (id:string) => {
+		navTo("/gamefriend?id=" + id)
+	}
 	useEffect(() => {
 		// , {
 		// 	autoConnect: false,
@@ -38,6 +41,10 @@ const WindowChat: React.FC = () => {
 
 		socket.socket.on('connect', () => {
 			console.log('Chat connected to server');
+		});
+
+		socket.socket.on('accgame', (data) => {
+			changetogamefriend(data)
 		});
 
 		socket.socket.on('update_front', () => {
@@ -73,7 +80,9 @@ const WindowChat: React.FC = () => {
 					return;
 				const fetchedMessages = data.map((item: any) => {
 					const tmp:Message = {
+						id:	item.id,
 						sender: item.sender.name,
+						senderId: item.sender.id,
 						msg: item.content,
 						type: item.type,
 					}

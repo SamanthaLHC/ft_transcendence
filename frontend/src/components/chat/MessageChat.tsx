@@ -1,9 +1,13 @@
 import { Box, Button, ButtonGroup, createTheme, ThemeProvider } from '@mui/material'
 import React from 'react'
-import { useUser } from '../Context'
+import { socket, useUser } from '../Context'
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
 
 interface Message {
+	id:		number
 	sender: string
+	senderId: number
 	msg: string
 	type: string
 }
@@ -44,10 +48,46 @@ const theme = createTheme({
 const MessageChat: React.FC<MessageProps> = ({ message }) => {
 
 	const { userData } = useUser();
+	const [cookies] = useCookies(["access_token"]);
 	console.log("mess type ", message.type)
 
+	const navTo = useNavigate();
+	const changetogamefriend = (id:string) => {
+		navTo("/gamefriend?id=" + id)
+	}
+
 	const handleRefuseClick = () => {
-		
+		const req = new Request("http://localhost:3000/chat/gameinvite/refuser/" + message.id, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+			},
+		})
+		fetch(req)
+			.then((response) => {
+				socket.emit('update')
+			})
+			.catch((error) => {
+				
+			});
+	}
+
+	const handleAccepterClick = () => {
+		const req = new Request("http://localhost:3000/chat/gameinvite/accepter/" + message.id, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+			},
+		})
+		fetch(req)
+			.then((response) => {
+				console.log("mess ", message)
+				socket.emit('accepterinvgame', message.id)
+				changetogamefriend((message.senderId).toString())
+			})
+			.catch((error) => {
+				
+			});
 	}
 	if (message.type === "MESSAGE") {
 		return (
@@ -80,6 +120,7 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 									<Button
 										size='small'
 										color='ochre'
+										onClick={handleAccepterClick}
 									>
 										Accept
 									</Button>

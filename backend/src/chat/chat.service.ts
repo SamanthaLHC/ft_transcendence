@@ -215,9 +215,11 @@ export class ChatService {
 					channelId: channelId
 				},
 				select: {
+					id: true,
 					sender: {
 						select: {
 							name: true,
+							id: true,
 						}
 					},
 					content: true,
@@ -327,6 +329,34 @@ export class ChatService {
 			}
 		})
 		return ret
+	}
+
+	async refuseinv(messId: number)
+	{
+		await this.prisma.messages.update({
+			where:{
+				id: +messId,
+				type: "GAME"
+			},
+			data:{
+				type: "MESSAGE",
+				content: "[INVITATION JEU] - REFUSER"
+			}
+		})
+	}
+
+	async accepterinv(messId: number)
+	{
+		await this.prisma.messages.update({
+			where:{
+				id: +messId,
+				type: "GAME"
+			},
+			data:{
+				type: "MESSAGE",
+				content: "[INVITATION JEU] - ACCEPTER"
+			}
+		})
 	}
 
 }
