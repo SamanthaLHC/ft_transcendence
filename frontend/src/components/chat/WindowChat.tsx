@@ -14,13 +14,22 @@ const WindowChat: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const messageRef = useRef<HTMLDivElement | null>(null);
 
-
 	useEffect(() => {
 		console.log("socket: ", socket.socket)
 		socket.socket.connect()
 
+		return () => {
+			if (socket.socket) {
+				console.log ("Chat disconnected")
+				socket.socket.disconnect();
+			}
+		};
+	}, []);
+
+	useEffect(() => {
 		socket.socket.on('connect', () => {
-			console.log('Chat connected to server');
+			console.log('Chat connected to server', socket);
+
 		});
 
 		socket.socket.on('update_front', () => {
@@ -28,11 +37,10 @@ const WindowChat: React.FC = () => {
 		});
 
 		return () => {
-			if (socket.socket) {
-				socket.socket.disconnect();
-			}
-		};
-	}, [socket.socket, cookies.access_token]);
+			socket.socket.off('connect')
+			socket.socket.off('update_front')
+		}
+	}, [])
 
 	useEffect(() => {
 		if (messageRef.current) {
