@@ -31,9 +31,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 					id: payload.sub,
 				},
 			})
-			if (!user)
-				socket.disconnect
-			newSocket.user = (user.id).toString()
+			// if (!user)
+			// 	socket.disconnect // ecrire disconnect() plutot que discnnect ? 
+			// newSocket.user = (user.id).toString()
+			if (user)
+				newSocket.user = (user.id).toString()
 		}
 		catch (e) {
 			console.log("error jwt (connect(chat)): ", e)
@@ -51,6 +53,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	async handleDisconnect(@ConnectedSocket() client: Socket) {
 		let findSocket = this.sockets.find(sockets => sockets.socket === client)
 		let userId = findSocket.user
+		if (!userId)
+			return
 		await this.prisma.messages.updateMany({
 			where:{
 				senderId: +userId,

@@ -54,6 +54,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	async handleConnection(socket: Socket) {
+
 		const token = socket.handshake.auth.token;
 		let userId: number
 		try {

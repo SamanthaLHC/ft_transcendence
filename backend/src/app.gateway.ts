@@ -10,7 +10,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server
 
   async handleConnection(socket: Socket) {
-    console.log("handleConnection")
     try {
       const token = socket.handshake.auth.token;
       const payload = await this.jwtService.verifyAsync(
@@ -25,7 +24,10 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
         },
       })
       if (!user)
+      {
         socket.disconnect
+
+      }
       else {
         await this.prisma.user.update({
           where: { id: user.id },
@@ -39,7 +41,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(socket: Socket) {
-    console.log("handleDisconnect")
     try {
       const token = socket.handshake.auth.token;
       const payload = await this.jwtService.verifyAsync(
@@ -48,6 +49,13 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
           secret: process.env.JWTSECRET
         }
       );
+      // console.log('payload: ', payload)
+      if (!payload || !payload.sub)
+      {
+        console.log('in if not payload')
+        return
+      }
+
       const user = await this.prisma.user.findFirst({
         where: {
           id: payload.sub,
