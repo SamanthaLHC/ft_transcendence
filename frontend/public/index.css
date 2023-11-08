@@ -61,6 +61,11 @@ body {
 	color: #ffc107;
 }
 
+.azonix {
+	margin: 10px;
+	font-family: azonix;
+}
+
 button {
 
 	background-image: linear-gradient(to right, #020101 0%, #740a0a 51%, #dbcc45 100%);
@@ -365,7 +370,7 @@ textarea {
 	/* background-color: #ebebeb; */
 }
 
-.my-message{
+.my-message {
 	max-width: 75%;
 	margin-left: 20%;
 	margin-right: 3%;
@@ -379,7 +384,7 @@ textarea {
 	clear: both;
 }
 
-.other-message{
+.other-message {
 	max-width: 75%;
 	margin-right: 20%;
 	width: fit-content;
@@ -404,18 +409,80 @@ textarea {
 /*                       form moderation                                      */
 /*____________________________________________________________________________*/
 
-.form-regular-user-section{
-	/* display: flex;
-	flex-direction: row; */
+.dialog {
+	display: block;
+	position: absolute;
+	top: -1000%;
+	margin: 0 auto;
+	background-color: #080d17;
+	width: fit-content;
+	height: fit-content;
+	border-style: solid;
+	border-width: 4px;
+	border-image: initial;
+	border-color: #740a0a;
+	border-radius: 20px;
+
 }
 
-.form-admin-section{
-	/* display: flex;
-	flex-direction: row; */
+.dialog-content {
+	margin: 5px;
+	display: grid;
+	place-items: center;
 }
-.form-owner-section{
-	/* display: flex;
-	flex-direction: row; */
+
+.input-pos {
+	margin: 5px;
+	width: 50%;
+}
+
+.dialog-title {
+	margin-left: 250px;
+}
+.form-regular-user-section {
+	margin: 8px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.form-admin-section {
+	margin: 8px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.form-owner-section {
+	margin: 8px;
+	display: grid;
+	place-items: center;
+}
+
+.btn-dialog {
+	width: 20%;
+	min-height: 50px;
+	padding: 5px;
+}
+
+.dialog-header {
+	display: flex;
+	justify-content: space-between;
+}
+
+.close-btn {
+	border-radius: 50px;
+	width: 25px;
+	height: 25px;
+	padding: 2px;
+	text-align: center;
+}
+
+.close-btn-pos {
+	margin: 8px;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
 }
 
 /*_______________________________________________________________________________________*/

@@ -164,9 +164,6 @@ const WindowChat: React.FC = () => {
 
 	//_____________________________________handle cmd form for / button
 
-	//_________________________________________________________________
-
-
 	const openCmdDialog = () => {
 		setCmdDialogOpen(true);
 	}
