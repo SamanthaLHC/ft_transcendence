@@ -311,6 +311,42 @@ export class ChatService {
 		}
 	}
 
-	// async muteUser(channelId: number, targetName: string, time: string, userId: number) {
-		
+	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
+		if (time < 0 || time > 86400)
+			return { message: "Time must be in range [0-86400] seconds" }
+		const userStatus = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId }
+			},
+			select: {
+				status: true
+			}
+		})
+		const targetUser = await this.prisma.userChannelMap.findFirst({
+			where: {
+				channelId: channelId,
+				user: {
+					name: targetName,
+				}
+			}
+
+		});
+		if (!targetUser) {
+			return { message: "User not found in this channel" }
+		}
+
+		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetUser.status != "OWNER" && userId != targetUser.userId) {
+			await this.prisma.userChannelMap.update({
+				where: {
+					id: { channelId: channelId, userId: targetUser.userId }
+				},
+				data: {
+					mutedUntil: new Date(Date.now() + time * 1000),
+				}
+			});
+		}
+		else {
+			return { message: "You can't mute this user" }
+		}
 	}
+}

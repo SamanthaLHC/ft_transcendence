@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber } from "class-validator";
+import { IsNotEmpty, Matches } from "class-validator";
 
 
 export class MuteDto {
@@ -6,6 +6,6 @@ export class MuteDto {
 	targetName: string;
 
 	@IsNotEmpty()
-	@IsNumber()
+	@Matches(/^[0-9]*$/)
 	time: string;
 }

@@ -79,11 +79,12 @@ export class ChatController {
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
 
-	// @UseGuards(AuthGuard)
-	// // mute a user in a channel for a certain amount of time
-	// @Patch('channel/:channelId/mute')
-	// async muteUser(@Param('channelId') channelId: string, @Body() data : MuteDto, @Req() req) {
-	// 	return await this.chatService.muteUser(+channelId, data.targetName, data.time, req.user.sub);
-	// }
+	@UseGuards(AuthGuard)
+	// mute a user in a channel for a certain amount of time
+	@Patch('channel/:channelId/mute')
+	async muteUser(@Param('channelId') channelId: string, @Body() data : MuteDto, @Req() req) {
+		console.log ("in control muteUser; channelId: ", channelId)
+		return await this.chatService.muteUser(+channelId, data.targetName, +data.time, req.user.sub);
+	}
 
 }
