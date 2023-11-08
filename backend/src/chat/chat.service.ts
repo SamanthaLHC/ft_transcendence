@@ -194,7 +194,7 @@ export class ChatService {
 					}
 				})
 				if (!user || user.mutedUntil >= new Date(Date.now())) {
-					return { message: "You are muted" }
+					return { message: "You are muted until " + user.mutedUntil.toLocaleString() }
 				}
 				const ret = await this.prisma.messages.create({
 					data: {
