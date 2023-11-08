@@ -30,7 +30,7 @@ export class ChatController {
 	
 	@UseGuards(AuthGuard)
 	@Post('new_message/:channelId')
-	async addNewMessage( @Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
+	async addNewMessage( @Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req) :Promise<any>{
 		console.log ("in control")
 		return await this.chatService.addNewMessage(+channelId, newMessage, req.user.sub);
 	}

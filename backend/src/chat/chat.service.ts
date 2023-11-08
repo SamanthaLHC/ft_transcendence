@@ -182,11 +182,19 @@ export class ChatService {
 	}
 
 	async addNewMessage(channelId: number, newMessage: NewMessageDto, userId: number) {
+
 		if (/[^\s]+/.test(newMessage.msg)) {
 			try {
-				console.log("in Service")
-				if (await this.isUserInChannel(channelId, userId) == false) {
-					return false
+				const user = await this.prisma.userChannelMap.findUnique({
+					where: {
+						id: { channelId: channelId, userId: userId }
+					},
+					select: {
+						mutedUntil: true
+					}
+				})
+				if (!user || user.mutedUntil >= new Date(Date.now())) {
+					return { message: "You are muted" }
 				}
 				const ret = await this.prisma.messages.create({
 					data: {
@@ -198,7 +206,7 @@ export class ChatService {
 			}
 			catch (e) {
 				Logger.log("Can't add msg");
-				return false
+				return { message: "Can't add msg" }
 			}
 		}
 		return false
