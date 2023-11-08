@@ -2,65 +2,67 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-    provider = "prisma-client-js"
+	provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+	provider = "postgresql"
+	url      = env("DATABASE_URL")
 }
 
 model User {
-    id                    Int              @id @default(autoincrement())
-    createdAt             DateTime         @default(now())
-    updatedAt             DateTime         @updatedAt
-    login                 String           @unique
-    photo                 String
-    name                  String           @unique
-    deuxfa                Boolean          @default(false)
-    deuxfasecret          String?
-    nbwin                 Int               @default(0)
-    nbloose               Int               @default(0)
-    channels              Channels[]
-    userChannelMap        UserChannelMap[]
-    messages              Messages[]
-    relationshipsAsUser   Relationships[]  @relation("UserRelationships")
-    relationshipsAsTarget Relationships[]  @relation("TargetRelationships")
-    status                Status_connect   @default(CONNECTED)
+	id                    Int              @id @default(autoincrement())
+	createdAt             DateTime         @default(now())
+	updatedAt             DateTime         @updatedAt
+	login                 String           @unique
+	photo                 String
+	name                  String           @unique
+	deuxfa                Boolean          @default(false)
+	deuxfasecret          String?
+	nbwin                 Int               @default(0)
+	nbloose               Int               @default(0)
+	channels              Channels[]
+	userChannelMap        UserChannelMap[]
+	messages              Messages[]
+	relationshipsAsUser   Relationships[]  @relation("UserRelationships")
+	relationshipsAsTarget Relationships[]  @relation("TargetRelationships")
+	status                Status_connect   @default(CONNECTED)
 }
 
 model GameHistory {
-    gameId       Int      @id @default(autoincrement())
-    at           DateTime @default(now())
-    gagnantId    Int
-    perdantId    Int
-    scoreGagnant Int
-    scorePerdant Int
+	gameId       Int      @id @default(autoincrement())
+	at           DateTime @default(now())
+	gagnantId    Int
+	perdantId    Int
+	scoreGagnant Int
+	scorePerdant Int
 }
 
 model Channels {
-    id        Int              @id @default(autoincrement())
-    name      String           @unique
-    privacy   Privacy
-    owner     User             @relation(fields: [ownerId], references: [id])
-    ownerId   Int
-    password  String? 
-    createdAt DateTime         @default(now())
-    users     UserChannelMap[]
-    messages  Messages[]
+	id        Int              @id @default(autoincrement())
+	name      String           @unique
+	privacy   Privacy
+	owner     User             @relation(fields: [ownerId], references: [id])
+	ownerId   Int
+	password  String? 
+	createdAt DateTime         @default(now())
+	users     UserChannelMap[]
+	messages  Messages[]
 
-    @@map("Channel")
+	@@map("Channel")
 }
 
 model UserChannelMap {
-    channel   Channels @relation(fields: [channelId], references: [id])
-    channelId Int
-    user      User     @relation(fields: [userId], references: [id])
-    userId    Int
+	channel     Channels    @relation(fields: [channelId], references: [id])
+	channelId   Int
+	user        User        @relation(fields: [userId], references: [id])
+	userId      Int
+	status    	StatusModo  @default(MEMBER)
+	mutedUntil  DateTime?
 
 	@@id([channelId, userId], name: "id")
 
-    @@map("UserChannel")
+	@@map("UserChannel")
 }
 
 model Messages {
@@ -72,30 +74,28 @@ model Messages {
     channelId Int
     createdAt DateTime @default(now())
     type      Message_Type
-
-    @@map("Message")
 }
 
 model Relationships {
-    @@id([userId, targetId], name: "id")
-    user      User     @relation("UserRelationships", fields: [userId], references: [id])
-    userId    Int
-    target    User     @relation("TargetRelationships", fields: [targetId], references: [id])
-    targetId  Int
-    status    Status
-    createdAt DateTime @default(now())
+	@@id([userId, targetId], name: "id")
+	user      User     @relation("UserRelationships", fields: [userId], references: [id])
+	userId    Int
+	target    User     @relation("TargetRelationships", fields: [targetId], references: [id])
+	targetId  Int
+	status    Status
+	createdAt DateTime @default(now())
 }
 
 enum Privacy {
-    PUBLIC
-    PRIVATE
-    PASSWORD_PROTECTED
+	PUBLIC
+	PRIVATE
+	PASSWORD_PROTECTED
 }
 
 enum Status_connect {
-    CONNECTED
-    DISCONNECTED
-    INGAME
+	CONNECTED
+	DISCONNECTED
+	INGAME
 }
 
 enum Message_Type {
@@ -104,6 +104,13 @@ enum Message_Type {
 }
 
 enum Status {
-    FRIEND
-    BLOCKED
+	FRIEND
+	BLOCKED
+}
+
+enum StatusModo {
+	MEMBER
+	OWNER
+	ADMIN
+	BANNED
 }
