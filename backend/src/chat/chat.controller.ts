@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel/create-channel.dto';
+import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { NewMessageDto } from './dto/new-message.dto';
+import { MuteDto } from './dto/mute.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -77,5 +78,12 @@ export class ChatController {
 		console.log (channelId)
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
+
+	// @UseGuards(AuthGuard)
+	// // mute a user in a channel for a certain amount of time
+	// @Patch('channel/:channelId/mute')
+	// async muteUser(@Param('channelId') channelId: string, @Body() data : MuteDto, @Req() req) {
+	// 	return await this.chatService.muteUser(+channelId, data.targetName, data.time, req.user.sub);
+	// }
 
 }

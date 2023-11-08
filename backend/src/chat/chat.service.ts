@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
-import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { CreateChannelDto } from './dto/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcrypt';
-import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { NewMessageDto } from './dto/new-message.dto';
 
 @Injectable()
 export class ChatService {
@@ -243,32 +243,31 @@ export class ChatService {
 
 	async getNamePrivateChannel(targetId: number, userId: number) {
 		let channel = await this.prisma.channels.findFirst({
-			where:{
+			where: {
 				id: targetId
 			},
-			select:{
+			select: {
 				users: true
 			}
 		})
 		if (!channel)
 			throw new NotFoundException()
 		console.log(channel.users)
-		if(channel.users[0].userId == userId)
-		{
+		if (channel.users[0].userId == userId) {
 			let user = await this.prisma.user.findFirst({
-				where:{
+				where: {
 					id: channel.users[1].userId
 				}
 			})
-			return {name: user.name}
+			return { name: user.name }
 		}
-		else{
+		else {
 			let user = await this.prisma.user.findFirst({
-				where:{
+				where: {
 					id: channel.users[0].userId
 				}
 			})
-			return {name: user.name}
+			return { name: user.name }
 		}
 	}
 
@@ -295,8 +294,7 @@ export class ChatService {
 			return channel;
 		}
 		else {
-			while (!channel || channel["message"])
-			{
+			while (!channel || channel["message"]) {
 				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
 				console.log(channelName);
 				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
@@ -312,4 +310,7 @@ export class ChatService {
 			return channel;
 		}
 	}
-}
+
+	// async muteUser(channelId: number, targetName: string, time: string, userId: number) {
+		
+	}

@@ -53,10 +53,10 @@ model Channels {
 }
 
 model UserChannelMap {
-    channel   Channels @relation(fields: [channelId], references: [id])
-    channelId Int
-    user      User     @relation(fields: [userId], references: [id])
-    userId    Int
+    channel     Channels    @relation(fields: [channelId], references: [id])
+    channelId   Int
+    user        User        @relation(fields: [userId], references: [id])
+    userId      Int
 
 	@@id([channelId, userId], name: "id")
 
