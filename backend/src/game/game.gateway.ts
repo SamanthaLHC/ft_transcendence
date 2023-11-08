@@ -74,8 +74,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				id: userId,
 			},
 		})
-		if (!user)
-			socket.disconnect
+		if (!user) {
+			socket.disconnect()
+			return ;
+		}
 		if (!this.rooms || this.rooms.length == 0) {
 			this.rooms = []
 			let data: Data
@@ -128,11 +130,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		catch (e) {
 			console.log("error jwt (connect(game)): ", e)
 		}
+		if (!userId)
+			return ;
 		const user = await this.prisma.user.findFirst({
 			where: {
 				id: userId,
 			},
 		})
+		if (!user)
+			return
 		const roomid = this.getroombyuser(user)
 		if (roomid != -1 && this.rooms[roomid].data) {
 			if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id) {
