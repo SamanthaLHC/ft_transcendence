@@ -113,16 +113,61 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					addrelation(datas.userId, "BLOCKED")
 				}
 			}
-			catch {}
+			catch { }
 		}
 	}
 
+
 	const navToChat = useNavigate();
-	const changeToChat = (id:string) => {
+	const changeToChat = (id: string) => {
 		let pathChat: string = '/chat?mpid=' + id;
 		navToChat(pathChat);
 		navToChat(0)
 	}
+
+	const handleClickGame = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const obj = {
+				name: inputValue,
+				ChannelId: channelId
+			};
+			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+			try {
+				navToChat("/home")
+				const response = await fetch(req);
+				const datas = await response.json();
+				if (datas) {
+					const req = new Request("http://localhost:3000/chat/channel/private/game/" + datas.userId, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${cookies.access_token}`,
+						},
+					});
+
+					fetch(req)
+						.then((response) => response.json())
+						.then((data) => {
+							if (data) {
+								if (datas)
+									changeToChat(datas.userId);
+							}
+						})
+						.catch((error) => {
+							console.error("Error fetching channels:", error);
+						});
+				}
+			}
+			catch { }
+		}
+	}
+
 
 	const handleClickMP = async () => {
 		if (inputValue !== "\n" && inputValue !== "") {
@@ -145,7 +190,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					changeToChat(datas.userId)
 				}
 			}
-			catch {}
+			catch { }
 		}
 	}
 
@@ -172,10 +217,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						<button className="btn-dialog">Set as admin</button>
 					</div>
 					<div className="form-regular-user-section">
-						<button className="btn-dialog">Invite to play</button>
+						<button className="btn-dialog" onClick={handleClickGame}>Invite to play</button>
 						<button className="btn-dialog" onClick={handleClickProfile}>See profile page</button>
 						<button className="btn-dialog" onClick={handleClickMP}>Private message</button>
-						<button className="btn-dialog"onClick={handleClickblock}>Block</button>
+						<button className="btn-dialog" onClick={handleClickblock}>Block</button>
 					</div>
 					<div className="form-admin-section">
 						<button className="btn-dialog">Ban</button>
