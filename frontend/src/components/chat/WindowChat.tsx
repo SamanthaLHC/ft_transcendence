@@ -3,11 +3,15 @@ import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
 import CmdDialog from './channels/CmdDialog';
-
+import MessageChat from './MessageChat';
+import { useNavigate } from 'react-router-dom';
 
 interface Message {
+	id: number
 	sender: string
+	senderId: number
 	msg: string
+	type: string
 }
 
 const WindowChat: React.FC = () => {
@@ -22,10 +26,17 @@ const WindowChat: React.FC = () => {
 
 
 	//Socket
+
+	const navTo = useNavigate();
+	const changetogamefriend = (id:string) => {
+		navTo("/gamefriend?id=" + id)
+	}
 	useEffect(() => {
 		// , {
 		// 	autoConnect: false,
 		//   });
+		let token = cookies.access_token;
+		socket.socket.auth = { token };
 		socket.socket.connect()
 		// setSocket(socketInstance);
 
@@ -33,6 +44,10 @@ const WindowChat: React.FC = () => {
 
 		socket.socket.on('connect', () => {
 			console.log('Chat connected to server');
+		});
+
+		socket.socket.on('accgame', (data) => {
+			changetogamefriend(data)
 		});
 
 		socket.socket.on('update_front', () => {
@@ -67,9 +82,12 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					const tmp = {
+					const tmp:Message = {
+						id:	item.id,
 						sender: item.sender.name,
+						senderId: item.sender.id,
 						msg: item.content,
+						type: item.type,
 					}
 					return tmp;
 				});
@@ -180,8 +198,8 @@ const WindowChat: React.FC = () => {
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 					{messages.map((message, index) => (
-						<li key={index} className={message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<span><b>{message.sender + ":"}</b><br></br>{message.msg}</span>
+						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<MessageChat message={message}/>
 						</li>
 					))}
 				</ul>
