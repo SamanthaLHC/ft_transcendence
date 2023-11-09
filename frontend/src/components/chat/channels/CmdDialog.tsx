@@ -197,6 +197,12 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	if (!isOpen) {
 		return null;
 	}
+
+	var isOwner = true;
+	var isAdmin = false;
+
+	// if chan PRIVATE -> not isOwner and not isAdmin
+
 	return (
 		<dialog className="dialog">
 			<div className='dialog-header'>
@@ -213,20 +219,24 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					onChange={(e) => setInputValue(e.target.value)}
 				/>
 				<div>
-					<div className="form-owner-section">
-						<button className="btn-dialog">Set as admin</button>
-					</div>
+					{isOwner && (
+						<div className="form-owner-section">
+							<button className="btn-dialog">Set as admin</button>
+						</div>
+					)}
 					<div className="form-regular-user-section">
 						<button className="btn-dialog" onClick={handleClickGame}>Invite to play</button>
 						<button className="btn-dialog" onClick={handleClickProfile}>See profile page</button>
 						<button className="btn-dialog" onClick={handleClickMP}>Private message</button>
 						<button className="btn-dialog" onClick={handleClickblock}>Block</button>
 					</div>
-					<div className="form-admin-section">
-						<button className="btn-dialog">Ban</button>
-						<button className="btn-dialog">Kick</button>
-						<button className="btn-dialog">Mute</button>
-					</div>
+					{(isAdmin || isOwner) && (
+						<div className="form-admin-section">
+							<button className="btn-dialog">Ban</button>
+							<button className="btn-dialog">Kick</button>
+							<button className="btn-dialog">Mute</button>
+						</div>
+					)}
 				</div>
 			</div>
 		</dialog>
