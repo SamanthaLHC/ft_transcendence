@@ -243,32 +243,31 @@ export class ChatService {
 
 	async getNamePrivateChannel(targetId: number, userId: number) {
 		let channel = await this.prisma.channels.findFirst({
-			where:{
+			where: {
 				id: targetId
 			},
-			select:{
+			select: {
 				users: true
 			}
 		})
 		if (!channel)
 			throw new NotFoundException()
 		console.log(channel.users)
-		if(channel.users[0].userId == userId)
-		{
+		if (channel.users[0].userId == userId) {
 			let user = await this.prisma.user.findFirst({
-				where:{
+				where: {
 					id: channel.users[1].userId
 				}
 			})
-			return {name: user.name}
+			return { name: user.name }
 		}
-		else{
+		else {
 			let user = await this.prisma.user.findFirst({
-				where:{
+				where: {
 					id: channel.users[0].userId
 				}
 			})
-			return {name: user.name}
+			return { name: user.name }
 		}
 	}
 
@@ -295,8 +294,7 @@ export class ChatService {
 			return channel;
 		}
 		else {
-			while (!channel || channel["message"])
-			{
+			while (!channel || channel["message"]) {
 				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
 				console.log(channelName);
 				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
@@ -311,5 +309,18 @@ export class ChatService {
 			await this.joinChannel(channel.id, targetId);
 			return channel;
 		}
+	}
+
+	async getUserIdbyNmaeInchannel(channelId: number, userName: string) {
+		const user = await this.prisma.userChannelMap.findFirst({
+			where: {
+				channelId: channelId,
+				user: {
+						name: userName,
+					}
+				}
+		});
+		console.log(user)
+		return user;
 	}
 }

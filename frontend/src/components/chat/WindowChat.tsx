@@ -192,7 +192,7 @@ const WindowChat: React.FC = () => {
 					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
 				<button className="send-button" onClick={openCmdDialog}> / </button>
-				< CmdDialog isOpen={isCmdDialogOpen} onClose={closeCmdDialog} />
+				< CmdDialog isOpen={isCmdDialogOpen} channelId={socket.channel.id} onClose={closeCmdDialog} />
 
 			</div>
 		</div>

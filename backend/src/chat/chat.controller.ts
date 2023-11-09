@@ -4,6 +4,7 @@ import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel/c
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { getuserIDbyname } from './dto/getuserIDbyname/getuserIDbyname.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -76,6 +77,12 @@ export class ChatController {
 		console.log ("in control getChannelMessages")
 		console.log (channelId)
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('getUserIdbyname')
+	async getUserIdbyNmaeInchannel(@Body() dto : getuserIDbyname){
+		return await this.chatService.getUserIdbyNmaeInchannel(dto.ChannelId, dto.name);
 	}
 
 }
