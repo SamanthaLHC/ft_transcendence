@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel/create-channel.dto';
+import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
-import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { NewMessageDto } from './dto/new-message.dto';
+import { MuteDto } from './dto/mute.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -29,7 +30,7 @@ export class ChatController {
 	
 	@UseGuards(AuthGuard)
 	@Post('new_message/:channelId')
-	async addNewMessage( @Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req) :Promise<Boolean>{
+	async addNewMessage( @Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req) :Promise<any>{
 		console.log ("in control")
 		return await this.chatService.addNewMessage(+channelId, newMessage, req.user.sub);
 	}
@@ -97,4 +98,18 @@ export class ChatController {
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
 
+	/* Moderation */
+
+	@UseGuards(AuthGuard)
+	@Patch('channel/:channelId/mute')
+	async muteUser(@Param('channelId') channelId: string, @Body() data : MuteDto, @Req() req) {
+		console.log ("in control muteUser; channelId: ", channelId)
+		return await this.chatService.muteUser(+channelId, data.targetName, +data.time, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Get('channel/:channelId/status')
+	async getUserStatus(@Param('channelId') channelId: string, @Req() req) {
+		return await this.chatService.getUserStatus(+channelId, req.user.sub);
+	}
 }

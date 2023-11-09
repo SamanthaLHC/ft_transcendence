@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaPromise } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
-import { CreateChannelDto } from './dto/create-channel/create-channel.dto';
+import { CreateChannelDto } from './dto/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcrypt';
-import { NewMessageDto } from './dto/new-message/new-message.dto';
+import { NewMessageDto } from './dto/new-message.dto';
 
 @Injectable()
 export class ChatService {
@@ -182,11 +182,19 @@ export class ChatService {
 	}
 
 	async addNewMessage(channelId: number, newMessage: NewMessageDto, userId: number) {
+
 		if (/[^\s]+/.test(newMessage.msg)) {
 			try {
-				console.log("in Service")
-				if (await this.isUserInChannel(channelId, userId) == false) {
-					return false
+				const user = await this.prisma.userChannelMap.findUnique({
+					where: {
+						id: { channelId: channelId, userId: userId }
+					},
+					select: {
+						mutedUntil: true
+					}
+				})
+				if (!user || user.mutedUntil >= new Date(Date.now())) {
+					return { message: "You are muted until " + user.mutedUntil.toLocaleString() }
 				}
 				const ret = await this.prisma.messages.create({
 					data: {
@@ -199,7 +207,7 @@ export class ChatService {
 			}
 			catch (e) {
 				Logger.log("Can't add msg");
-				return false
+				return { message: "Can't add msg" }
 			}
 		}
 		return false
@@ -247,32 +255,31 @@ export class ChatService {
 
 	async getNamePrivateChannel(targetId: number, userId: number) {
 		let channel = await this.prisma.channels.findFirst({
-			where:{
+			where: {
 				id: targetId
 			},
-			select:{
+			select: {
 				users: true
 			}
 		})
 		if (!channel)
 			throw new NotFoundException()
 		console.log(channel.users)
-		if(channel.users[0].userId == userId)
-		{
+		if (channel.users[0].userId == userId) {
 			let user = await this.prisma.user.findFirst({
-				where:{
+				where: {
 					id: channel.users[1].userId
 				}
 			})
-			return {name: user.name}
+			return { name: user.name }
 		}
-		else{
+		else {
 			let user = await this.prisma.user.findFirst({
-				where:{
+				where: {
 					id: channel.users[0].userId
 				}
 			})
-			return {name: user.name}
+			return { name: user.name }
 		}
 	}
 
@@ -299,8 +306,7 @@ export class ChatService {
 			return channel;
 		}
 		else {
-			while (!channel || channel["message"])
-			{
+			while (!channel || channel["message"]) {
 				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
 				console.log(channelName);
 				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
@@ -357,6 +363,59 @@ export class ChatService {
 				content: "[INVITATION JEU] - ACCEPTER"
 			}
 		})
+	}
+
+	/* Moderation */
+
+	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
+		if (time < 0 || time > 86400)
+			return { message: "Time must be in range [0-86400] seconds" }
+		const userStatus = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId }
+			},
+			select: {
+				status: true
+			}
+		})
+		const targetUser = await this.prisma.userChannelMap.findFirst({
+			where: {
+				channelId: channelId,
+				user: {
+					name: targetName,
+				}
+			}
+
+		});
+		if (!targetUser) {
+			return { message: "User not found in this channel" }
+		}
+
+		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetUser.status != "OWNER" && userId != targetUser.userId) {
+			await this.prisma.userChannelMap.update({
+				where: {
+					id: { channelId: channelId, userId: targetUser.userId }
+				},
+				data: {
+					mutedUntil: new Date(Date.now() + time * 1000),
+				}
+			});
+		}
+		else {
+			return { message: "You can't mute this user" }
+		}
+	}
+
+	async getUserStatus(channelId: number, userId: number) {
+		const userStatus = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId }
+			},
+			select: {
+				status: true
+			}
+		})
+		return userStatus
 	}
 
 }
