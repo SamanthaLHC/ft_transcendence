@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 interface CmdDialogProps {
 	isOpen: boolean;
@@ -10,7 +11,10 @@ interface CmdDialogProps {
 
 const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [inputValue, setInputValue] = useState('');
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [isOwner, setIsOwner] = useState(false);
 	const [cookies] = useCookies(['access_token']);
+	const socket = useChatSocket()
 	const { isOpen, onClose } = props;
 	const { channelId } = props;
 
@@ -194,14 +198,45 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
+	//__________________________________________________get user role_______
+
+	useEffect(() => {
+
+		async function getStatus() {
+			setIsAdmin(false);
+			setIsOwner(false);
+
+			if (socket.channel.id != -1) {
+
+				const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/status', {
+					method: "GET",
+					headers: {
+						"content-type": "application/json",
+						"Authorization": `Bearer ${cookies.access_token}`,
+					},
+				});
+
+				try {
+					const response = await fetch(req);
+					const datas = await response.json();
+
+					if (response.ok) {
+						if (datas.status == 'ADMIN')
+							setIsAdmin(true);
+						if (datas.status == 'OWNER')
+							setIsOwner(true);
+					}
+				} catch (error) {
+					console.error(error);
+				}
+			}
+		}
+		getStatus();
+	}, [socket.channel.id, setIsAdmin, setIsOwner]);
+
 	if (!isOpen) {
 		return null;
 	}
-
-	var isOwner = true;
-	var isAdmin = false;
-
-	// if chan PRIVATE -> not isOwner and not isAdmin
 
 	return (
 		<dialog className="dialog">
