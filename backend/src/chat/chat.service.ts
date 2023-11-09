@@ -201,6 +201,7 @@ export class ChatService {
 						content: newMessage.msg.trim(),
 						senderId: userId,
 						channelId: channelId,
+						type: "MESSAGE"
 					}
 				})
 			}
@@ -222,13 +223,16 @@ export class ChatService {
 					channelId: channelId
 				},
 				select: {
+					id: true,
 					sender: {
 						select: {
 							name: true,
+							id: true,
 						}
 					},
 					content: true,
 					createdAt: true,
+					type: true,
 				}
 			})
 			return messages
@@ -319,6 +323,50 @@ export class ChatService {
 		}
 	}
 
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
+	{
+		console.log("inv game ")
+		const ret = await this.prisma.messages.create({
+			data: {
+				content: "Tu veux jouer ?",
+				senderId: userId,
+				channelId: channelId,
+				type: "GAME"
+			}
+		})
+		return ret
+	}
+
+	async refuseinv(messId: number)
+	{
+		await this.prisma.messages.update({
+			where:{
+				id: +messId,
+				type: "GAME"
+			},
+			data:{
+				type: "MESSAGE",
+				content: "[INVITATION JEU] - REFUSER"
+			}
+		})
+	}
+
+	async accepterinv(messId: number)
+	{
+		await this.prisma.messages.update({
+			where:{
+				id: +messId,
+				type: "GAME"
+			},
+			data:{
+				type: "MESSAGE",
+				content: "[INVITATION JEU] - ACCEPTER"
+			}
+		})
+	}
+
+	/* Moderation */
+
 	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
 		if (time < 0 || time > 86400)
 			return { message: "Time must be in range [0-86400] seconds" }
@@ -357,4 +405,17 @@ export class ChatService {
 			return { message: "You can't mute this user" }
 		}
 	}
+
+	async getUserStatus(channelId: number, userId: number) {
+		const userStatus = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId }
+			},
+			select: {
+				status: true
+			}
+		})
+		return userStatus
+	}
+
 }

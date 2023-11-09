@@ -66,15 +66,14 @@ model UserChannelMap {
 }
 
 model Messages {
-	id        Int      @id @default(autoincrement())
-	content   String
-	sender    User     @relation(fields: [senderId], references: [id])
-	senderId  Int
-	channel   Channels @relation(fields: [channelId], references: [id])
-	channelId Int
-	createdAt DateTime @default(now())
-
-	@@map("Message")
+    id        Int      @id @default(autoincrement())
+    content   String
+    sender    User     @relation(fields: [senderId], references: [id])
+    senderId  Int
+    channel   Channels @relation(fields: [channelId], references: [id])
+    channelId Int
+    createdAt DateTime @default(now())
+    type      Message_Type
 }
 
 model Relationships {
@@ -97,6 +96,11 @@ enum Status_connect {
 	CONNECTED
 	DISCONNECTED
 	INGAME
+}
+
+enum Message_Type {
+    MESSAGE
+    GAME
 }
 
 enum Status {

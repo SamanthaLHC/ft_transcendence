@@ -54,6 +54,13 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
+	@Post('channel/private/game/:targetId')
+	async gamePrivateChannel(@Param('targetId') targetId : string, @Req() req) {
+		const channel = await this.chatService.createPrivateChannel(+targetId, req.user.sub);
+		return await this.chatService.gamePrivateChannel(+targetId, req.user.sub, channel.id)
+	}
+
+	@UseGuards(AuthGuard)
 	@Post('channel/private/getname/:targetId')
 	async getNamePrivateChannel(@Param('targetId') targetId : string, @Req() req) {
 		return await this.chatService.getNamePrivateChannel(+targetId, req.user.sub);
@@ -72,6 +79,18 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
+	@Post('gameinvite/refuser/:messageid')
+	async refuseinv(@Param('messageid') messageid: string, @Req() req) {
+		return await this.chatService.refuseinv(+messageid);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('gameinvite/accepter/:messageid')
+	async accepterinv(@Param('messageid') messageid: string, @Req() req) {
+		return await this.chatService.accepterinv(+messageid);
+	}
+
+	@UseGuards(AuthGuard)
 	@Get('messages/:channelId')
 	async getChannelMessages(@Param('channelId') channelId: string, @Req() req) :Promise<PrismaPromise<any>>{
 		console.log ("in control getChannelMessages")
@@ -79,12 +98,18 @@ export class ChatController {
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
 
+	/* Moderation */
+
 	@UseGuards(AuthGuard)
-	// mute a user in a channel for a certain amount of time
 	@Patch('channel/:channelId/mute')
 	async muteUser(@Param('channelId') channelId: string, @Body() data : MuteDto, @Req() req) {
 		console.log ("in control muteUser; channelId: ", channelId)
 		return await this.chatService.muteUser(+channelId, data.targetName, +data.time, req.user.sub);
 	}
 
+	@UseGuards(AuthGuard)
+	@Get('channel/:channelId/status')
+	async getUserStatus(@Param('channelId') channelId: string, @Req() req) {
+		return await this.chatService.getUserStatus(+channelId, req.user.sub);
+	}
 }
