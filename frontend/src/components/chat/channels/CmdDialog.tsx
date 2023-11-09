@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 interface CmdDialogProps {
 	isOpen: boolean;
@@ -234,6 +234,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		getStatus();
 	}, [socket.channel.id, setIsAdmin, setIsOwner]);
 
+	// __________________________________________________handle mute
+
+
+
 	if (!isOpen) {
 		return null;
 	}
@@ -270,6 +274,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							<button className="btn-dialog">Ban</button>
 							<button className="btn-dialog">Kick</button>
 							<button className="btn-dialog">Mute</button>
+							{/* {isTimeDialogOpen &&} */}
 						</div>
 					)}
 				</div>
