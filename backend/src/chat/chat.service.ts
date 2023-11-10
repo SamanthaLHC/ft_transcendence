@@ -126,6 +126,7 @@ export class ChatService {
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
 		await this.joinChannel(channel.id, userId, newChannel.password);
+		this.setUserStatus(channel.id, userId, "OWNER")
 		return channel;
 	}
 
