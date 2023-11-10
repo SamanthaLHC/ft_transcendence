@@ -127,7 +127,7 @@ export class ChatService {
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
 		await this.joinChannel(channel.id, userId, newChannel.password);
-		if(channel.privacy != "PRIVATE")
+		if (channel.privacy != "PRIVATE")
 			this.setUserStatus(channel.id, userId, "OWNER")
 		return channel;
 	}
@@ -178,7 +178,8 @@ export class ChatService {
 					id: { channelId: channelId, userId: userId },
 					channel: {
 						privacy: {
-						not: "PRIVATE"}
+							not: "PRIVATE"
+						}
 					}
 				}
 			});
@@ -203,7 +204,7 @@ export class ChatService {
 					}
 				})
 				if (!user || user.mutedUntil >= new Date(Date.now())) {
-					return { message: "You are muted for " + Math.trunc(((Number(user.mutedUntil) - Date.now()) / 1000)) + " seconds"}
+					return { message: "You are muted for " + Math.trunc(((Number(user.mutedUntil) - Date.now()) / 1000)) + " seconds" }
 				}
 				const ret = await this.prisma.messages.create({
 					data: {
@@ -241,7 +242,7 @@ export class ChatService {
 			const messages = await this.prisma.messages.findMany({
 				where: {
 					channelId: channelId,
-					senderId: { notIn: tableauDeNombres},
+					senderId: { notIn: tableauDeNombres },
 				},
 				select: {
 					id: true,
@@ -349,16 +350,15 @@ export class ChatService {
 			where: {
 				channelId: channelId,
 				user: {
-						name: userName,
-					}
+					name: userName,
 				}
+			}
 		});
 		console.log(user)
 		return user;
 	}
-	
-	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
-	{
+
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
 		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {
@@ -472,13 +472,24 @@ export class ChatService {
 	async setAdmin(channelId: number, targetName: string, userId: number) {
 		const userStatus = await this.getUserStatus(channelId, userId)
 		if (userStatus.status !== "OWNER") {
-			return { message: "You must be the owner of the channel to promote someone as admin"}
+			return { message: "You must be the owner of the channel to promote someone as admin" }
 		}
 		const targetUser = await this.getChannelUserByName(channelId, targetName)
 		if (targetUser.userId === userId) {
-			return { message: "You can't demote yourself as admin !"}
+			return { message: "You can't demote yourself as admin !" }
 		}
 		return await this.setUserStatus(channelId, targetUser.userId, "ADMIN")
+	}
+
+	async ban(channelId: number, targetName: string, userId: number) {
+		const targetUser = await this.getChannelUserByName(channelId, targetName)
+		if (this.checkPerm(channelId, targetUser.userId, userId)) {
+			return await this.setUserStatus(channelId, targetUser.userId, "BANNED")
+		}
+		else {
+			return {message: "You don't have the permission to ban ", targetName}
+		}
+
 	}
 
 	async editChannel(channelId: number, userId: number, dto: editChannelDto) {
@@ -489,8 +500,7 @@ export class ChatService {
 		})
 		if (!status)
 			throw new NotFoundException();
-		if (status.status != "OWNER")
-		{
+		if (status.status != "OWNER") {
 			throw new UnauthorizedException("You are not the owner");
 		}
 		let hashedPassword = null;
@@ -508,13 +518,11 @@ export class ChatService {
 		})
 	}
 
-	async kick(channelId:number, userId:number, targetId:number)
-	{
-		if (this.checkPerm(channelId, targetId, userId))
-		{
+	async kick(channelId: number, userId: number, targetId: number) {
+		if (this.checkPerm(channelId, targetId, userId)) {
 			this.leaveChannel(channelId, targetId);
 		}
 		else
-			throw new UnauthorizedException("Vous devez etre admin du channel");
+			throw new UnauthorizedException("Vous devez etre admin du channel ");
 	}
 }
