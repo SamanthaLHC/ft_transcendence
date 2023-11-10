@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaPromise, StatusModo } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
@@ -7,6 +7,7 @@ import * as bcrypt from 'bcrypt';
 import { NewMessageDto } from './dto/new-message.dto';
 import { use } from 'passport';
 import { get } from 'http';
+import { editChannelDto } from './dto/editchannel.dto';
 
 @Injectable()
 export class ChatService {
@@ -220,9 +221,21 @@ export class ChatService {
 			if (await this.isUserInChannel(channelId, userId) == false) {
 				return { message: "You are not in this channel" }
 			}
+			const blockedId = await this.prisma.relationships.findMany({
+				where: {
+					userId: userId,
+					status: "BLOCKED"
+				},
+				select: {
+					targetId: true
+				}
+			})
+			console.log("lalala", blockedId)
+			const tableauDeNombres = blockedId.map(objet => objet.targetId);
 			const messages = await this.prisma.messages.findMany({
 				where: {
-					channelId: channelId
+					channelId: channelId,
+					senderId: { notIn: tableauDeNombres},
 				},
 				select: {
 					id: true,
@@ -437,6 +450,7 @@ export class ChatService {
 	}
 
 
+<<<<<<< Updated upstream
 	// async setAdmin(channelId: number, targetName: string, userId: number) {
 	// 	await this.getUserStatus(channelId, userId)
 	// 	.then(async (userStatus) => {
@@ -453,4 +467,32 @@ export class ChatService {
 
 	// 	// const targetUser = this.prisma.userChannelMap.findFirst({
 	// }
+=======
+	async editChannel(channelId: number, userId: number, dto: editChannelDto) {
+		const status = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId }
+			},
+		})
+		if (!status)
+			throw new NotFoundException();
+		if (status.status != "OWNER")
+		{
+			throw new UnauthorizedException("You are not the owner");
+		}
+		let hashedPassword = null;
+		if (dto.privacy === "PASSWORD_PROTECTED") {
+			hashedPassword = await bcrypt.hash(dto.password, this.saltOrRounds);
+		}
+		await this.prisma.channels.update({
+			where: {
+				id: channelId
+			},
+			data: {
+				privacy: dto.privacy,
+				...(dto.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword }),
+			}
+		})
+	}
+>>>>>>> Stashed changes
 }
