@@ -126,4 +126,10 @@ export class ChatController {
 	async getUserIdbyNmaeInchannel(@Body() dto : getuserIDbyname){
 		return await this.chatService.getUserIdbyNmaeInchannel(dto.ChannelId, dto.name);
 	}
+
+	@UseGuards(AuthGuard)
+	@Patch('channel/:channelId/setAdmin/:targetName')
+	async setAdmin(@Param('channelId') channelId: string, @Param('targetName') targetName: string, @Req() req ) {
+		return await this.chatService.setAdmin(+channelId, targetName, req.user.sub);
+	}
 }

@@ -464,23 +464,18 @@ export class ChatService {
 		}
 	}
 
+	async setAdmin(channelId: number, targetName: string, userId: number) {
+		const userStatus = await this.getUserStatus(channelId, userId)
+		if (userStatus.status !== "OWNER") {
+			return { message: "You must be the owner of the channel to promote someone as admin"}
+		}
+		const targetUser = await this.getChannelUserByName(channelId, targetName)
+		if (targetUser.userId === userId) {
+			return { message: "You can't demote yourself as admin !"}
+		}
+		return await this.setUserStatus(channelId, targetUser.userId, "ADMIN")
+	}
 
-	// async setAdmin(channelId: number, targetName: string, userId: number) {
-	// 	await this.getUserStatus(channelId, userId)
-	// 	.then(async (userStatus) => {
-	// 		if (userStatus.status == "OWNER" || userStatus.status == "ADMIN") {
-	// 			const targetUser = await this.getChannelUserByName(channelId, targetName)
-	// 			if (targetUser) {
-	// 				const targetStatus = await this.getUserStatus(channelId, targetUser.id)
-	// 			}
-	// 		}
-	// 	},
-	// 	(error) => {
-	// 		console.log(error)
-	// 	})
-
-	// 	// const targetUser = this.prisma.userChannelMap.findFirst({
-	// }
 	async editChannel(channelId: number, userId: number, dto: editChannelDto) {
 		const status = await this.prisma.userChannelMap.findUnique({
 			where: {
