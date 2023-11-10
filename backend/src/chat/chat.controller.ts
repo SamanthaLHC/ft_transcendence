@@ -5,11 +5,8 @@ import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message.dto';
 import { MuteDto } from './dto/mute.dto';
-<<<<<<< Updated upstream
-=======
-import { getuserIDbyname } from './dto/getuserIDbyname/getuserIDbyname.dto';
+import { getuserIDbyname } from './dto/getuserIDbyname.dto';
 import { editChannelDto } from './dto/editchannel.dto';
->>>>>>> Stashed changes
 
 @Controller('chat')
 export class ChatController {

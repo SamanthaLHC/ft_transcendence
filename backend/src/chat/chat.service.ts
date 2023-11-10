@@ -451,7 +451,6 @@ export class ChatService {
 	}
 
 
-<<<<<<< Updated upstream
 	// async setAdmin(channelId: number, targetName: string, userId: number) {
 	// 	await this.getUserStatus(channelId, userId)
 	// 	.then(async (userStatus) => {
@@ -468,7 +467,6 @@ export class ChatService {
 
 	// 	// const targetUser = this.prisma.userChannelMap.findFirst({
 	// }
-=======
 	async editChannel(channelId: number, userId: number, dto: editChannelDto) {
 		const status = await this.prisma.userChannelMap.findUnique({
 			where: {
@@ -495,5 +493,4 @@ export class ChatService {
 			}
 		})
 	}
->>>>>>> Stashed changes
 }
