@@ -5,6 +5,11 @@ import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message.dto';
 import { MuteDto } from './dto/mute.dto';
+<<<<<<< Updated upstream
+=======
+import { getuserIDbyname } from './dto/getuserIDbyname/getuserIDbyname.dto';
+import { editChannelDto } from './dto/editchannel.dto';
+>>>>>>> Stashed changes
 
 @Controller('chat')
 export class ChatController {
@@ -111,5 +116,17 @@ export class ChatController {
 	@Get('channel/:channelId/status')
 	async getUserStatus(@Param('channelId') channelId: string, @Req() req) {
 		return await this.chatService.getUserStatus(+channelId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/edit')
+	async editChannel(@Param('channelId') channelId: string, @Req() req, @Body() dto: editChannelDto) {
+		return await this.chatService.editChannel(+channelId, req.user.sub, dto);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('getUserIdbyname')
+	async getUserIdbyNmaeInchannel(@Body() dto : getuserIDbyname){
+		return await this.chatService.getUserIdbyNmaeInchannel(dto.ChannelId, dto.name);
 	}
 }
