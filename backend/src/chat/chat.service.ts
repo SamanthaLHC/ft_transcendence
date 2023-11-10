@@ -196,7 +196,7 @@ export class ChatService {
 					}
 				})
 				if (!user || user.mutedUntil >= new Date(Date.now())) {
-					return { message: "You are muted until " + user.mutedUntil.toLocaleString() }
+					return { message: "You are muted for " + Math.trunc(((Number(user.mutedUntil) - Date.now()) / 1000)) + " seconds"}
 				}
 				const ret = await this.prisma.messages.create({
 					data: {
@@ -406,10 +406,9 @@ export class ChatService {
 	async checkPerm(channelId: number, targetId: number, userId: number) {
 		const userStatus = await this.getUserStatus(channelId, userId)
 		const targetStatus = await this.getUserStatus(channelId, targetId)
-		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetStatus.status != "OWNER" && userId != targetUser.userId) {
-			if (targetStatus.status != "OWNER") {
-				return true
-			}
+		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
+		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetStatus.status != "OWNER" && userId != targetId) {
+			return true
 		}
 		return false
 	}
@@ -417,13 +416,12 @@ export class ChatService {
 	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
 		if (time < 0 || time > 86400)
 			return { message: "Time must be in range [0-86400] seconds" }
-		const userStatus = await this.getUserStatus(channelId, userId)
-		const targetUser = get
+		const targetUser = await this.getChannelUserByName(channelId, targetName)
 		if (!targetUser) {
 			return { message: "User not found in this channel" }
 		}
 
-		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetUser.status != "OWNER" && userId != targetUser.userId) {
+		if (await this.checkPerm(channelId, targetUser.userId, userId)) {
 			await this.prisma.userChannelMap.update({
 				where: {
 					id: { channelId: channelId, userId: targetUser.userId }
@@ -439,20 +437,20 @@ export class ChatService {
 	}
 
 
-	async setAdmin(channelId: number, targetName: string, userId: number) {
-		await this.getUserStatus(channelId, userId)
-		.then(async (userStatus) => {
-			if (userStatus.status == "OWNER" || userStatus.status == "ADMIN") {
-				const targetUser = await this.getUserByName(targetName)
-				if (targetUser) {
-					const targetStatus = await this.getUserStatus(channelId, targetUser.id)
-				}
-			}
-		},
-		(error) => {
-			console.log(error)
-		})
+	// async setAdmin(channelId: number, targetName: string, userId: number) {
+	// 	await this.getUserStatus(channelId, userId)
+	// 	.then(async (userStatus) => {
+	// 		if (userStatus.status == "OWNER" || userStatus.status == "ADMIN") {
+	// 			const targetUser = await this.getChannelUserByName(channelId, targetName)
+	// 			if (targetUser) {
+	// 				const targetStatus = await this.getUserStatus(channelId, targetUser.id)
+	// 			}
+	// 		}
+	// 	},
+	// 	(error) => {
+	// 		console.log(error)
+	// 	})
 
-		// const targetUser = this.prisma.userChannelMap.findFirst({
-	}
+	// 	// const targetUser = this.prisma.userChannelMap.findFirst({
+	// }
 }
