@@ -339,7 +339,21 @@ export class ChatService {
 		}
 	}
 
-	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
+	async getUserIdbyNmaeInchannel(channelId: number, userName: string) {
+		const user = await this.prisma.userChannelMap.findFirst({
+			where: {
+				channelId: channelId,
+				user: {
+						name: userName,
+					}
+				}
+		});
+		console.log(user)
+		return user;
+	}
+	
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
+	{
 		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {

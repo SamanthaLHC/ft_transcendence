@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
+import CmdDialog from './channels/CmdDialog';
 import MessageChat from './MessageChat';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,6 +22,8 @@ const WindowChat: React.FC = () => {
 	const messageRef = useRef<HTMLDivElement | null>(null);
 	const { userData } = useUser();
 	const [displayName, setDisplayName] = useState("");
+	const [isCmdDialogOpen, setCmdDialogOpen] = useState(false);
+
 
 	//Socket
 
@@ -152,7 +155,7 @@ const WindowChat: React.FC = () => {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
-	
+
 			await fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
@@ -166,21 +169,31 @@ const WindowChat: React.FC = () => {
 					console.error("Error fetching channels:", error);
 				});
 		};
-        const fetchData = async () => {
-            if (socket.channel.privacy === "PRIVATE") {
-                await getnamedm(socket.channel.id);
-            }
+		const fetchData = async () => {
+			if (socket.channel.privacy === "PRIVATE") {
+				await getnamedm(socket.channel.id);
+			}
 			else
 				setDisplayName("");
-        };
+		};
 
-        fetchData();
-    }, [socket.channel]);
+		fetchData();
+	}, [socket.channel]);
+
+	//_____________________________________handle cmd form for / button
+
+	const openCmdDialog = () => {
+		setCmdDialogOpen(true);
+	}
+
+	const closeCmdDialog = () => {
+		setCmdDialogOpen(false);
+	}
 
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ displayName || socket.channel.name }
+				{displayName || socket.channel.name}
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
@@ -196,11 +209,12 @@ const WindowChat: React.FC = () => {
 					onChange={(e) => setInputValue(e.target.value)}
 					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
+				<button className="send-button" onClick={openCmdDialog}> / </button>
+				< CmdDialog isOpen={isCmdDialogOpen} channelId={socket.channel.id} onClose={closeCmdDialog} />
+
 			</div>
 		</div>
 	)
 }
 
 export default WindowChat;
-
-//HERE set de faux users et un lorem ipsum pour voir le rendu du chan

@@ -136,9 +136,3 @@ const Friends: React.FC = () => {
 }
 
 export default 	Friends;
-
-
-//TODO on click friends: ajouter les options 
-//TODO ajouter la diode de connexion
-//TODO get friends's pp with fetch get
-//TODO get friend profil page  (how ??)
