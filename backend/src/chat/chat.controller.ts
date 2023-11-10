@@ -126,4 +126,10 @@ export class ChatController {
 	async getUserIdbyNmaeInchannel(@Body() dto : getuserIDbyname){
 		return await this.chatService.getUserIdbyNmaeInchannel(dto.ChannelId, dto.name);
 	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/kick/:targetid')
+	async kick(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req){
+		return await this.chatService.kick(+channelId, req.user.sub, +targetid);
+	}
 }
