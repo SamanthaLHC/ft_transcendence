@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PrismaPromise } from '@prisma/client';
+import { PrismaPromise, StatusModo } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcrypt';
 import { NewMessageDto } from './dto/new-message.dto';
+import { use } from 'passport';
+import { get } from 'http';
 
 @Injectable()
 export class ChatService {
@@ -323,8 +325,7 @@ export class ChatService {
 		}
 	}
 
-	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
-	{
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
 		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {
@@ -337,39 +338,49 @@ export class ChatService {
 		return ret
 	}
 
-	async refuseinv(messId: number)
-	{
+	async refuseinv(messId: number) {
 		await this.prisma.messages.update({
-			where:{
+			where: {
 				id: +messId,
 				type: "GAME"
 			},
-			data:{
+			data: {
 				type: "MESSAGE",
 				content: "[INVITATION JEU] - REFUSER"
 			}
 		})
 	}
 
-	async accepterinv(messId: number)
-	{
+	async accepterinv(messId: number) {
 		await this.prisma.messages.update({
-			where:{
+			where: {
 				id: +messId,
 				type: "GAME"
 			},
-			data:{
+			data: {
 				type: "MESSAGE",
 				content: "[INVITATION JEU] - ACCEPTER"
 			}
 		})
 	}
 
-	/* Moderation */
+	/*************** Moderation ***************/
 
-	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
-		if (time < 0 || time > 86400)
-			return { message: "Time must be in range [0-86400] seconds" }
+	// check if user can use moderation commands on target
+
+	async getChannelUserByName(channelId: number, name: string) {
+		return await this.prisma.userChannelMap.findFirst({
+			where: {
+				channelId: channelId,
+				user: {
+					name: name,
+				}
+			}
+
+		});
+	}
+
+	async getUserStatus(channelId: number, userId: number) {
 		const userStatus = await this.prisma.userChannelMap.findUnique({
 			where: {
 				id: { channelId: channelId, userId: userId }
@@ -378,15 +389,36 @@ export class ChatService {
 				status: true
 			}
 		})
-		const targetUser = await this.prisma.userChannelMap.findFirst({
-			where: {
-				channelId: channelId,
-				user: {
-					name: targetName,
-				}
-			}
+		return userStatus
+	}
 
-		});
+	async setUserStatus(channelId: number, targetId: number, status: StatusModo) {
+		return await this.prisma.userChannelMap.update({
+			where: {
+				id: { channelId: channelId, userId: targetId }
+			},
+			data: {
+				status: status
+			}
+		})
+	}
+
+	async checkPerm(channelId: number, targetId: number, userId: number) {
+		const userStatus = await this.getUserStatus(channelId, userId)
+		const targetStatus = await this.getUserStatus(channelId, targetId)
+		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetStatus.status != "OWNER" && userId != targetUser.userId) {
+			if (targetStatus.status != "OWNER") {
+				return true
+			}
+		}
+		return false
+	}
+
+	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
+		if (time < 0 || time > 86400)
+			return { message: "Time must be in range [0-86400] seconds" }
+		const userStatus = await this.getUserStatus(channelId, userId)
+		const targetUser = get
 		if (!targetUser) {
 			return { message: "User not found in this channel" }
 		}
@@ -406,16 +438,21 @@ export class ChatService {
 		}
 	}
 
-	async getUserStatus(channelId: number, userId: number) {
-		const userStatus = await this.prisma.userChannelMap.findUnique({
-			where: {
-				id: { channelId: channelId, userId: userId }
-			},
-			select: {
-				status: true
-			}
-		})
-		return userStatus
-	}
 
+	async setAdmin(channelId: number, targetName: string, userId: number) {
+		await this.getUserStatus(channelId, userId)
+		.then(async (userStatus) => {
+			if (userStatus.status == "OWNER" || userStatus.status == "ADMIN") {
+				const targetUser = await this.getUserByName(targetName)
+				if (targetUser) {
+					const targetStatus = await this.getUserStatus(channelId, targetUser.id)
+				}
+			}
+		},
+		(error) => {
+			console.log(error)
+		})
+
+		// const targetUser = this.prisma.userChannelMap.findFirst({
+	}
 }
