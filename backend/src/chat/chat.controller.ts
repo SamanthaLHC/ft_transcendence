@@ -5,6 +5,7 @@ import { PrismaPromise } from '@prisma/client';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { NewMessageDto } from './dto/new-message.dto';
 import { MuteDto } from './dto/mute.dto';
+import { getuserIDbyname } from './dto/getuserIDbyname/getuserIDbyname.dto';
 
 @Controller('chat')
 export class ChatController {
@@ -111,5 +112,11 @@ export class ChatController {
 	@Get('channel/:channelId/status')
 	async getUserStatus(@Param('channelId') channelId: string, @Req() req) {
 		return await this.chatService.getUserStatus(+channelId, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('getUserIdbyname')
+	async getUserIdbyNmaeInchannel(@Body() dto : getuserIDbyname){
+		return await this.chatService.getUserIdbyNmaeInchannel(dto.ChannelId, dto.name);
 	}
 }
