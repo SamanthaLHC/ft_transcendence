@@ -50,6 +50,8 @@ export class ChatController {
 	@UseGuards(AuthGuard)
 	@Post('channel/private/create/:targetId')
 	async createPrivateChannel(@Param('targetId') targetId: string, @Req() req) {
+		console.log("IN CONTROLLER CHAT: userid: ", req.user.sub);
+		console.log("IN CONTROLLER CHAT: targetid: ", targetId);
 		return await this.chatService.createPrivateChannel(+targetId, req.user.sub);
 	}
 

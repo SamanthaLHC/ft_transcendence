@@ -284,6 +284,8 @@ export class ChatService {
 	}
 
 	async createPrivateChannel(targetId: number, userId: number) {
+		console.log("IN CHAT SERVICE: userid: ", userId);
+		console.log("IN CHAT SERVICE: targetid: ", targetId);
 		let channel = await this.prisma.channels.findFirst({
 			where: {
 				privacy: "PRIVATE",

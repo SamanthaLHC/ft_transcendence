@@ -13,6 +13,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [inputValue, setInputValue] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isOwner, setIsOwner] = useState(false);
+	const [isMuteFormOpen, setIsMuteFormOpen] = useState(false);
+	const [muteTime, setMuteTime] = useState(0);
+	const [isMuteButtonActive, setIsMuteButtonActive] = useState(true);
 	const [cookies] = useCookies(['access_token']);
 	const socket = useChatSocket()
 	const { isOpen, onClose } = props;
@@ -125,6 +128,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const navToChat = useNavigate();
 	const changeToChat = (id: string) => {
 		let pathChat: string = '/chat?mpid=' + id;
+		console.log("PATH IN CHANGE TO CHAT :", pathChat);
 		navToChat(pathChat);
 		navToChat(0)
 	}
@@ -236,8 +240,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 	// __________________________________________________handle mute
 
-
-
 	if (!isOpen) {
 		return null;
 	}
@@ -274,7 +276,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							<button className="btn-dialog">Ban</button>
 							<button className="btn-dialog">Kick</button>
 							<button className="btn-dialog">Mute</button>
-							{/* {isTimeDialogOpen &&} */}
 						</div>
 					)}
 				</div>

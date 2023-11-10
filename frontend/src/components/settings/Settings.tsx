@@ -7,6 +7,7 @@ import Friends from '../friends/Friends'
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../Context";
 // import coin from '../../assets/wp8162229.jpg';
+// import coin from '../../assets/foret-grand-etang-lotus-illustration-style-dessin-anime-scene-nature_1150-37329.png'
 import coin from '../../assets/tumblr_f0edcc319656b54ae60be2e05d2ca777_eec6b0c8_500.webp'
 
 
