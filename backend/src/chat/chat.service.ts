@@ -127,7 +127,8 @@ export class ChatService {
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
 		await this.joinChannel(channel.id, userId, newChannel.password);
-		this.setUserStatus(channel.id, userId, "OWNER")
+		if(channel.privacy != "PRIVATE")
+			this.setUserStatus(channel.id, userId, "OWNER")
 		return channel;
 	}
 
@@ -174,7 +175,11 @@ export class ChatService {
 		try {
 			const ret = await this.prisma.userChannelMap.delete({
 				where: {
-					id: { channelId: channelId, userId: userId }
+					id: { channelId: channelId, userId: userId },
+					channel: {
+						privacy: {
+						not: "PRIVATE"}
+					}
 				}
 			});
 			Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
@@ -501,5 +506,15 @@ export class ChatService {
 				...(dto.privacy === "PASSWORD_PROTECTED" && { password: hashedPassword }),
 			}
 		})
+	}
+
+	async kick(channelId:number, userId:number, targetId:number)
+	{
+		if (this.checkPerm(channelId, targetId, userId))
+		{
+			this.leaveChannel(channelId, targetId);
+		}
+		else
+			throw new UnauthorizedException("Vous devez etre admin du channel");
 	}
 }
