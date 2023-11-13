@@ -7,6 +7,7 @@ import { NewMessageDto } from './dto/new-message.dto';
 import { MuteDto } from './dto/mute.dto';
 import { editChannelDto } from './dto/editchannel.dto';
 import { getuserIDbyname } from './dto/getuserIDbyname/getuserIDbyname.dto';
+import { upNameDto } from 'src/users/dto';
 
 @Controller('chat')
 export class ChatController {
@@ -117,8 +118,8 @@ export class ChatController {
 
 	@UseGuards(AuthGuard)
 	@Post('channel/:channelId/edit')
-	async editChannel(@Param('channelId') channelId: string, @Req() req, @Body() dto: editChannelDto) {
-		return await this.chatService.editChannel(+channelId, req.user.sub, dto);
+	async editChannel(@Param('channelId') channelId: string, @Req() req, @Body() data: editChannelDto) {
+		return await this.chatService.editChannel(+channelId, req.user.sub, data);
 	}
 
 	@UseGuards(AuthGuard)
@@ -128,9 +129,9 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
-	@Patch('channel/:channelId/setAdmin/:targetName')
-	async setAdmin(@Param('channelId') channelId: string, @Param('targetName') targetName: string, @Req() req ) {
-		return await this.chatService.setAdmin(+channelId, targetName, req.user.sub);
+	@Post('channel/:channelId/setAdmin')
+	async setAdmin(@Param('channelId') channelId: string, @Body() data: upNameDto, @Req() req ) {
+		return await this.chatService.setAdmin(+channelId, data.name, req.user.sub);
 	}
 
 	@UseGuards(AuthGuard)

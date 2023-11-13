@@ -172,8 +172,8 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
-	const kick = async (channelid:number, targetId:number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/'+ channelid + '/kick/'+targetId, {
+	const kick = async (channelid: number, targetId: number) => {
+		const req: Request = new Request('http://localhost:3000/chat/channel/' + channelid + '/kick/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -219,15 +219,16 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					})
 					fetch(req)
 						.then((response) => response.json())
-						.then((data) => {if (data.message) {
-							alert("Error sending message: " + data.message)
-						} else {
-							socket.socket.emit('update', inputValue)
-						}
-					})
-					.catch((error) => {
-						console.error("Error sending message:", error);
-					});
+						.then((data) => {
+							if (data.message) {
+								alert("Error sending message: " + data.message)
+							} else {
+								socket.socket.emit('update', inputValue)
+							}
+						})
+						.catch((error) => {
+							console.error("Error sending message:", error);
+						});
 				}
 			}
 			catch { }
@@ -258,6 +259,59 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { }
 		}
+	}
+
+	const handleClickAdmin = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const body = {
+				name: inputValue,
+			};
+			const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/setAdmin', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(body),
+			});
+			fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.message && data.message !== "Blank username") {
+						alert(data.message);
+					}
+					else if (data.message !== "Blank username") {
+						const body = {
+							msg: inputValue + " is now admin of this channel",
+						};
+						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+							method: "POST",
+							headers: {
+								Authorization: `Bearer ${cookies.access_token}`,
+								"Content-Type": "application/json", // Specify content type
+							},
+							body: JSON.stringify(body),
+						})
+						fetch(req)
+							.then((response) => response.json())
+							.then((data) => {
+								if (data.message) {
+									alert("Error sending message: " + data.message)
+								} else {
+									socket.socket.emit('update', inputValue)
+								}
+							})
+							.catch((error) => {
+								console.error("Error sending message:", error);
+							});
+					}
+
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		}
+
 	}
 
 	//__________________________________________________get user role_______
@@ -322,7 +376,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				<div>
 					{isOwner && (
 						<div className="form-owner-section">
-							<button className="btn-dialog">Set as admin</button>
+							<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
 						</div>
 					)}
 					<div className="form-regular-user-section">

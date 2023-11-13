@@ -470,15 +470,26 @@ export class ChatService {
 	}
 
 	async setAdmin(channelId: number, targetName: string, userId: number) {
-		const userStatus = await this.getUserStatus(channelId, userId)
-		if (userStatus.status !== "OWNER") {
-			return { message: "You must be the owner of the channel to promote someone as admin" }
+
+		if (/[^\s]+/.test(targetName)) {
+			const userStatus = await this.getUserStatus(channelId, userId)
+			if (userStatus.status !== "OWNER") {
+				return { message: "You must be the owner of the channel to promote someone as admin" }
+			}
+			const targetUser = await this.getChannelUserByName(channelId, targetName)
+			if (!targetUser) {
+				return { message: "User not found in this channel" }
+			}
+			if (targetUser.status === "ADMIN") {
+				return { message: targetName + " is already admin" }
+			}
+			if (targetUser.userId === userId) {
+				return { message: "You can't demote yourself as admin !" }
+			}
+			return await this.setUserStatus(channelId, targetUser.userId, "ADMIN")
 		}
-		const targetUser = await this.getChannelUserByName(channelId, targetName)
-		if (targetUser.userId === userId) {
-			return { message: "You can't demote yourself as admin !" }
-		}
-		return await this.setUserStatus(channelId, targetUser.userId, "ADMIN")
+		else
+			return { message: "Blank username" }
 	}
 
 	async ban(channelId: number, targetName: string, userId: number) {
