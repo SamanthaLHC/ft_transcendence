@@ -487,6 +487,36 @@ textarea {
 	justify-content: flex-end;
 }
 
+/* _______________________________mute form_______________________ */
+
+.mute-form {
+	text-align: center;
+	margin: 20px;
+}
+
+.form-group {
+	margin-bottom: 10px;
+}
+
+.form-label {
+	font-size: 14px;
+	font-family: azonix;
+	text-align: center;
+	font-size: small;
+	color: #ffc107;
+}
+
+.form-input {
+	width: 150px;
+}
+
+.form-button-pos {
+	text-align: center;
+	display: block ruby;
+}
+
+
+
 /*_______________________________________________________________________________________*/
 /*                                  settings page                                        */
 /*_______________________________________________________________________________________*/

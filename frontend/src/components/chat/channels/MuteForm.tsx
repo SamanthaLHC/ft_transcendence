@@ -22,30 +22,32 @@ const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
 
     return (
         <div className="popup">
-            <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
-                <div style={{ marginBottom: '10px' }}>
-                    <label htmlFor="time" style={{ marginLeft: '50px', fontSize: '14px' }}>
-                        Time:
+            <form onSubmit={handleSubmit} className="mute-form">
+                <div className="form-group">
+                    <label htmlFor="time" className="form-label">
+                        Time in secondes:
                     </label>
                     <input
                         type="time"
                         id="time"
                         value={time}
                         onChange={(event) => setTime(event.target.value)}
-                        style={{ width: '150px' }}
+                        className="form-input"
                     />
                 </div>
-
-                <button
-                    type="submit"
-                    disabled={isCreateButtonDisabled}
-                    className={isCreateButtonDisabled ? 'disabled-button' : ''}
-                >
-                    Apply
-                </button>
+                <div className='form-button-pos'>
+                    <button
+                        type="submit"
+                        disabled={isCreateButtonDisabled}
+                        className={`form-button ${isCreateButtonDisabled ? 'disabled-button' : ''}`}
+                    >
+                        Apply
+                    </button>
+                </div>
             </form>
         </div>
     );
 };
+
 
 export default MuteForm;
