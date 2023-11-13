@@ -24,8 +24,8 @@ const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
         <div className="popup">
             <form onSubmit={handleSubmit} style={{ textAlign: 'left' }}>
                 <div style={{ marginBottom: '10px' }}>
-                    <label htmlFor="name" style={{ marginRight: '10px', fontSize: '14px' }}>
-                        Name:
+                    <label htmlFor="time" style={{ marginLeft: '50px', fontSize: '14px' }}>
+                        Time:
                     </label>
                     <input
                         type="time"
@@ -35,36 +35,6 @@ const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
                         style={{ width: '150px' }}
                     />
                 </div>
-                {/* 
-                <div style={{ marginBottom: '10px' }}>
-                    <label style={{ fontSize: '14px' }}>
-                        <input
-                            type="checkbox"
-                            checked={isProtected}
-                            onChange={handlePrivacyChange}
-                            style={{ marginRight: '5px' }}
-                        />
-                        Protected
-                    </label>
-                </div> */}
-
-                {/* {isProtected && ( */}
-                {/* <div style={{ marginBottom: '10px' }}>
-                    <label
-                        htmlFor="time"
-                        style={{ marginRight: '10px', fontSize: '14px' }}
-                    >
-                        Password:
-                    </label>
-                    <input
-                        type="time"
-                        id="time"
-                        value={time}
-                        onChange={(event) => setTime(event.target.value)}
-                        style={{ width: '150px' }}
-                    />
-                </div> */}
-                {/* )} */}
 
                 <button
                     type="submit"

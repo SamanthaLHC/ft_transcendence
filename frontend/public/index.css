@@ -456,8 +456,9 @@ textarea {
 
 .form-owner-section {
 	margin: 8px;
-	display: grid;
-	place-items: center;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
 }
 
 .btn-dialog {

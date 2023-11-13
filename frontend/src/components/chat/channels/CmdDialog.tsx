@@ -226,10 +226,15 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					const datas = await response.json();
 
 					if (response.ok) {
-						if (datas.status == 'ADMIN')
+						console.log("response is :", datas.status)
+						if (datas.status == 'ADMIN') {
 							setIsAdmin(true);
-						if (datas.status == 'OWNER')
+							console.log("isAdmin true: ", isAdmin);
+						}
+						if (datas.status == 'OWNER') {
 							setIsOwner(true);
+							console.log("isOwner true: ", isOwner);
+						}
 					}
 				} catch (error) {
 					console.error(error);
@@ -277,6 +282,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					{isOwner && (
 						<div className="form-owner-section">
 							<button className="btn-dialog">Set as admin</button>
+							<button className="btn-dialog">Unset as admin</button>
 						</div>
 					)}
 					<div className="form-regular-user-section">
@@ -285,9 +291,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						<button className="btn-dialog" onClick={handleClickMP}>Private message</button>
 						<button className="btn-dialog" onClick={handleClickblock}>Block</button>
 					</div>
-					{isAdmin || isOwner && (
+					{(isAdmin || isOwner) && (
 						<div className="form-admin-section">
 							<button className="btn-dialog">Ban</button>
+							<button className="btn-dialog">Unban</button>
 							<button className="btn-dialog">Kick</button>
 							<button className="btn-dialog" onClick={handleMuteClick}>Mute</button>
 							{isMuteFormOpen && (
