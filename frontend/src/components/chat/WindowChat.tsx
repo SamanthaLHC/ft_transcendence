@@ -28,7 +28,7 @@ const WindowChat: React.FC = () => {
 	//Socket
 
 	const navTo = useNavigate();
-	const changetogamefriend = (id:string) => {
+	const changetogamefriend = (id: string) => {
 		navTo("/gamefriend?id=" + id)
 	}
 	useEffect(() => {
@@ -82,8 +82,8 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					const tmp:Message = {
-						id:	item.id,
+					const tmp: Message = {
+						id: item.id,
 						sender: item.sender.name,
 						senderId: item.sender.id,
 						msg: item.content,
@@ -198,8 +198,8 @@ const WindowChat: React.FC = () => {
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 					{messages.map((message, index) => (
-						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<MessageChat message={message}/>
+						<li key={index} className={message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<MessageChat message={message} />
 						</li>
 					))}
 				</ul>

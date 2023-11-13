@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
 import { Navigate, useNavigate } from 'react-router-dom';
+import MuteForm from './MuteForm';
 
 interface CmdDialogProps {
 	isOpen: boolean;
@@ -17,7 +18,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [muteTime, setMuteTime] = useState(0);
 	const [isMuteButtonActive, setIsMuteButtonActive] = useState(true);
 	const [cookies] = useCookies(['access_token']);
-	const socket = useChatSocket()
+	const socket = useChatSocket();
 	const { isOpen, onClose } = props;
 	const { channelId } = props;
 
@@ -240,6 +241,19 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 	// __________________________________________________handle mute
 
+	const handleMuteClick = () => {
+		setIsMuteFormOpen(!isMuteFormOpen);
+	};
+
+	const handleSubmit: (time: string) => void = (time) => {
+		// Handle the mute form submission logic here
+		// You can use the 'time' parameter to get the selected mute time
+		// ...
+
+		// Close the MuteForm after submission
+		setIsMuteFormOpen(false);
+	};
+
 	if (!isOpen) {
 		return null;
 	}
@@ -271,16 +285,19 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						<button className="btn-dialog" onClick={handleClickMP}>Private message</button>
 						<button className="btn-dialog" onClick={handleClickblock}>Block</button>
 					</div>
-					{(isAdmin || isOwner) && (
+					{isAdmin || isOwner && (
 						<div className="form-admin-section">
 							<button className="btn-dialog">Ban</button>
 							<button className="btn-dialog">Kick</button>
-							<button className="btn-dialog">Mute</button>
+							<button className="btn-dialog" onClick={handleMuteClick}>Mute</button>
+							{isMuteFormOpen && (
+								<MuteForm isOpen={isMuteFormOpen} onSubmit={handleSubmit} />
+							)}
 						</div>
 					)}
 				</div>
 			</div>
-		</dialog>
+		</dialog >
 	);
 };
 
