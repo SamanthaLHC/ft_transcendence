@@ -494,23 +494,40 @@ export class ChatService {
 		}
 	}
 
+	async setAdmin(channelId: number, targetName: string, userId: number) {
 
-	// async setAdmin(channelId: number, targetName: string, userId: number) {
-	// 	await this.getUserStatus(channelId, userId)
-	// 	.then(async (userStatus) => {
-	// 		if (userStatus.status == "OWNER" || userStatus.status == "ADMIN") {
-	// 			const targetUser = await this.getChannelUserByName(channelId, targetName)
-	// 			if (targetUser) {
-	// 				const targetStatus = await this.getUserStatus(channelId, targetUser.id)
-	// 			}
-	// 		}
-	// 	},
-	// 	(error) => {
-	// 		console.log(error)
-	// 	})
+		if (/[^\s]+/.test(targetName)) {
+			const userStatus = await this.getUserStatus(channelId, userId)
+			if (userStatus.status !== "OWNER") {
+				return { message: "You must be the owner of the channel to promote someone as admin" }
+			}
+			const targetUser = await this.getChannelUserByName(channelId, targetName)
+			if (!targetUser) {
+				return { message: "User not found in this channel" }
+			}
+			if (targetUser.status === "ADMIN") {
+				return { message: targetName + " is already admin" }
+			}
+			if (targetUser.userId === userId) {
+				return { message: "You can't demote yourself as admin !" }
+			}
+			return await this.setUserStatus(channelId, targetUser.userId, "ADMIN")
+		}
+		else
+			return { message: "Blank username" }
+	}
 
-	// 	// const targetUser = this.prisma.userChannelMap.findFirst({
-	// }
+	async ban(channelId: number, targetName: string, userId: number) {
+		const targetUser = await this.getChannelUserByName(channelId, targetName)
+		if (this.checkPerm(channelId, targetUser.userId, userId)) {
+			return await this.setUserStatus(channelId, targetUser.userId, "BANNED")
+		}
+		else {
+			return {message: "You don't have the permission to ban ", targetName}
+		}
+
+	}
+
 	async editChannel(channelId: number, userId: number, dto: editChannelDto) {
 		const status = await this.prisma.userChannelMap.findUnique({
 			where: {
@@ -542,7 +559,7 @@ export class ChatService {
 			this.leaveChannel(channelId, targetId);
 		}
 		else
-			throw new UnauthorizedException("Vous devez etre admin du channel");
+			throw new UnauthorizedException("Vous devez etre admin du channel ");
 	}
 
 	async ban(channelId: number, userId: number, targetId: number) {
