@@ -342,7 +342,7 @@ export class ChatService {
 		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {
-				content: "Tu veux jouer ?",
+				content: "Do you want to play ?",
 				senderId: userId,
 				channelId: channelId,
 				type: "GAME"
@@ -359,7 +359,7 @@ export class ChatService {
 			},
 			data: {
 				type: "MESSAGE",
-				content: "[INVITATION JEU] - REFUSER"
+				content: "[INVITE TO PLAY] - DECLINED"
 			}
 		})
 	}
@@ -372,7 +372,7 @@ export class ChatService {
 			},
 			data: {
 				type: "MESSAGE",
-				content: "[INVITATION JEU] - ACCEPTER"
+				content: "[INVITE TO PLAY] - ACCEPTED"
 			}
 		})
 	}
