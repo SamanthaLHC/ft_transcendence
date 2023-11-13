@@ -250,13 +250,44 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		setIsMuteFormOpen(!isMuteFormOpen);
 	};
 
-	const handleSubmit: (time: string) => void = (time) => {
-		// Handle the mute form submission logic here
-		// You can use the 'time' parameter to get the selected mute time
-		// ...
+	const handleSubmit = async (time: string) => {
 
-		// Close the MuteForm after submission
 		setIsMuteFormOpen(false);
+
+		console.log("COUCOU WESH");
+		console.log("targetName is : ", inputValue);
+		console.log("Time is : ", time);
+		console.log("Endpoints is : ", `http://localhost:3000/chat/channel/${channelId}/mute`);
+		console.log("cookie is : ", `${cookies.access_token}`);
+
+
+		if (inputValue !== "\n" && inputValue !== "") {
+			const obj = {
+				targetName: inputValue,
+				time: time
+			};
+
+			try {
+				const req: Request = new Request(`http://localhost:3000/chat/channel/${channelId}/mute`, {
+					method: "POST",
+					headers: {
+						"content-type": "application/json",
+						"Authorization": `Bearer ${cookies.access_token}`,
+					},
+					body: JSON.stringify(obj),
+				});
+				const response = await fetch(req);
+				const datas = await response.json();
+				console.log("datas is: ", datas);
+				if (datas.message)
+					alert(datas.message);
+				else
+					alert(`${inputValue} Sucessfully muted for ${time} secondes`);
+
+			} catch (error) {
+				console.error(error);
+			}
+		}
 	};
 
 	if (!isOpen) {

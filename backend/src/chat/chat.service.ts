@@ -330,16 +330,15 @@ export class ChatService {
 			where: {
 				channelId: channelId,
 				user: {
-						name: userName,
-					}
+					name: userName,
 				}
+			}
 		});
 		console.log(user)
 		return user;
 	}
-	
-	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
-	{
+
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
 		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {
@@ -352,28 +351,26 @@ export class ChatService {
 		return ret
 	}
 
-	async refuseinv(messId: number)
-	{
+	async refuseinv(messId: number) {
 		await this.prisma.messages.update({
-			where:{
+			where: {
 				id: +messId,
 				type: "GAME"
 			},
-			data:{
+			data: {
 				type: "MESSAGE",
 				content: "[INVITATION JEU] - REFUSER"
 			}
 		})
 	}
 
-	async accepterinv(messId: number)
-	{
+	async accepterinv(messId: number) {
 		await this.prisma.messages.update({
-			where:{
+			where: {
 				id: +messId,
 				type: "GAME"
 			},
-			data:{
+			data: {
 				type: "MESSAGE",
 				content: "[INVITATION JEU] - ACCEPTER"
 			}
@@ -407,7 +404,7 @@ export class ChatService {
 		}
 
 		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetUser.status != "OWNER" && userId != targetUser.userId) {
-			await this.prisma.userChannelMap.update({
+			return await this.prisma.userChannelMap.update({
 				where: {
 					id: { channelId: channelId, userId: targetUser.userId }
 				},

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 interface MuteFormProps {
     isOpen: boolean;
-    onSubmit: (time: string) => void;
+    onSubmit: (time: string) => Promise<void>;
 }
 
 const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
@@ -13,9 +13,14 @@ const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
     }
 
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        onSubmit(time);
+        try {
+            await onSubmit(time);
+            setTime('');
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const isCreateButtonDisabled = time.trim() === '';

@@ -104,7 +104,7 @@ export class ChatController {
 	/* Moderation */
 
 	@UseGuards(AuthGuard)
-	@Patch('channel/:channelId/mute')
+	@Post('channel/:channelId/mute')
 	async muteUser(@Param('channelId') channelId: string, @Body() data: MuteDto, @Req() req) {
 		console.log("in control muteUser; channelId: ", channelId)
 		return await this.chatService.muteUser(+channelId, data.targetName, +data.time, req.user.sub);
