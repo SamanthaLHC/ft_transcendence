@@ -25,13 +25,21 @@ const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
             <form onSubmit={handleSubmit} className="mute-form">
                 <div className="form-group">
                     <label htmlFor="time" className="form-label">
-                        Time in secondes:
+                        mute duration in secondes:
                     </label>
                     <input
-                        type="time"
+                        type="number"
                         id="time"
                         value={time}
-                        onChange={(event) => setTime(event.target.value)}
+                        onChange={(event) => {
+                            const inputValue = event.target.value;
+                            if (/^\d+$/.test(inputValue) || inputValue === '') {
+                                setTime(inputValue);
+                            }
+                            else {
+                                alert("must be a positiv number");
+                            }
+                        }}
                         className="form-input"
                     />
                 </div>
