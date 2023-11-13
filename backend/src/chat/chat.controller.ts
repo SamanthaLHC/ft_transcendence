@@ -132,4 +132,10 @@ export class ChatController {
 	async kick(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req){
 		return await this.chatService.kick(+channelId, req.user.sub, +targetid);
 	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/ban/:targetid')
+	async ban(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req){
+		return await this.chatService.ban(+channelId, req.user.sub, +targetid);
+	}
 }

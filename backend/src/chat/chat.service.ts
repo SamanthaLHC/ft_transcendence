@@ -30,6 +30,9 @@ export class ChatService {
 		const userChannelMaps = await this.prisma.userChannelMap.findMany({
 			where: {
 				userId: userId,
+				status: {
+					not: "BANNED"
+				}
 			},
 			select: {
 				channel: {
@@ -80,6 +83,7 @@ export class ChatService {
 				users: {
 					select: {
 						userId: true,
+						status: true,
 					}
 				}
 			}
@@ -89,7 +93,7 @@ export class ChatService {
 				id: channel.id,
 				name: channel.name,
 				privacy: channel.privacy,
-				joined: channel.users.some(user => user.userId === userId),
+				joined: channel.users.some(user => user.userId === userId && user.status !== "BANNED"),
 			}
 		});
 		return ret;
@@ -127,12 +131,13 @@ export class ChatService {
 			return channel;
 		Logger.log(`Channel [${channel.name}] created`, "ChatService");
 		await this.joinChannel(channel.id, userId, newChannel.password);
-		if(channel.privacy != "PRIVATE")
+		if (channel.privacy != "PRIVATE")
 			this.setUserStatus(channel.id, userId, "OWNER")
 		return channel;
 	}
 
 	async joinChannel(channelId: number, userId: number, password?: string) {
+		console.log("here")
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
@@ -140,6 +145,13 @@ export class ChatService {
 			Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
 			return { message: "User already in channel" };
 		}
+
+		if (await this.isUserInChannelBanned(channelId, userId)) {
+			console.log("wegfveiukgvf")
+			Logger.log(`User [${userId}] banned in channel [${channelId}]`, "ChatService");
+			return { message: "User banned in channel" };
+		}
+		console.log("wueh")
 
 		const channel = await this.prisma.channels.findUnique({
 			where: {
@@ -178,7 +190,8 @@ export class ChatService {
 					id: { channelId: channelId, userId: userId },
 					channel: {
 						privacy: {
-						not: "PRIVATE"}
+							not: "PRIVATE"
+						}
 					}
 				}
 			});
@@ -203,7 +216,7 @@ export class ChatService {
 					}
 				})
 				if (!user || user.mutedUntil >= new Date(Date.now())) {
-					return { message: "You are muted for " + Math.trunc(((Number(user.mutedUntil) - Date.now()) / 1000)) + " seconds"}
+					return { message: "You are muted for " + Math.trunc(((Number(user.mutedUntil) - Date.now()) / 1000)) + " seconds" }
 				}
 				const ret = await this.prisma.messages.create({
 					data: {
@@ -241,7 +254,7 @@ export class ChatService {
 			const messages = await this.prisma.messages.findMany({
 				where: {
 					channelId: channelId,
-					senderId: { notIn: tableauDeNombres},
+					senderId: { notIn: tableauDeNombres },
 				},
 				select: {
 					id: true,
@@ -268,7 +281,20 @@ export class ChatService {
 	async isUserInChannel(channelId: number, userId: number): Promise<boolean> {
 		const userChannelMap = await this.prisma.userChannelMap.findUnique({
 			where: {
-				id: { channelId: channelId, userId: userId }
+				id: { channelId: channelId, userId: userId },
+				status: {
+					not: "BANNED"
+				}
+			}
+		});
+		return !!userChannelMap;
+	}
+
+	async isUserInChannelBanned(channelId: number, userId: number): Promise<boolean> {
+		const userChannelMap = await this.prisma.userChannelMap.findUnique({
+			where: {
+				id: { channelId: channelId, userId: userId },
+				status: "BANNED"
 			}
 		});
 		return !!userChannelMap;
@@ -349,16 +375,15 @@ export class ChatService {
 			where: {
 				channelId: channelId,
 				user: {
-						name: userName,
-					}
+					name: userName,
 				}
+			}
 		});
 		console.log(user)
 		return user;
 	}
-	
-	async gamePrivateChannel(targetId: number, userId: number, channelId: number)
-	{
+
+	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
 		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {
@@ -494,8 +519,7 @@ export class ChatService {
 		})
 		if (!status)
 			throw new NotFoundException();
-		if (status.status != "OWNER")
-		{
+		if (status.status != "OWNER") {
 			throw new UnauthorizedException("You are not the owner");
 		}
 		let hashedPassword = null;
@@ -513,11 +537,38 @@ export class ChatService {
 		})
 	}
 
-	async kick(channelId:number, userId:number, targetId:number)
-	{
-		if (this.checkPerm(channelId, targetId, userId))
-		{
+	async kick(channelId: number, userId: number, targetId: number) {
+		if (this.checkPerm(channelId, targetId, userId)) {
 			this.leaveChannel(channelId, targetId);
+		}
+		else
+			throw new UnauthorizedException("Vous devez etre admin du channel");
+	}
+
+	async ban(channelId: number, userId: number, targetId: number) {
+		if (this.checkPerm(channelId, targetId, userId)) {
+			if (channelId < 1 || Number.isNaN(channelId))
+				throw new BadRequestException(`Invalid channel id (${channelId})`);
+			try {
+				const ret = await this.prisma.userChannelMap.update({
+					where: {
+						id: { channelId: channelId, userId: targetId },
+						channel: {
+							privacy: {
+								not: "PRIVATE"
+							}
+						}
+					},
+					data: {
+						status: "BANNED"
+					}
+				});
+				Logger.log(`User [${targetId}] banned channel [${channelId}]`, "ChatService");
+			}
+			catch (e) {
+				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
+				throw new NotFoundException(`No entry found for user [${targetId}] in channel [${channelId}]`);
+			}
 		}
 		else
 			throw new UnauthorizedException("Vous devez etre admin du channel");
