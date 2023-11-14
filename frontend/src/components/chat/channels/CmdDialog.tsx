@@ -541,7 +541,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					{isOwner && (
 						<div className="form-owner-section">
 							<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
-							<button className="btn-dialog">Unset as admin</button>
+							<button className="btn-dialog" onClick={handleClickUnsetAdmin}>Unset as admin</button>
 						</div>
 					)}
 					<div className="form-regular-user-section">
