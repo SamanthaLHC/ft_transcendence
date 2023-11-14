@@ -135,6 +135,12 @@ export class ChatController {
 	}
 
 	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/unsetAdmin')
+	async unsetAdmin(@Param('channelId') channelId: string, @Body() data: upNameDto, @Req() req ) {
+		return await this.chatService.unsetAdmin(+channelId, data.name, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
 	@Post('channel/:channelId/kick/:targetid')
 	async kick(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req){
 		return await this.chatService.kick(+channelId, req.user.sub, +targetid);

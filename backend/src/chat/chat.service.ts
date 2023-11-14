@@ -517,16 +517,25 @@ export class ChatService {
 			return { message: "Blank username" }
 	}
 
-	async ban(channelId: number, targetName: string, userId: number) {
-		const targetUser = await this.getChannelUserByName(channelId, targetName)
-		if (this.checkPerm(channelId, targetUser.userId, userId)) {
-			return await this.setUserStatus(channelId, targetUser.userId, "BANNED")
+	async unsetAdmin(channelId: number, targetName: string, userId: number) {
+		if (/[^\s]+/.test(targetName)) {
+			const userStatus = await this.getUserStatus(channelId, userId)
+			if (userStatus.status !== "OWNER") {
+				return { message: "You must be the owner of the channel to demote someone" }
+			}
+			const targetUser = await this.getChannelUserByName(channelId, targetName)
+			if (!targetUser) {
+				return { message: "User not found in this channel" }
+			}
+			if (targetUser.status !== "ADMIN") {
+				return { message: targetName + " is not admin" }
+			}
+			return await this.setUserStatus(channelId, targetUser.userId, "MEMBER")
 		}
-		else {
-			return {message: "You don't have the permission to ban ", targetName}
-		}
-
+		else
+			return { message: "Blank username" }
 	}
+
 
 	async editChannel(channelId: number, userId: number, dto: editChannelDto) {
 		const status = await this.prisma.userChannelMap.findUnique({
