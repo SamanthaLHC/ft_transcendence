@@ -183,6 +183,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			const datas = await response.json();
+			if (datas.message) {
+				alert("Error kicking: " + datas.message)
+			}
 		}
 		catch { }
 	}
@@ -198,6 +201,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			const datas = await response.json();
+			if (datas.message) {
+				alert("Error banning: " + datas.message)
+			}
 		}
 		catch { }
 	}
@@ -268,7 +274,11 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				console.log("dats ", datas)
+				if (datas.message) {
+					alert("Error : " + datas.message)
+				}
+				else{
 					changeToChat(datas.userId)
 				}
 			}

@@ -87,6 +87,10 @@ const Channels: React.FC = () => {
 			fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
+					if (data.message)
+					{
+						alert("Error :" + data.message);
+					}
 					if (data.name) {
 						tochat()
 						socket.socket.emit('change_room', data.name);
