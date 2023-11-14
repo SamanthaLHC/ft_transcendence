@@ -31,6 +31,9 @@ const WindowChat: React.FC = () => {
 	const changetogamefriend = (id: string) => {
 		navTo("/gamefriend?id=" + id)
 	}
+	const actualiser = () => {
+		navTo(0)
+	}
 	useEffect(() => {
 		// , {
 		// 	autoConnect: false,
@@ -80,7 +83,9 @@ const WindowChat: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.message) // if error
-					return;
+				{
+					actualiser()
+				}
 				const fetchedMessages = data.map((item: any) => {
 					const tmp: Message = {
 						id: item.id,

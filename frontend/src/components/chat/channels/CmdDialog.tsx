@@ -177,6 +177,84 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
+	const kick = async (channelid: number, targetId: number) => {
+		const req: Request = new Request('http://localhost:3000/chat/channel/' + channelid + '/kick/' + targetId, {
+			method: "Post",
+			headers: {
+				"content-type": "application/json",
+				"Authorization": `Bearer ${cookies.access_token}`,
+			}
+		});
+		try {
+			const response = await fetch(req);
+			const datas = await response.json();
+		}
+		catch { }
+	}
+
+	const ban = async (channelid: number, targetId: number) => {
+		const req: Request = new Request('http://localhost:3000/chat/channel/' + channelid + '/ban/' + targetId, {
+			method: "Post",
+			headers: {
+				"content-type": "application/json",
+				"Authorization": `Bearer ${cookies.access_token}`,
+			}
+		});
+		try {
+			const response = await fetch(req);
+			const datas = await response.json();
+		}
+		catch { }
+	}
+
+	const handleClickkick = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const obj = {
+				name: inputValue,
+				ChannelId: channelId
+			};
+			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+			try {
+				const response = await fetch(req);
+				const datas = await response.json();
+				if (datas) {
+					kick(channelId, datas.userId)
+					const body = {
+						msg: "Kick " + inputValue,
+					};
+					const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${cookies.access_token}`,
+							"Content-Type": "application/json", // Specify content type
+						},
+						body: JSON.stringify(body),
+					})
+					fetch(req)
+						.then((response) => response.json())
+						.then((data) => {
+							if (data.message) {
+								alert("Error sending message: " + data.message)
+							} else {
+								socket.socket.emit('update', inputValue)
+							}
+						})
+						.catch((error) => {
+							console.error("Error sending message:", error);
+						});
+				}
+			}
+			catch { }
+		}
+	}
+
 
 	const handleClickMP = async () => {
 		if (inputValue !== "\n" && inputValue !== "") {
@@ -201,6 +279,107 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { }
 		}
+	}
+
+	const handleClickban = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const obj = {
+				name: inputValue,
+				ChannelId: channelId
+			};
+			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+			try {
+				const response = await fetch(req);
+				const datas = await response.json();
+				if (datas) {
+					ban(channelId, datas.userId)
+					const body = {
+						msg: "Ban " + inputValue,
+					};
+					const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${cookies.access_token}`,
+							"Content-Type": "application/json", // Specify content type
+						},
+						body: JSON.stringify(body),
+					})
+					fetch(req)
+						.then((response) => response.json())
+						.then((data) => {
+							if (data.message) {
+								alert("Error sending message: " + data.message)
+							} else {
+								socket.socket.emit('update', inputValue)
+							}
+						})
+						.catch((error) => {
+							console.error("Error sending message:", error);
+						});
+				}
+			}
+			catch { }
+		}
+	}
+
+	const handleClickAdmin = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const body = {
+				name: inputValue,
+			};
+			const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/setAdmin', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(body),
+			});
+			fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.message && data.message !== "Blank username") {
+						alert(data.message);
+					}
+					else if (data.message !== "Blank username") {
+						const body = {
+							msg: inputValue + " is now admin of this channel",
+						};
+						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+							method: "POST",
+							headers: {
+								Authorization: `Bearer ${cookies.access_token}`,
+								"Content-Type": "application/json", // Specify content type
+							},
+							body: JSON.stringify(body),
+						})
+						fetch(req)
+							.then((response) => response.json())
+							.then((data) => {
+								if (data.message) {
+									alert("Error sending message: " + data.message)
+								} else {
+									socket.socket.emit('update', inputValue)
+								}
+							})
+							.catch((error) => {
+								console.error("Error sending message:", error);
+							});
+					}
+
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		}
+
 	}
 
 	//__________________________________________________get user role_______

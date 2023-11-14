@@ -46,6 +46,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 				return;
 			}
 		}
+		console.log("channel joined ", channel.joined)
 		if (channel.joined === false) {
 			console.log('joining channel')
 			const req = new Request("http://localhost:3000/chat/channel/join/" + channel.id, {
