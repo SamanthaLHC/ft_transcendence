@@ -16,7 +16,7 @@ export class ChatService {
 	saltOrRounds = 10;
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
-		const channels = await this.prisma.channels.findMany({
+		const channels = await this.prisma.channels.finuMany({
 			select: {
 				id: true,
 				name: true,
@@ -331,8 +331,10 @@ export class ChatService {
 	}
 
 	async createPrivateChannel(targetId: number, userId: number) {
-		console.log("IN CHAT SERVICE: userid: ", userId);
-		console.log("IN CHAT SERVICE: targetid: ", targetId);
+		if (targetId === userId) {
+			return { "message": "pas de mp avec toi meme" }
+		}
+		console.log("de ", targetId, userId)
 		let channel = await this.prisma.channels.findFirst({
 			where: {
 				privacy: "PRIVATE",
@@ -473,9 +475,11 @@ export class ChatService {
 		if (userStatus.status === "OWNER" && targetStatus.status !== "OWNER" && userId !== targetId) {
 			return true
 		}
+		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
 		if (userStatus.status === "ADMIN" && targetStatus.status !== "OWNER" && targetStatus.status !== "ADMIN" && userId !== targetId) {
 			return true
 		}
+		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
 		return false
 	}
 
@@ -582,15 +586,18 @@ export class ChatService {
 	}
 
 	async kick(channelId: number, userId: number, targetId: number) {
-		if (this.checkPerm(channelId, targetId, userId)) {
+		if (!this.isUserInChannel(channelId, userId) || !this.isUserInChannel(channelId, targetId)) {
+			return { message: "User not found in this channel" }
+		}
+		if (await this.checkPerm(channelId, targetId, userId)) {
 			this.leaveChannel(channelId, targetId);
 		}
 		else
-			throw new UnauthorizedException("Vous devez etre admin du channel ");
+			return { "message": "Checkperm fail" }
 	}
 
 	async ban(channelId: number, userId: number, targetId: number) {
-		if (this.checkPerm(channelId, targetId, userId)) {
+		if (await this.checkPerm(channelId, targetId, userId)) {
 			if (channelId < 1 || Number.isNaN(channelId))
 				throw new BadRequestException(`Invalid channel id (${channelId})`);
 			try {
@@ -615,6 +622,6 @@ export class ChatService {
 			}
 		}
 		else
-			throw new UnauthorizedException("Vous devez etre admin du channel");
+			return { "message": "Checkperm fail" }
 	}
 }
