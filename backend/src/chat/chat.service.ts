@@ -463,6 +463,9 @@ export class ChatService {
 
 	async checkPerm(channelId: number, targetId: number, userId: number) {
 		const userStatus = await this.getUserStatus(channelId, userId)
+		if (!userStatus) {
+			throw new NotFoundException("User not found in this channel")
+		}
 		const targetStatus = await this.getUserStatus(channelId, targetId)
 		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
 		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetStatus.status != "OWNER" && userId != targetId) {
@@ -498,6 +501,9 @@ export class ChatService {
 
 		if (/[^\s]+/.test(targetName)) {
 			const userStatus = await this.getUserStatus(channelId, userId)
+			if (!userStatus) {
+				throw new NotFoundException("User not found in this channel")
+			}
 			if (userStatus.status !== "OWNER") {
 				return { message: "You must be the owner of the channel to promote someone as admin" }
 			}
@@ -520,6 +526,9 @@ export class ChatService {
 	async unsetAdmin(channelId: number, targetName: string, userId: number) {
 		if (/[^\s]+/.test(targetName)) {
 			const userStatus = await this.getUserStatus(channelId, userId)
+			if (!userStatus) {
+				throw new NotFoundException("User not found in this channel")
+			}
 			if (userStatus.status !== "OWNER") {
 				return { message: "You must be the owner of the channel to demote someone" }
 			}
