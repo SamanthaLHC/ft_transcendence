@@ -489,13 +489,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 		setIsMuteFormOpen(false);
 
-		console.log("COUCOU WESH");
-		console.log("targetName is : ", inputValue);
-		console.log("Time is : ", time);
-		console.log("Endpoints is : ", `http://localhost:3000/chat/channel/${channelId}/mute`);
-		console.log("cookie is : ", `${cookies.access_token}`);
-
-
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				targetName: inputValue,
@@ -547,7 +540,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				<div>
 					{isOwner && (
 						<div className="form-owner-section">
-							<button className="btn-dialog">Set as admin</button>
+							<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
 							<button className="btn-dialog">Unset as admin</button>
 						</div>
 					)}
@@ -559,9 +552,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					</div>
 					{(isAdmin || isOwner) && (
 						<div className="form-admin-section">
-							<button className="btn-dialog">Ban</button>
+							<button className="btn-dialog" onClick={handleClickban}>Ban</button>
 							<button className="btn-dialog">Unban</button>
-							<button className="btn-dialog">Kick</button>
+							<button className="btn-dialog" onClick={handleClickkick}>Kick</button>
 							<button className="btn-dialog" onClick={handleMuteClick}>Mute</button>
 							{isMuteFormOpen && (
 								<MuteForm isOpen={isMuteFormOpen} onSubmit={handleSubmit} />
