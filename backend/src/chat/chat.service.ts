@@ -509,7 +509,7 @@ export class ChatService {
 				return { message: targetName + " is already admin" }
 			}
 			if (targetUser.userId === userId) {
-				return { message: "You can't demote yourself as admin !" }
+				return { message: "As Owner, you already have all admin rights" }
 			}
 			return await this.setUserStatus(channelId, targetUser.userId, "ADMIN")
 		}
@@ -524,6 +524,9 @@ export class ChatService {
 				return { message: "You must be the owner of the channel to demote someone" }
 			}
 			const targetUser = await this.getChannelUserByName(channelId, targetName)
+			if (targetUser.userId === userId) {
+				return { message: "You can't demote yourself !" }
+			}
 			if (!targetUser) {
 				return { message: "User not found in this channel" }
 			}

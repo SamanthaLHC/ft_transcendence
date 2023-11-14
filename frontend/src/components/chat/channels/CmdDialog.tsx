@@ -377,6 +377,62 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 	}
 
+
+	const handleClickUnsetAdmin = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const body = {
+				name: inputValue,
+			};
+			const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/unsetAdmin', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(body),
+			});
+			fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.message && data.message !== "Blank username") {
+						alert(data.message);
+					}
+					else if (data.message !== "Blank username") {
+						const body = {
+							msg: inputValue + " is no more an admin of this channel (Cheh !)",
+						};
+						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+							method: "POST",
+							headers: {
+								Authorization: `Bearer ${cookies.access_token}`,
+								"Content-Type": "application/json", // Specify content type
+							},
+							body: JSON.stringify(body),
+						})
+						fetch(req)
+							.then((response) => response.json())
+							.then((data) => {
+								if (data.message) {
+									alert("Error sending message: " + data.message)
+								} else {
+									socket.socket.emit('update', inputValue)
+								}
+							})
+							.catch((error) => {
+								console.error("Error sending message:", error);
+							});
+					}
+
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		}
+
+	}
+
+
+
 	//__________________________________________________get user role_______
 
 	useEffect(() => {
