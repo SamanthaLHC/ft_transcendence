@@ -482,7 +482,7 @@ export class ChatService {
 		}
 
 		if (await this.checkPerm(channelId, targetUser.userId, userId)) {
-			await this.prisma.userChannelMap.update({
+			return await this.prisma.userChannelMap.update({
 				where: {
 					id: { channelId: channelId, userId: targetUser.userId }
 				},
