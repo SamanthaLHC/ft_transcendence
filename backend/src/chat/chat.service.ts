@@ -465,9 +465,15 @@ export class ChatService {
 
 	async checkPerm(channelId: number, targetId: number, userId: number) {
 		const userStatus = await this.getUserStatus(channelId, userId)
+		if (!userStatus) {
+			throw new NotFoundException("User not found in this channel")
+		}
 		const targetStatus = await this.getUserStatus(channelId, targetId)
 		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
-		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetStatus.status != "OWNER" && userId != targetId) {
+		if (userStatus.status === "OWNER" && targetStatus.status !== "OWNER" && userId !== targetId) {
+			return true
+		}
+		if (userStatus.status === "ADMIN" && targetStatus.status !== "OWNER" && targetStatus.status !== "ADMIN" && userId !== targetId) {
 			return true
 		}
 		return false
@@ -501,6 +507,9 @@ export class ChatService {
 
 		if (/[^\s]+/.test(targetName)) {
 			const userStatus = await this.getUserStatus(channelId, userId)
+			if (!userStatus) {
+				throw new NotFoundException("User not found in this channel")
+			}
 			if (userStatus.status !== "OWNER") {
 				return { message: "You must be the owner of the channel to promote someone as admin" }
 			}
@@ -523,15 +532,18 @@ export class ChatService {
 	async unsetAdmin(channelId: number, targetName: string, userId: number) {
 		if (/[^\s]+/.test(targetName)) {
 			const userStatus = await this.getUserStatus(channelId, userId)
+			if (!userStatus) {
+				throw new NotFoundException("User not found in this channel")
+			}
 			if (userStatus.status !== "OWNER") {
 				return { message: "You must be the owner of the channel to demote someone" }
 			}
 			const targetUser = await this.getChannelUserByName(channelId, targetName)
-			if (targetUser.userId === userId) {
-				return { message: "You can't demote yourself !" }
-			}
 			if (!targetUser) {
 				return { message: "User not found in this channel" }
+			}
+			if (targetUser.userId === userId) {
+				return { message: "You can't demote yourself !" }
 			}
 			if (targetUser.status !== "ADMIN") {
 				return { message: targetName + " is not admin" }
