@@ -262,16 +262,16 @@ const Profil: React.FC = () => {
 						<div className='typo-friends yellow'>
 							{userInfos.name}
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickfriend}> {friend ? "Remove friend" : "add Friend"}</button>
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickblock}>{block ? "Unblock" : "block"}</button>
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickMP}>Direct Message</button>
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickGame}>Invite Game</button>
 						</div>
 					</div>
