@@ -46,7 +46,7 @@ const WindowChat: React.FC = () => {
 			console.log('Chat connected to server');
 		});
 
-		socket.socket.on('accgame', (data) => {
+		socket.socket.on('accgame', (data: any) => {
 			changetogamefriend(data)
 		});
 
@@ -204,15 +204,19 @@ const WindowChat: React.FC = () => {
 					))}
 				</ul>
 			</div>
-			<div id="input-area">
-				<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
-					onChange={(e) => setInputValue(e.target.value)}
-					onKeyDown={handleSendKey} />
-				<button className="send-button" onClick={handleSendClick}> SEND </button>
-				<button className="send-button" onClick={openCmdDialog}> / </button>
-				< CmdDialog isOpen={isCmdDialogOpen} channelId={socket.channel.id} onClose={closeCmdDialog} />
 
-			</div>
+			{/* TODO display only if in a channel:  */}
+			{(socket.channel.name || displayName) && (
+				<div id="input-area">
+					<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
+						onChange={(e) => setInputValue(e.target.value)}
+						onKeyDown={handleSendKey} />
+					<button className="send-button" onClick={handleSendClick}> SEND </button>
+					<button className="send-button" onClick={openCmdDialog}> / </button>
+					<CmdDialog isOpen={isCmdDialogOpen} channelId={socket.channel.id} onClose={closeCmdDialog} />
+				</div>
+			)}
+			{/* ___________ */}
 		</div>
 	)
 }
