@@ -468,7 +468,10 @@ export class ChatService {
 		}
 		const targetStatus = await this.getUserStatus(channelId, targetId)
 		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
-		if ((userStatus.status == "OWNER" || userStatus.status == "ADMIN") && targetStatus.status != "OWNER" && userId != targetId) {
+		if (userStatus.status === "OWNER" && targetStatus.status !== "OWNER" && userId !== targetId) {
+			return true
+		}
+		if (userStatus.status === "ADMIN" && targetStatus.status !== "OWNER" && targetStatus.status !== "ADMIN" && userId !== targetId) {
 			return true
 		}
 		return false
@@ -533,11 +536,11 @@ export class ChatService {
 				return { message: "You must be the owner of the channel to demote someone" }
 			}
 			const targetUser = await this.getChannelUserByName(channelId, targetName)
-			if (targetUser.userId === userId) {
-				return { message: "You can't demote yourself !" }
-			}
 			if (!targetUser) {
 				return { message: "User not found in this channel" }
+			}
+			if (targetUser.userId === userId) {
+				return { message: "You can't demote yourself !" }
 			}
 			if (targetUser.status !== "ADMIN") {
 				return { message: targetName + " is not admin" }
