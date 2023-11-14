@@ -512,7 +512,9 @@ textarea {
 
 .form-button-pos {
 	text-align: center;
-	display: block ruby;
+	display: grid;
+	place-items: center;
+	/* display: block ruby; */
 }
 
 
