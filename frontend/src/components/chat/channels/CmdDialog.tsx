@@ -668,7 +668,32 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
+	// ___________________________________________handle leave
 
+	const handleClickLeave = async () => {
+		try {
+			const req: Request = new Request(`http://localhost:3000/chat/channel/leave/${channelId}`, {
+				method: "DELETE",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+			});
+			const response = await fetch(req);
+			const datas = await response.json();
+			if (datas) {
+				if (datas.message)
+					alert(datas.message);
+				else {
+					navToChat(0);
+				}
+			}
+
+		} catch (error) {
+			console.error(error);
+		}
+
+	}
 
 	if (!isOpen) {
 		return null;
@@ -719,7 +744,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						</div>
 					)}
 					<div className="form-regular-user-section">
-						<button className="chan-action-btn">Leave chan</button>
+						<button className="chan-action-btn" onClick={handleClickLeave}>Leave chan</button>
 					</div>
 				</div>
 			</div>

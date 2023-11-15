@@ -193,6 +193,7 @@ export class ChatService {
 				}
 			});
 			Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
+			return ret;
 		}
 		catch (e) {
 			Logger.log(`No entry found for user [${userId}] in channel [${channelId}]`, "ChatService");
