@@ -550,14 +550,11 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					const datas = await response.json();
 
 					if (response.ok) {
-						console.log("response is :", datas.status)
 						if (datas.status == 'ADMIN') {
 							setIsAdmin(true);
-							console.log("isAdmin true: ", isAdmin);
 						}
 						if (datas.status == 'OWNER') {
 							setIsOwner(true);
-							console.log("isOwner true: ", isOwner);
 						}
 					}
 				} catch (error) {
@@ -643,6 +640,36 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
+
+	const handleClickUnsetPwd = async () => {
+
+		const obj = {
+			privacy: "PUBLIC"
+		};
+
+		try {
+			const req: Request = new Request(`http://localhost:3000/chat/channel/${channelId}/edit`, {
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+			const response = await fetch(req);
+			const datas = await response.json();
+			if (datas.message)
+				alert(datas.message);
+			else
+				alert(`Password succefully unset`);
+
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+
+
 	if (!isOpen) {
 		return null;
 	}
@@ -671,7 +698,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							{isPwdFormOpen && (
 								<PwdForm isOpen={isPwdFormOpen} onSubmit={submitPwd} />
 							)}
-							<button className="chan-action-btn"> unset password</button>
+							<button className="chan-action-btn" onClick={handleClickUnsetPwd}> unset password</button>
 						</div>
 					)}
 					<div className="form-regular-user-section">

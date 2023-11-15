@@ -561,9 +561,18 @@ export class ChatService {
 		})
 		if (!status)
 			throw new NotFoundException();
+		const channel = await this.prisma.channels.findUnique({
+			where: {
+				id: channelId
+			}
+		})
+		if (!channel)
+			throw new NotFoundException();
 		if (status.status != "OWNER") {
-			return {message: "You are not the owner of the channel"};
+			return { message: "You are not the owner of the channel" };
 		}
+		if (channel.privacy === "PUBLIC" && dto.privacy === "PUBLIC")
+			return { message: "There is already no password." };
 		let hashedPassword = null;
 		if (dto.privacy === "PASSWORD_PROTECTED") {
 			hashedPassword = await bcrypt.hash(dto.password, this.saltOrRounds);
@@ -617,7 +626,7 @@ export class ChatService {
 			}
 			catch (e) {
 				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
-				return { "message": "No entry found for user" + targetId +" in channel " +channelId};
+				return { "message": "No entry found for user" + targetId + " in channel " + channelId };
 			}
 		}
 		else
@@ -645,7 +654,7 @@ export class ChatService {
 			}
 			catch (e) {
 				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
-				return { "message": "No entry found for user" + targetId +" in channel " +channelId};
+				return { "message": "No entry found for user" + targetId + " in channel " + channelId };
 			}
 		}
 		else
