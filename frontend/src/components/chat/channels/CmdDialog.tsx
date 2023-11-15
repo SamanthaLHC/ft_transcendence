@@ -45,7 +45,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					changeToFriend(datas.userId)
 				}
 			}
-			catch { }
+			catch { alert("Not in channel") }
 		}
 	}
 
@@ -68,6 +68,8 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			if (response.ok) {
 				alert("Succes");
 			}
+			else
+				alert("Vous ne pouvez pas bloquer cette personne")
 		} catch (error) {
 			console.error(error);
 		}
@@ -117,7 +119,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					addrelation(datas.userId, "BLOCKED")
 				}
 			}
-			catch { }
+			catch { alert("Not in channel") }
 		}
 	}
 
@@ -185,9 +187,11 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			const datas = await response.json();
 			if (datas.message) {
 				alert("Error kicking: " + datas.message)
+				return 0
 			}
+			return 1
 		}
-		catch { }
+		catch { return 1 }
 	}
 
 	const ban = async (channelid: number, targetId: number) => {
@@ -207,7 +211,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			return 1
 		}
-		catch {return 0}
+		catch { return 0 }
 	}
 
 	const unban = async (channelid: number, targetId: number) => {
@@ -227,7 +231,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			return 1
 		}
-		catch {return 0 }
+		catch { return 0 }
 	}
 
 	const handleClickkick = async () => {
@@ -248,33 +252,34 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
-					kick(channelId, datas.userId)
-					const body = {
-						msg: "Kick " + inputValue,
-					};
-					const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
-						method: "POST",
-						headers: {
-							Authorization: `Bearer ${cookies.access_token}`,
-							"Content-Type": "application/json", // Specify content type
-						},
-						body: JSON.stringify(body),
-					})
-					fetch(req)
-						.then((response) => response.json())
-						.then((data) => {
-							if (data.message) {
-								alert("Error sending message: " + data.message)
-							} else {
-								socket.socket.emit('update', inputValue)
-							}
+					if (await kick(channelId, datas.userId)) {
+						const body = {
+							msg: "Kick " + inputValue,
+						};
+						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+							method: "POST",
+							headers: {
+								Authorization: `Bearer ${cookies.access_token}`,
+								"Content-Type": "application/json", // Specify content type
+							},
+							body: JSON.stringify(body),
 						})
-						.catch((error) => {
-							console.error("Error sending message:", error);
-						});
+						fetch(req)
+							.then((response) => response.json())
+							.then((data) => {
+								if (data.message) {
+									alert("Error sending message: " + data.message)
+								} else {
+									socket.socket.emit('update', inputValue)
+								}
+							})
+							.catch((error) => {
+								console.error("Error sending message:", error);
+							});
+					}
 				}
 			}
-			catch { }
+			catch { alert("Not in channel") }
 		}
 	}
 
@@ -303,7 +308,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					changeToChat(datas.userId)
 				}
 			}
-			catch { }
+			catch { alert("Not in channel") }
 		}
 	}
 
@@ -356,7 +361,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					}
 				}
 			}
-			catch { }
+			catch { alert("Not in channel") }
 		}
 	}
 
@@ -409,7 +414,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				else
 					alert("test")
 			}
-			catch { alert("Not banned")}
+			catch { alert("Not banned") }
 		}
 	}
 
