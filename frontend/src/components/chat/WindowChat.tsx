@@ -207,8 +207,8 @@ const WindowChat: React.FC = () => {
 				</ul>
 			</div>
 
-			{/* TODO display only if in a channel:  */}
-			{(socket.channel.name || displayName) && (
+			{/* display only if in a channel:  */}
+			{(displayName || socket.channel.name) && (
 				<div id="input-area">
 					<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
 						onChange={(e) => setInputValue(e.target.value)}
