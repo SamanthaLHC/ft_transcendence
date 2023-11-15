@@ -16,7 +16,7 @@ export class ChatService {
 	saltOrRounds = 10;
 
 	async findAllChannels(): Promise<PrismaPromise<any>> {
-		const channels = await this.prisma.channels.finuMany({
+		const channels = await this.prisma.channels.findMany({
 			select: {
 				id: true,
 				name: true,
