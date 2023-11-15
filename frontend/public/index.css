@@ -487,6 +487,28 @@ textarea {
 	justify-content: flex-end;
 }
 
+.chan-action-btn {
+
+	background-image: linear-gradient(to right, #c21500 0%, #ffc500 51%, #c21500 100%);
+	width: 25%;
+	padding: 5px 5px;
+	text-align: center;
+	text-transform: uppercase;
+	transition: 0.5s;
+	background-size: 200% auto;
+	color: black;
+	border-radius: 10px;
+	display: block;
+	font-family: "Azonix";
+	font-size: small;
+}
+
+.chan-action-btn:hover {
+	background-position: right center;
+	color: #fff;
+	text-decoration: none;
+}
+
 /* _______________________________mute form_______________________ */
 
 .mute-form {

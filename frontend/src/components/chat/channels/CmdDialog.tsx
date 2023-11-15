@@ -283,7 +283,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				if (datas.message) {
 					alert("Error : " + datas.message)
 				}
-				else{
+				else {
 					changeToChat(datas.userId)
 				}
 			}
@@ -549,9 +549,16 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				/>
 				<div>
 					{isOwner && (
-						<div className="form-owner-section">
-							<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
-							<button className="btn-dialog" onClick={handleClickUnsetAdmin}>Unset as admin</button>
+						<div>
+							<div className="form-owner-section">
+								<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
+								<button className="btn-dialog" onClick={handleClickUnsetAdmin}>Unset as admin</button>
+							</div>
+							<div className="form-owner-section">
+								<button className="chan-action-btn"> set channel name</button>
+								<button className="chan-action-btn"> set password</button>
+								<button className="chan-action-btn"> unset password</button>
+							</div>
 						</div>
 					)}
 					<div className="form-regular-user-section">
@@ -571,6 +578,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							)}
 						</div>
 					)}
+					<div className="form-regular-user-section">
+						<button className="chan-action-btn">Leave chan</button>
+					</div>
 				</div>
 			</div>
 		</dialog >
