@@ -104,7 +104,7 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 			return (
 				<span><b>{message.sender + ":"}</b><br></br>{message.msg}
 					<br></br>
-					<div className='btn-pos'>
+					<div className='chat-btn-pos'>
 						<Box
 							sx={{
 								display: 'flex',
