@@ -7,6 +7,7 @@ import { NewMessageDto } from './dto/new-message.dto';
 import { MuteDto } from './dto/mute.dto';
 import { editChannelDto } from './dto/editchannel.dto';
 import { getuserIDbyname } from './dto/getuserIDbyname/getuserIDbyname.dto';
+import { upNameDto } from 'src/users/dto';
 
 @Controller('chat')
 export class ChatController {
@@ -33,7 +34,6 @@ export class ChatController {
 	@UseGuards(AuthGuard)
 	@Post('new_message/:channelId')
 	async addNewMessage(@Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req): Promise<any> {
-		console.log("in control")
 		return await this.chatService.addNewMessage(+channelId, newMessage, req.user.sub);
 	}
 
@@ -59,7 +59,10 @@ export class ChatController {
 	@Post('channel/private/game/:targetId')
 	async gamePrivateChannel(@Param('targetId') targetId: string, @Req() req) {
 		const channel = await this.chatService.createPrivateChannel(+targetId, req.user.sub);
-		return await this.chatService.gamePrivateChannel(+targetId, req.user.sub, channel.id)
+		if (channel["message"]){
+			return channel
+		}
+		return await this.chatService.gamePrivateChannel(+targetId, req.user.sub, channel["id"])
 	}
 
 	@UseGuards(AuthGuard)
@@ -95,17 +98,14 @@ export class ChatController {
 	@UseGuards(AuthGuard)
 	@Get('messages/:channelId')
 	async getChannelMessages(@Param('channelId') channelId: string, @Req() req): Promise<PrismaPromise<any>> {
-		console.log("in control getChannelMessages")
-		console.log(channelId)
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
 
 	/* Moderation */
 
 	@UseGuards(AuthGuard)
-	@Patch('channel/:channelId/mute')
+	@Post('channel/:channelId/mute')
 	async muteUser(@Param('channelId') channelId: string, @Body() data: MuteDto, @Req() req) {
-		console.log("in control muteUser; channelId: ", channelId)
 		return await this.chatService.muteUser(+channelId, data.targetName, +data.time, req.user.sub);
 	}
 
@@ -117,25 +117,43 @@ export class ChatController {
 
 	@UseGuards(AuthGuard)
 	@Post('channel/:channelId/edit')
-	async editChannel(@Param('channelId') channelId: string, @Req() req, @Body() dto: editChannelDto) {
-		return await this.chatService.editChannel(+channelId, req.user.sub, dto);
+	async editChannel(@Param('channelId') channelId: string, @Req() req, @Body() data: editChannelDto) {
+		return await this.chatService.editChannel(+channelId, req.user.sub, data);
 	}
 
 	@UseGuards(AuthGuard)
 	@Post('getUserIdbyname')
-	async getUserIdbyNmaeInchannel(@Body() dto : getuserIDbyname){
+	async getUserIdbyNmaeInchannel(@Body() dto: getuserIDbyname) {
 		return await this.chatService.getUserIdbyNmaeInchannel(dto.ChannelId, dto.name);
 	}
 
 	@UseGuards(AuthGuard)
-	@Patch('channel/:channelId/setAdmin/:targetName')
-	async setAdmin(@Param('channelId') channelId: string, @Param('targetName') targetName: string, @Req() req ) {
-		return await this.chatService.setAdmin(+channelId, targetName, req.user.sub);
+	@Post('channel/:channelId/setAdmin')
+	async setAdmin(@Param('channelId') channelId: string, @Body() data: upNameDto, @Req() req) {
+		return await this.chatService.setAdmin(+channelId, data.name, req.user.sub);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/unsetAdmin')
+	async unsetAdmin(@Param('channelId') channelId: string, @Body() data: upNameDto, @Req() req) {
+		return await this.chatService.unsetAdmin(+channelId, data.name, req.user.sub);
 	}
 
 	@UseGuards(AuthGuard)
 	@Post('channel/:channelId/kick/:targetid')
-	async kick(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req){
+	async kick(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req) {
 		return await this.chatService.kick(+channelId, req.user.sub, +targetid);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/ban/:targetid')
+	async ban(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req) {
+		return await this.chatService.ban(+channelId, req.user.sub, +targetid);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/unban/:targetid')
+	async unban(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req) {
+		return await this.chatService.unban(+channelId, req.user.sub, +targetid);
 	}
 }

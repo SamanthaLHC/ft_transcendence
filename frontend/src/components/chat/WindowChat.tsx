@@ -76,7 +76,6 @@ const WindowChat: React.FC = () => {
 	}, [messages])
 
 	const updateMessages = () => {
-		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
 
 		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
@@ -102,7 +101,6 @@ const WindowChat: React.FC = () => {
 					return tmp;
 				});
 				setMessages(fetchedMessages);
-				console.log("messages :", messages)
 			})
 			.catch((error) => {
 				console.error("Error updating channel " + socket.channel.name + ":", error);
@@ -170,7 +168,6 @@ const WindowChat: React.FC = () => {
 				.then((response) => response.json())
 				.then((data) => {
 					if (data) { // if error
-						console.log("return ", data.name)
 						setDisplayName("[DM] " + data.name);
 						// socket.channel.name = "[DM] " + data.name
 					}

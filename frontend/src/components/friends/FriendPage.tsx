@@ -51,7 +51,6 @@ const Profil: React.FC = () => {
 
 				const response = await fetch(req);
 				const datas = await response.json();
-				console.log(datas)
 				if (datas.id == id_num) {
 					changeToProfile()
 				}

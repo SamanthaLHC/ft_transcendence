@@ -49,7 +49,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
           secret: process.env.JWTSECRET
         }
       );
-      // console.log('payload: ', payload)
       if (!payload || !payload.sub)
       {
         console.log('in if not payload')
