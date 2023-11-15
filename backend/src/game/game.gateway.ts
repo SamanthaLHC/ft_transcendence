@@ -67,7 +67,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			userId = payload.sub
 		}
 		catch (e) {
-			console.log("error jwt (connect(game)): ", e)
 		}
 		const user = await this.prisma.user.findFirst({
 			where: {
@@ -128,7 +127,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			userId = payload.sub
 		}
 		catch (e) {
-			console.log("error jwt (connect(game)): ", e)
 		}
 		if (!userId)
 			return ;

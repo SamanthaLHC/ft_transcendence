@@ -517,7 +517,12 @@ textarea {
 	/* display: block ruby; */
 }
 
-
+.chat-btn-pos {
+	text-align: center;
+	padding: 5px;
+	margin: 0;
+	/* padding-left: 150px; */
+}
 
 /*_______________________________________________________________________________________*/
 /*                                  settings page                                        */

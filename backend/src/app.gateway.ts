@@ -36,7 +36,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
     catch (e) {
-      console.log("error jwt (connect): ", e)
     }
   }
 
@@ -49,7 +48,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
           secret: process.env.JWTSECRET
         }
       );
-      // console.log('payload: ', payload)
       if (!payload || !payload.sub)
       {
         console.log('in if not payload')
@@ -72,7 +70,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
       }
     }
     catch (e) {
-      console.log("error jwt (disconnect): ", e)
     }
   }
 }
