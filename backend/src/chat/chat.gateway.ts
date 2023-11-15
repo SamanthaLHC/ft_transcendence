@@ -38,7 +38,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 				newSocket.user = (user.id).toString()
 		}
 		catch (e) {
-			console.log("error jwt (connect(chat)): ", e)
 		}
 		if (this.sockets === undefined) {
 			this.sockets = [newSocket]
