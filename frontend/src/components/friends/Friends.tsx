@@ -68,7 +68,6 @@ const Friends: React.FC = () => {
 				}
 			}
 			async function getUsers() {
-				console.log("getUsers:", searchQuery);
 				let uri_str: string
 				uri_str = 'http://localhost:3000/users/search?search=' + searchQuery
 				const req = new Request(uri_str, {

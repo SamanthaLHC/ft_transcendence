@@ -137,7 +137,6 @@ export class ChatService {
 	}
 
 	async joinChannel(channelId: number, userId: number, password?: string) {
-		console.log("here")
 		if (channelId < 1 || Number.isNaN(channelId))
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
@@ -147,11 +146,9 @@ export class ChatService {
 		}
 
 		if (await this.isUserInChannelBanned(channelId, userId)) {
-			console.log("wegfveiukgvf")
 			Logger.log(`User [${userId}] banned in channel [${channelId}]`, "ChatService");
 			return { message: "User banned in channel" };
 		}
-		console.log("wueh")
 
 		const channel = await this.prisma.channels.findUnique({
 			where: {
@@ -209,7 +206,10 @@ export class ChatService {
 			try {
 				const user = await this.prisma.userChannelMap.findUnique({
 					where: {
-						id: { channelId: channelId, userId: userId }
+						id: { channelId: channelId, userId: userId },
+						status: {
+							not: "BANNED"
+						}
 					},
 					select: {
 						mutedUntil: true
@@ -249,7 +249,6 @@ export class ChatService {
 					targetId: true
 				}
 			})
-			console.log("lalala", blockedId)
 			const tableauDeNombres = blockedId.map(objet => objet.targetId);
 			const messages = await this.prisma.messages.findMany({
 				where: {
@@ -311,7 +310,6 @@ export class ChatService {
 		})
 		if (!channel)
 			throw new NotFoundException()
-		console.log(channel.users)
 		if (channel.users[0].userId == userId) {
 			let user = await this.prisma.user.findFirst({
 				where: {
@@ -335,7 +333,6 @@ export class ChatService {
 		{
 			return {"message": "pas de mp avec toi meme"}
 		}
-		console.log("de ", targetId, userId)
 		let channel = await this.prisma.channels.findFirst({
 			where: {
 				privacy: "PRIVATE",
@@ -360,7 +357,6 @@ export class ChatService {
 		else {
 			while (!channel || channel["message"]) {
 				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-				console.log(channelName);
 				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
 				if (channel["message"]) {
 					console.log(channel["message"]);
@@ -384,12 +380,10 @@ export class ChatService {
 				}
 			}
 		});
-		console.log(user)
 		return user;
 	}
 
 	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
-		console.log("inv game ")
 		const ret = await this.prisma.messages.create({
 			data: {
 				content: "Tu veux jouer ?",
@@ -472,15 +466,15 @@ export class ChatService {
 			throw new NotFoundException("User not found in this channel")
 		}
 		const targetStatus = await this.getUserStatus(channelId, targetId)
-		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
+		if (!targetStatus) {
+			throw new NotFoundException("User not found in this channel")
+		}
 		if (userStatus.status === "OWNER" && targetStatus.status !== "OWNER" && userId !== targetId) {
 			return true
 		}
-		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
 		if (userStatus.status === "ADMIN" && targetStatus.status !== "OWNER" && targetStatus.status !== "ADMIN" && userId !== targetId) {
 			return true
 		}
-		console.log("in checck: sender: ", userStatus, " target: ", targetStatus)
 		return false
 	}
 
@@ -604,6 +598,9 @@ export class ChatService {
 				const ret = await this.prisma.userChannelMap.update({
 					where: {
 						id: { channelId: channelId, userId: targetId },
+						status: {
+							not: "BANNED"
+						},
 						channel: {
 							privacy: {
 								not: "PRIVATE"
@@ -614,11 +611,41 @@ export class ChatService {
 						status: "BANNED"
 					}
 				});
+				console.log("ret ", ret)
 				Logger.log(`User [${targetId}] banned channel [${channelId}]`, "ChatService");
+				return {};
 			}
 			catch (e) {
 				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
-				throw new NotFoundException(`No entry found for user [${targetId}] in channel [${channelId}]`);
+				return { "message": "No entry found for user" + targetId +" in channel " +channelId};
+			}
+		}
+		else
+			return { "message": "Checkperm fail" }
+	}
+
+	async unban(channelId: number, userId: number, targetId: number) {
+		if (await this.checkPerm(channelId, targetId, userId)) {
+			if (channelId < 1 || Number.isNaN(channelId))
+				throw new BadRequestException(`Invalid channel id (${channelId})`);
+			try {
+				const ret = await this.prisma.userChannelMap.delete({
+					where: {
+						id: { channelId: channelId, userId: targetId },
+						status: "BANNED",
+						channel: {
+							privacy: {
+								not: "PRIVATE"
+							}
+						}
+					}
+				});
+				Logger.log(`User [${targetId}] unbanned channel [${channelId}]`, "ChatService");
+				return {}
+			}
+			catch (e) {
+				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
+				return { "message": "No entry found for user" + targetId +" in channel " +channelId};
 			}
 		}
 		else

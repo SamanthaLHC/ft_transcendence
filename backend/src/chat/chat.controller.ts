@@ -34,7 +34,6 @@ export class ChatController {
 	@UseGuards(AuthGuard)
 	@Post('new_message/:channelId')
 	async addNewMessage(@Param('channelId') channelId: string, @Body() newMessage: NewMessageDto, @Req() req): Promise<any> {
-		console.log("in control")
 		return await this.chatService.addNewMessage(+channelId, newMessage, req.user.sub);
 	}
 
@@ -99,8 +98,6 @@ export class ChatController {
 	@UseGuards(AuthGuard)
 	@Get('messages/:channelId')
 	async getChannelMessages(@Param('channelId') channelId: string, @Req() req): Promise<PrismaPromise<any>> {
-		console.log("in control getChannelMessages")
-		console.log(channelId)
 		return await this.chatService.getChannelMessages(+channelId, req.user.sub);
 	}
 
@@ -109,7 +106,6 @@ export class ChatController {
 	@UseGuards(AuthGuard)
 	@Post('channel/:channelId/mute')
 	async muteUser(@Param('channelId') channelId: string, @Body() data: MuteDto, @Req() req) {
-		console.log("in control muteUser; channelId: ", channelId)
 		return await this.chatService.muteUser(+channelId, data.targetName, +data.time, req.user.sub);
 	}
 
@@ -153,5 +149,11 @@ export class ChatController {
 	@Post('channel/:channelId/ban/:targetid')
 	async ban(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req) {
 		return await this.chatService.ban(+channelId, req.user.sub, +targetid);
+	}
+
+	@UseGuards(AuthGuard)
+	@Post('channel/:channelId/unban/:targetid')
+	async unban(@Param('channelId') channelId: string, @Param('targetid') targetid: string, @Req() req) {
+		return await this.chatService.unban(+channelId, req.user.sub, +targetid);
 	}
 }

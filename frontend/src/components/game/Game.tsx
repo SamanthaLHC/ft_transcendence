@@ -71,7 +71,6 @@ const Game: React.FC = () => {
 			setData(data)
 		});
 		socket.on('update', (data) => {
-			// console.log("balle ", data.posballex, data.posballey)
 			setData(data)
 		});
 		socket.on('aff_win', (data) => {
