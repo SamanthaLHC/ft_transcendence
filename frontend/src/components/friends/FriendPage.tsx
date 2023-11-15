@@ -14,11 +14,16 @@ const Profil: React.FC = () => {
 	const [block, setblock] = useState<boolean>(false);
 
 	const navToHome = useNavigate();
+	const navToChat = useNavigate();
 	const changeToHome = () => {
 		let pathHome: string = '/Home';
 		navToHome(pathHome);
 	}
 
+	const changeToProfile = () => {
+		let pathHome: string = '/profil';
+		navToHome(pathHome);
+	}
 
 	function getId(): string | null {
 		let url_str: string = window.location.search;
@@ -30,12 +35,6 @@ const Profil: React.FC = () => {
 	}
 
 	useEffect(() => {
-
-
-		const changeToProfile = () => {
-			let pathHome: string = '/profil';
-			navToHome(pathHome);
-		}
 		const checkme = async (id: string) => {
 			try {
 				let id_num: number = +id
@@ -203,6 +202,42 @@ const Profil: React.FC = () => {
 		}
 	}
 
+	const changeToChat = (id: string) => {
+		let pathChat: string = '/chat?mpid=' + id;
+		navToChat(pathChat);
+	}
+
+	const handleClickMP = () => {
+		const id = getId()
+		if (id)
+			changeToChat(id)
+	}
+
+	const handleClickGame = () => {
+		const id = getId()
+		if (!id)
+			changeToHome()
+		const req = new Request("http://localhost:3000/chat/channel/private/game/" + id, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${cookies.access_token}`,
+			},
+		});
+
+		fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				if (data) {
+					console.log("id ", id)
+					if (id)
+						changeToChat(id);
+				}
+			})
+			.catch((error) => {
+				console.error("Error fetching channels:", error);
+			});
+	}
+
 	return (
 		<React.Fragment>
 			<Header />
@@ -224,10 +259,10 @@ const Profil: React.FC = () => {
 							<button className="btn-size" onClick={handleClickblock}>{block ? "Unblock" : "block"}</button>
 						</div>
 						<div className='btn-pos'>
-							<button className="btn-size" >Direct Message</button>
+							<button className="btn-size" onClick={handleClickMP}>Direct Message</button>
 						</div>
 						<div className='btn-pos'>
-							<button className="btn-size" >Invite Game</button>
+							<button className="btn-size" onClick={handleClickGame}>Invite Game</button>
 						</div>
 					</div>
 					<div className='list-items'>

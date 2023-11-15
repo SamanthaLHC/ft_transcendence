@@ -61,6 +61,61 @@ const Settings: React.FC = () => {
 		}
 	};
 
+const handleClick = () => {
+	if (!active2fa)
+		enableTwofa();
+	else
+		disableTwofa();
+};
+
+//______________________________________________________________________________________
+//                           handle change name
+//______________________________________________________________________________________
+
+const handleTextareaKeyPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+	if (e.key === 'Enter') {
+		e.preventDefault(); // prevent newline to be added
+
+		if (inputValue) {
+			const obj = {
+				name: inputValue
+			};
+			const req: Request = new Request('http://localhost:3000/users/update_name', {
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+
+			try {
+				const response = await fetch(req);
+				if (!response.ok) {
+					alert("Invalid Name. Already exist or is not between 1 and 15 caracters.");
+				}
+				else {
+					updateUserData(userData.id, inputValue, userData.photo);
+				}
+			} catch (error) {
+				console.error(error);
+			}
+		}
+		setInputValue(''); //clear
+	}
+};
+
+//______________________________________________________________________________________
+//                           handle change avatar
+//______________________________________________________________________________________
+
+const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	if (e.target.files && e.target.files.length > 0) {
+		setFile(e.target.files[0]);
+	}
+};
+
+
 	const disableTwofa = async () => {
 		try {
 			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
@@ -81,61 +136,6 @@ const Settings: React.FC = () => {
 			console.error(error);
 		}
 	};
-
-	const handleClick = () => {
-		if (!active2fa)
-			enableTwofa();
-		else
-			disableTwofa();
-	};
-
-	//______________________________________________________________________________________
-	//                           handle change name
-	//______________________________________________________________________________________
-
-	const handleTextareaKeyPress = async (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-		if (e.key === 'Enter') {
-			e.preventDefault(); // prevent newline to be added
-
-			if (inputValue) {
-				const obj = {
-					name: inputValue
-				};
-				const req: Request = new Request('http://localhost:3000/users/update_name', {
-					method: "POST",
-					headers: {
-						"content-type": "application/json",
-						"Authorization": `Bearer ${cookies.access_token}`,
-					},
-					body: JSON.stringify(obj),
-				});
-
-				try {
-					const response = await fetch(req);
-					if (!response.ok) {
-						alert("Invalid Name. Already exist or is not between 1 and 15 caracters.");
-					}
-					else {
-						updateUserData(userData.id, inputValue, userData.photo);
-					}
-				} catch (error) {
-					console.error(error);
-				}
-			}
-			setInputValue(''); //clear
-		}
-	};
-
-	//______________________________________________________________________________________
-	//                           handle change avatar
-	//______________________________________________________________________________________
-
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files && e.target.files.length > 0) {
-			setFile(e.target.files[0]);
-		}
-	};
-
 
 	useEffect(() => {
 		const uploadAvatar = async () => {
@@ -177,42 +177,7 @@ const Settings: React.FC = () => {
 	}, [file, oldfile, cookies.access_token, userData, updateUserData]);
 
 
-	//______________________________________________________________________________________
-	//                           handle change avatar
-	//______________________________________________________________________________________
 
-	useEffect(() => {
-		if (file) {
-			uploadAvatar();
-		}
-	}, [file]);
-
-	const uploadAvatar = async () => {
-		if (file) {
-			const formData = new FormData();
-			formData.append('file', file);
-			try {
-				const req = new Request("http://localhost:3000/users/upload", {
-					method: "POST",
-					headers: {
-						Authorization: `Bearer ${cookies.access_token}`,
-					},
-					body: formData,
-				});
-
-				const response = await fetch(req);
-				if (response.ok) {
-					const responseStr = await response.text();
-					updateUserData(userData.id, userData.name, responseStr);
-				} else {
-					alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
-				}
-			} catch (error) {
-				console.error(error);
-				alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
-			}
-		}
-	};
 
 	return (
 		<React.Fragment>

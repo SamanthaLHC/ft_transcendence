@@ -14,6 +14,7 @@ import { ChatSocketProvider, UserProvider } from "../Context"
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useCookies } from 'react-cookie';
+import GameF from "../gamefriend/GameF";
 
 const App: React.FC = () => {
 
@@ -34,12 +35,13 @@ const App: React.FC = () => {
 				console.log('Connected to server');
 			});
 			return () => {
-			if (socket) {
-				socket.disconnect();
-			}
+				if (socket) {
+					socket.disconnect();
+				}
 			}
 		}
 	}, [cookies.access_token]);
+
 	return (
 		<UserProvider>
 		<ChatSocketProvider>
@@ -52,6 +54,7 @@ const App: React.FC = () => {
 				<Route path={"/profil"} element={<Profil />} />
 				<Route path={"/friend"} element={<FriendPage />} />
 				<Route path={"/2fa"} element={<TwoFa />} />
+				<Route path={"/gamefriend"} element={<GameF />} />
 				<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
 				<Route path={"*"} element={<Error />} />
 			</Routes>

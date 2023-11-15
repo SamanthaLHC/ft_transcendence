@@ -287,11 +287,11 @@ export class UsersService {
     }
 
     async updateAvatar(id: number, url: string) {
-        await this.prisma.user.update({
-            where: { id: id },
-            data: { photo: url }
-        })
-        return url;
+		await this.prisma.user.update({
+			where: { id: id },
+			data: { photo: url }
+		})
+		return url;
     }
     async updateName(id: number, name: string) {
         if (name.length > 15)

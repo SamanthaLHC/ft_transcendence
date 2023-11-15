@@ -6,11 +6,14 @@ import { useCookies } from "react-cookie";
 import CreateChannelForm from "./CreateChannelForm";
 import ChannelButton from "./ChannelButton";
 import { useChatSocket } from "../../Context";
+import { useNavigate } from "react-router-dom";
 
 interface Channel {
 	id: number;
 	name: string;
+	displayname: string;
 	privacy: string;
+	joined: boolean;
 }
 
 const Channels: React.FC = () => {
@@ -21,16 +24,31 @@ const Channels: React.FC = () => {
 	const [channelCreated, setChannelCreated] = useState(false);
 	const socket = useChatSocket()
 
+	function getId(): string | null {
+		let url_str: string = window.location.search;
+		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
+		let code_param: string | null = strToSearch.get("mpid");
+		console.log(code_param)
+		return code_param;
+	}
+
+	const navToHome = useNavigate();
+	const tochat = () => {
+		let pathHome: string = '/chat';
+		navToHome(pathHome);
+	}
+
+
 	const handleSearchChange = (query: string) => {
 		setSearchQuery(query);
 	};
-	
+
 	useEffect(() => {
 		async function getChannels() {
 			let uri_str: string
 			if (searchQuery === '')
 				uri_str = 'http://localhost:3000/chat/channels/joined'
-			else 
+			else
 				uri_str = 'http://localhost:3000/chat/channel?search=' + searchQuery
 
 			const req = new Request(uri_str, {
@@ -40,14 +58,47 @@ const Channels: React.FC = () => {
 				},
 			});
 
-
 			return fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
+					console.log(data);
 					const fetchedChannels = data.map((item: any) => {
-						return item as Channel;
+						let newchan:Channel = item
+						newchan.displayname = item.name
+						console.log("coucou ", newchan)
+						return newchan;
 					});
 					setChannels(fetchedChannels);
+				})
+				.catch((error) => {
+					console.error("Error fetching channels:", error);
+				});
+		}
+
+		const id = getId()
+		if (id) {
+			const req = new Request("http://localhost:3000/chat/channel/private/create/" + id, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${cookies.access_token}`,
+				},
+			});
+
+			fetch(req)
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.name) {
+						tochat()
+						socket.socket.emit('change_room', data.name);
+						socket.channel = data
+						socket.socket.emit('update', "coucou")
+						getChannels()
+					}
+					else
+					{
+						console.log("nop")
+						tochat()
+					}
 				})
 				.catch((error) => {
 					console.error("Error fetching channels:", error);
@@ -112,34 +163,34 @@ const Channels: React.FC = () => {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	
+
 	return (
 		<React.Fragment>
-		  <div className="channels">
-			<h5 className="typo-channel yellow">
-			  Channels
-			  <IconButton
-				className="add-button"
-				aria-controls={open ? "basic-menu" : undefined}
-				aria-haspopup="true"
-				aria-expanded={open ? "true" : undefined}
-				onClick={handleClick}
-			  >
-				<AddCircleIcon />
-			  </IconButton>
-			  <CreateChannelForm isOpen={open} onSubmit={handleSubmit} />
-			</h5>
-			<SearchBar onSearchChange={handleSearchChange} updateChannels={handleUpdateChannels} />
-	
-			<div>
-			  <ul className="typo yellow list">
-				{channels.map((chan) => (
-				  <ChannelButton key={chan.name} channel={chan} />
-				))}
-			  </ul>
+			<div className="channels">
+				<h5 className="typo-channel yellow">
+					Channels
+					<IconButton
+						className="add-button"
+						aria-controls={open ? "basic-menu" : undefined}
+						aria-haspopup="true"
+						aria-expanded={open ? "true" : undefined}
+						onClick={handleClick}
+					>
+						<AddCircleIcon />
+					</IconButton>
+					<CreateChannelForm isOpen={open} onSubmit={handleSubmit} />
+				</h5>
+				<SearchBar onSearchChange={handleSearchChange} updateChannels={handleUpdateChannels} />
+
+				<div>
+					<ul className="typo yellow list">
+						{channels.map((chan) => (
+							<ChannelButton key={chan.id} channel={chan} />
+						))}
+					</ul>
+				</div>
 			</div>
-		  </div>
 		</React.Fragment>
-	  );
+	);
 }
 export default Channels;
