@@ -59,6 +59,11 @@ const WindowChat: React.FC = () => {
 
 		return () => {
 			if (socket) {
+				socket.channel = {
+					id: -1,
+					name: "",
+					privacy: ""
+				}
 				socket.socket.disconnect();
 			}
 		};
