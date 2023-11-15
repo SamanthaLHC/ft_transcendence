@@ -3,6 +3,7 @@ import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MuteForm from './MuteForm';
+import PwdForm from './PwdForm';
 
 interface CmdDialogProps {
 	isOpen: boolean;
@@ -15,8 +16,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [isOwner, setIsOwner] = useState(false);
 	const [isMuteFormOpen, setIsMuteFormOpen] = useState(false);
-	const [muteTime, setMuteTime] = useState(0);
-	const [isMuteButtonActive, setIsMuteButtonActive] = useState(true);
+	const [isPwdFormOpen, setPwdFormOpen] = useState(false);
 	const [cookies] = useCookies(['access_token']);
 	const socket = useChatSocket();
 	const { isOpen, onClose } = props;
@@ -212,7 +212,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			return 1
 		}
-		catch {return 0}
+		catch { return 0 }
 	}
 
 	const unban = async (channelid: number, targetId: number) => {
@@ -232,7 +232,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			return 1
 		}
-		catch {return 0 }
+		catch { return 0 }
 	}
 
 	const handleClickkick = async () => {
@@ -414,7 +414,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				else
 					alert("test")
 			}
-			catch { alert("Not banned")}
+			catch { alert("Not banned") }
 		}
 	}
 
@@ -607,6 +607,42 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	};
 
+	// ____________________________________________handle password__________________
+
+	const handleClickSetPwd = () => {
+		setPwdFormOpen(!isPwdFormOpen);
+	};
+
+	const submitPwd = async (newPwd: string) => {
+
+		setPwdFormOpen(false);
+
+		const obj = {
+			privacy: "PASSWORD_PROTECTED",
+			password: newPwd
+		};
+
+		try {
+			const req: Request = new Request(`http://localhost:3000/chat/channel/${channelId}/edit`, {
+				method: "POST",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+			const response = await fetch(req);
+			const datas = await response.json();
+			if (datas.message)
+				alert(datas.message);
+			else
+				alert(`Password succefully set`);
+
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
 	if (!isOpen) {
 		return null;
 	}
@@ -628,16 +664,14 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				/>
 				<div>
 					{isOwner && (
-						<div>
-							<div className="form-owner-section">
-								<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
-								<button className="btn-dialog" onClick={handleClickUnsetAdmin}>Unset as admin</button>
-							</div>
-							<div className="form-owner-section">
-								<button className="chan-action-btn"> set channel name</button>
-								<button className="chan-action-btn"> set password</button>
-								<button className="chan-action-btn"> unset password</button>
-							</div>
+						<div className="form-owner-section">
+							<button className="btn-dialog" onClick={handleClickAdmin}>Set as admin</button>
+							<button className="btn-dialog" onClick={handleClickUnsetAdmin}>Unset as admin</button>
+							<button className="chan-action-btn" onClick={handleClickSetPwd}> set password</button>
+							{isPwdFormOpen && (
+								<PwdForm isOpen={isPwdFormOpen} onSubmit={submitPwd} />
+							)}
+							<button className="chan-action-btn"> unset password</button>
 						</div>
 					)}
 					<div className="form-regular-user-section">

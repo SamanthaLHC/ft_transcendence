@@ -562,13 +562,13 @@ export class ChatService {
 		if (!status)
 			throw new NotFoundException();
 		if (status.status != "OWNER") {
-			throw new UnauthorizedException("You are not the owner");
+			return {message: "You are not the owner of the channel"};
 		}
 		let hashedPassword = null;
 		if (dto.privacy === "PASSWORD_PROTECTED") {
 			hashedPassword = await bcrypt.hash(dto.password, this.saltOrRounds);
 		}
-		await this.prisma.channels.update({
+		return await this.prisma.channels.update({
 			where: {
 				id: channelId
 			},
