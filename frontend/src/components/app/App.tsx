@@ -26,7 +26,6 @@ const App: React.FC = () => {
 		const socket = io('http://localhost:3000/status', {
 			autoConnect: false,
 		});
-		console.log(cookies.access_token)
 		if (cookies.access_token) {
 			let token = cookies.access_token;
 			socket.auth = { token };

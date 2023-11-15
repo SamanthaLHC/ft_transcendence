@@ -31,9 +31,6 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 	}
 
 	const joinChannel = (channel: Channel, password?: string) => {
-
-		console.log('I must join', channel.name, '(ID:', channel.id, ')');
-		console.log(channel);
 		const body = {
 			password: '',
 			privacy: channel.privacy,
@@ -46,9 +43,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 				return;
 			}
 		}
-		console.log("channel joined ", channel.joined)
 		if (channel.joined === false) {
-			console.log('joining channel')
 			const req = new Request("http://localhost:3000/chat/channel/join/" + channel.id, {
 				method: "POST",
 				headers: {
@@ -61,11 +56,9 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 				.then((response) => response.json())
 				.then((data) => {
 					if (data.message) { // if error
-						console.log(data.message);
 						alert(data.message);
 					}
 					else {
-						console.log('successfully joined');
 						channel.joined = true;
 						changeChannel(channel);
 					}
@@ -74,9 +67,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 					console.log(error);
 				});
 		}
-		else
-		{
-			console.log('user already in channel');
+		else {
 			changeChannel(channel);
 		}
 	}
@@ -103,12 +94,11 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
-	
+
 			await fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
 					if (data) { // if error
-						console.log("return ", data.name)
 						setDisplayName("[DM] " + data.name);
 						// socket.channel.name = "[DM] " + data.name
 					}
@@ -117,14 +107,14 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 					console.error("Error fetching channels:", error);
 				});
 		};
-        const fetchData = async () => {
-            if (channel.privacy === "PRIVATE") {
-                await getnamedm(channel.id);
-            }
-        };
+		const fetchData = async () => {
+			if (channel.privacy === "PRIVATE") {
+				await getnamedm(channel.id);
+			}
+		};
 
-        fetchData();
-    }, [channel]);
+		fetchData();
+	}, [channel]);
 	return (
 		<ListItem className="yellow">
 			<button className="profil-button" onClick={handleChannelClick}>
