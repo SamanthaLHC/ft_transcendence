@@ -65,6 +65,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 					}
 					else {
 						console.log('successfully joined');
+						channel.joined = true;
 						changeChannel(channel);
 					}
 				})
