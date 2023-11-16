@@ -15,6 +15,7 @@ import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { useCookies } from 'react-cookie';
 import GameF from "../gamefriend/GameF";
+import ErrorCafe from "../errorcafe/Error";
 
 const App: React.FC = () => {
 
@@ -56,6 +57,7 @@ const App: React.FC = () => {
 				<Route path={"/2fa"} element={<TwoFa />} />
 				<Route path={"/gamefriend"} element={<GameF />} />
 				<Route path="/qrcode/:imageUrl" element={<TwoFaQRCodePage imageUrl={imageUrl} />} />
+				<Route path={"/cafe"} element={<ErrorCafe />} />
 				<Route path={"*"} element={<Error />} />
 			</Routes>
 		</ChatSocketProvider>
