@@ -4,10 +4,14 @@ import { useCookies } from 'react-cookie';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MuteForm from './MuteForm';
 import PwdForm from './PwdForm';
-
+interface Channel {
+	id: number;
+	name: string;
+	privacy: string;
+}
 interface CmdDialogProps {
 	isOpen: boolean;
-	channelId: number;
+	channel: Channel;
 	onClose: () => void;
 }
 
@@ -20,7 +24,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [cookies] = useCookies(['access_token']);
 	const socket = useChatSocket();
 	const { isOpen, onClose } = props;
-	const { channelId } = props;
+	const { channel } = props;
 
 	const navToFriend = useNavigate();
 	const changeToFriend = (id: number) => {
@@ -32,7 +36,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -106,7 +110,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -140,7 +144,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -180,7 +184,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	}
 
 	const kick = async (channelid: number, targetId: number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/' + channelid + '/kick/' + targetId, {
+		const req: Request = new Request('http://localhost:3000/chat/channel/' + channel.id + '/kick/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -200,7 +204,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	}
 
 	const ban = async (channelid: number, targetId: number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/' + channelid + '/ban/' + targetId, {
+		const req: Request = new Request('http://localhost:3000/chat/channel/' + channel.id + '/ban/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -220,7 +224,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	}
 
 	const unban = async (channelid: number, targetId: number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/' + channelid + '/unban/' + targetId, {
+		const req: Request = new Request('http://localhost:3000/chat/channel/' + channel.id + '/unban/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -243,7 +247,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -257,7 +261,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
-					if (await kick(channelId, datas.userId)) {
+					if (await kick(channel.id, datas.userId)) {
 						const body = {
 							msg: "Kick " + inputValue,
 						};
@@ -293,7 +297,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -321,7 +325,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -338,7 +342,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					if (datas.status === "BANNED") {
 						alert("Already banned")
 					}
-					else if (await ban(channelId, datas.userId)) {
+					else if (await ban(channel.id, datas.userId)) {
 						const body = {
 							msg: "Ban " + inputValue,
 						};
@@ -374,7 +378,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		if (inputValue !== "\n" && inputValue !== "") {
 			const obj = {
 				name: inputValue,
-				ChannelId: channelId
+				ChannelId: channel.id
 			};
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
@@ -390,7 +394,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				if (datas) {
 					if (datas.status !== "BANNED")
 						alert("Not banned")
-					else if (await unban(channelId, datas.userId)) {
+					else if (await unban(channel.id, datas.userId)) {
 						const body = {
 							msg: "UnBan " + inputValue,
 						};
@@ -587,7 +591,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			};
 
 			try {
-				const req: Request = new Request(`http://localhost:3000/chat/channel/${channelId}/mute`, {
+				const req: Request = new Request(`http://localhost:3000/chat/channel/${channel.id}/mute`, {
 					method: "POST",
 					headers: {
 						"content-type": "application/json",
@@ -624,7 +628,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		};
 
 		try {
-			const req: Request = new Request(`http://localhost:3000/chat/channel/${channelId}/edit`, {
+			const req: Request = new Request(`http://localhost:3000/chat/channel/${channel.id}/edit`, {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",
@@ -652,7 +656,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		};
 
 		try {
-			const req: Request = new Request(`http://localhost:3000/chat/channel/${channelId}/edit`, {
+			const req: Request = new Request(`http://localhost:3000/chat/channel/${channel.id}/edit`, {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",
@@ -676,7 +680,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 	const handleClickLeave = async () => {
 		try {
-			const req: Request = new Request(`http://localhost:3000/chat/channel/leave/${channelId}`, {
+			const req: Request = new Request(`http://localhost:3000/chat/channel/leave/${channel.id}`, {
 				method: "DELETE",
 				headers: {
 					"content-type": "application/json",
@@ -749,7 +753,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						</div>
 					)}
 					<div className="form-regular-user-section">
-						<button className="chan-action-btn" onClick={handleClickLeave}>Leave chan</button>
+						{(channel.privacy !== "PRIVATE") &&
+							<button className="chan-action-btn" onClick={handleClickLeave}>Leave chan</button>
+						}
 					</div>
 				</div>
 			</div>
