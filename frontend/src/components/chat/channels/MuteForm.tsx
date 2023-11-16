@@ -36,8 +36,8 @@ const MuteForm: React.FC<MuteFormProps> = ({ isOpen, onSubmit }) => {
                         type="number"
                         id="time"
                         value={time}
-                        min = "0"
-                        max = "86400"
+                        min="0"
+                        max="86400"
                         onChange={(event) => {
                             const inputValue = event.target.value;
                             if (/^\d+$/.test(inputValue) || inputValue === '') {

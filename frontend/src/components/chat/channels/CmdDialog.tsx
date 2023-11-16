@@ -597,7 +597,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				});
 				const response = await fetch(req);
 				const datas = await response.json();
-				console.log("datas is: ", datas);
 				if (datas.message)
 					alert(datas.message);
 				else
@@ -716,7 +715,8 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				<input
 					className='input-pos'
 					type="text"
-					placeholder="User login"
+					maxLength={15}
+					placeholder="User name"
 					onChange={(e) => setInputValue(e.target.value)}
 				/>
 				<div>
@@ -740,7 +740,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					{(isAdmin || isOwner) && (
 						<div className="form-admin-section">
 							<button className="btn-dialog" onClick={handleClickban}>Ban</button>
-							<button className="btn-dialog">Unban</button>
+							<button className="btn-dialog" onClick={handleClickunban}>Unban</button>
 							<button className="btn-dialog" onClick={handleClickkick}>Kick</button>
 							<button className="btn-dialog" onClick={handleMuteClick}>Mute</button>
 							{isMuteFormOpen && (

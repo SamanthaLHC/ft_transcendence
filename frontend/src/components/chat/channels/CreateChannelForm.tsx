@@ -36,6 +36,7 @@ const CreateChannelForm: React.FC<CreateChannelFormProps> = ({ isOpen, onSubmit 
 					<input
 						type="text"
 						id="name"
+						maxLength={100}
 						value={name}
 						onChange={(event) => setName(event.target.value)}
 						style={{ width: '150px' }}
@@ -65,6 +66,7 @@ const CreateChannelForm: React.FC<CreateChannelFormProps> = ({ isOpen, onSubmit 
 						<input
 							type="password"
 							id="password"
+							maxLength={100}
 							value={password}
 							onChange={(event) => setPassword(event.target.value)}
 							style={{ width: '150px' }}

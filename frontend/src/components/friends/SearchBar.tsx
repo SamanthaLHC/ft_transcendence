@@ -17,7 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange, updateUsers }) =>
 		setSearchText(value);
 		onSearchChange(value);
 	};
-	
+
 	const handleClick = () => {
 		onSearchChange(searchText);
 		updateUsers(true);
@@ -31,6 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange, updateUsers }) =>
 				value={searchText}
 				onChange={handleSearchChange}
 				style={{ backgroundColor: '#42464f' }}
+				inputProps={{ maxLength: 100 }}
 				InputProps={{
 					style: { color: '#ffc107' }, // Set la couleur du texte à #ffc107 (jaune)
 					endAdornment: (

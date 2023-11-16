@@ -35,6 +35,7 @@ const PwdForm: React.FC<PwdFormProps> = ({ isOpen, onSubmit }) => {
                     <input
                         type="password"
                         id="password"
+                        maxLength={100}
                         value={password}
                         onChange={(event) => { setPwd(event.target.value) }}
                         className="form-input"

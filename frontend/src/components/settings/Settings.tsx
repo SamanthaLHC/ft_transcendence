@@ -193,6 +193,7 @@ const Settings: React.FC = () => {
 								id="inputName"
 								name="inputName"
 								value={inputValue}
+								maxLength={15}
 								onChange={(e) => setInputValue(e.target.value)}
 								onKeyDown={handleTextareaKeyPress}
 							/>
