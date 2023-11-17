@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import ducky from '../../assets/duck-no.gif'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
 import MatchHistory from './MatchHistory'
-import { Avatar, Badge, Divider, Typography, styled } from '@mui/material'
 import { useCookies } from 'react-cookie'
-import { NavigateFunction, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import WinsAndLoses from './WinsAndLoses'
 import Statusconnect from './Statusconnect'
-import { userInfo } from 'os'
-import { socket } from '../Context'
 
 const Profil: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
@@ -52,7 +48,7 @@ const Profil: React.FC = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				console.log(datas)
-				if (datas.id == id_num) {
+				if (datas.id === id_num) {
 					changeToProfile()
 				}
 			}
@@ -72,11 +68,11 @@ const Profil: React.FC = () => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
-					if (datas.status == "FRIEND") {
+					if (datas.status === "FRIEND") {
 						setFriend(true)
 						setblock(false)
 					}
-					else if (datas.status == "BLOCKED") {
+					else if (datas.status === "BLOCKED") {
 						setFriend(false)
 						setblock(true)
 					}
@@ -95,13 +91,7 @@ const Profil: React.FC = () => {
 			checkme(id)
 			initstatusfa(id);
 		}
-	}, [cookies.access_token, setFriend, setblock, getId]);
-
-	const navToLogin: NavigateFunction = useNavigate();
-	const changeToLogin = () => {
-		let pathLogin: string = '/';
-		navToLogin(pathLogin);
-	}
+	}, [cookies.access_token, setFriend, setblock, getId, navToHome]);
 
 
 	useEffect(() => {
@@ -125,7 +115,7 @@ const Profil: React.FC = () => {
 		let id = getId()
 		if (id)
 			getUserInfo(id);
-	}, [cookies.access_token, getId()]);
+	}, [cookies.access_token, getId, changeToHome]);
 	if (!userInfos) {
 		return null
 	}

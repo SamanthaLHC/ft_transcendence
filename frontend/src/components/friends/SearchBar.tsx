@@ -6,10 +6,9 @@ import { useState } from 'react';
 
 interface SearchBarProps {
 	onSearchChange: (query: string) => void;
-	updateUsers: (dummyState: boolean) => void;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange, updateUsers }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
 	const [searchText, setSearchText] = useState('');
 
 	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +19,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange, updateUsers }) =>
 	
 	const handleClick = () => {
 		onSearchChange(searchText);
-		updateUsers(true);
 	}
 	return (
 		<div>

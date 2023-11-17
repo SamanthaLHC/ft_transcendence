@@ -22,26 +22,29 @@ const WindowChat: React.FC = () => {
 	const { userData } = useUser();
 	const [displayName, setDisplayName] = useState("");
 
-	//Socket
-
 	const navTo = useNavigate();
-	const changetogamefriend = (id:string) => {
+	const changetogamefriend = (id: string) => {
 		navTo("/gamefriend?id=" + id)
 	}
+
 	useEffect(() => {
-		// , {
-		// 	autoConnect: false,
-		//   });
+		console.log("socket: ", socket.socket)
 		let token = cookies.access_token;
 		socket.socket.auth = { token };
 		socket.socket.connect()
-		// setSocket(socketInstance);
 
-		// listen for events emitted by the server
+		return () => {
+			if (socket.socket) {
+				console.log("Chat disconnected")
+				socket.socket.disconnect();
+			}
+		};
+	}, []);
 
+	useEffect(() => {
 		socket.socket.on('connect', () => {
-			console.log('Chat connected to server');
-		});
+			console.log('Chat connected to server', socket);
+		})
 
 		socket.socket.on('accgame', (data) => {
 			changetogamefriend(data)
@@ -50,13 +53,11 @@ const WindowChat: React.FC = () => {
 		socket.socket.on('update_front', () => {
 			updateMessages();
 		});
-
 		return () => {
-			if (socket) {
-				socket.socket.disconnect();
-			}
-		};
-	}, []);
+			socket.socket.off('connect')
+			socket.socket.off('update_front')
+		}
+	}, [])
 
 	useEffect(() => {
 		if (messageRef.current) {
@@ -79,8 +80,8 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 					return;
 				const fetchedMessages = data.map((item: any) => {
-					const tmp:Message = {
-						id:	item.id,
+					const tmp: Message = {
+						id: item.id,
 						sender: item.sender.name,
 						senderId: item.sender.id,
 						msg: item.content,
@@ -152,7 +153,7 @@ const WindowChat: React.FC = () => {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
-	
+
 			await fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
@@ -166,27 +167,27 @@ const WindowChat: React.FC = () => {
 					console.error("Error fetching channels:", error);
 				});
 		};
-        const fetchData = async () => {
-            if (socket.channel.privacy === "PRIVATE") {
-                await getnamedm(socket.channel.id);
-            }
+		const fetchData = async () => {
+			if (socket.channel.privacy === "PRIVATE") {
+				await getnamedm(socket.channel.id);
+			}
 			else
 				setDisplayName("");
-        };
+		};
 
-        fetchData();
-    }, [socket.channel]);
+		fetchData();
+	}, [socket.channel]);
 
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ displayName || socket.channel.name }
+				{displayName || socket.channel.name}
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 					{messages.map((message, index) => (
-						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<MessageChat message={message}/>
+						<li key={index} className={message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<MessageChat message={message} />
 						</li>
 					))}
 				</ul>
@@ -196,8 +197,8 @@ const WindowChat: React.FC = () => {
 					onChange={(e) => setInputValue(e.target.value)}
 					onKeyDown={handleSendKey} />
 				<button className="send-button" onClick={handleSendClick}> SEND </button>
-			</div>
-		</div>
+			</div >
+		</div >
 	)
 }
 

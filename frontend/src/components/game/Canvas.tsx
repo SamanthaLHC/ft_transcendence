@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import duck from '../../assets/duck.png'
 import pad from '../../assets/pad.png'
 
@@ -29,8 +29,6 @@ type CanvasProps = {
     imgpad.src = pad
     let imgpadd = new Image();
     imgpadd.src = pad
-    let oldposjdroite = 4
-    let oldposjgauche = 4
     const drawgauchepad = (rect: CanvasRenderingContext2D, wight: number, height: number) => {
         rect.fillStyle = 'red';
         rect.fillRect(0, data.jgauche*height/10, 2*wight/100, 20*height/100);
@@ -109,7 +107,7 @@ type CanvasProps = {
                 context.closePath()
             }
         }
-    let {innerWidth, innerHeight} = window;
+    let {innerWidth} = window;
     return (
         <div>
             <canvas ref={canvasRef} width={innerWidth/1.5} height={innerWidth/1.5/2} />

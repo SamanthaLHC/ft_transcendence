@@ -12,6 +12,7 @@ const Settings: React.FC = () => {
 	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
+	const [oldfile, setOldFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 
@@ -52,34 +53,13 @@ const Settings: React.FC = () => {
 			const datas = await response.json();
 			const imageBlob = await fetch(datas.otpAuthUrl).then((r) => r.blob()); // Fetch image as a Blob
 			const imageUrl = window.URL.createObjectURL(imageBlob); // Create a URL for the Blob
-		navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
-		// setActive2fa(true);
-	}
+			navigate(`/qrcode/${encodeURIComponent(imageUrl)}`);
+			// setActive2fa(true);
+		}
 		catch (error) {
-		console.error(error);
-	}
-};
-
-const disableTwofa = async () => {
-	try {
-		const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
-			method: 'POST',
-			headers: {
-				Authorization: `Bearer ${cookies.access_token}`,
-			},
-		});
-		const response = await fetch(req);
-		if (response.ok) {
-			setActive2fa(false);
+			console.error(error);
 		}
-		else {
-			console.error(`Request failed with status: ${response.status}`);
-		}
-	}
-	catch (error) {
-		console.error(error);
-	}
-};
+	};
 
 const handleClick = () => {
 	if (!active2fa)
@@ -135,84 +115,113 @@ const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 	}
 };
 
-useEffect(() => {
-	if (file) {
-		uploadAvatar();
-	}
-}, [file]);
 
-
-const uploadAvatar = async () => {
-	if (file) {
-		const formData = new FormData();
-		formData.append('file', file);
+	const disableTwofa = async () => {
 		try {
-			const req = new Request("http://localhost:3000/users/upload", {
-				method: "POST",
+			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
+				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
-				body: formData,
 			});
-
 			const response = await fetch(req);
 			if (response.ok) {
-				const responseStr = await response.text();
-				updateUserData(userData.id, userData.name, responseStr);
-			} else {
-				alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+				setActive2fa(false);
 			}
-		} catch (error) {
-			console.error(error);
-			alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+			else {
+				console.error(`Request failed with status: ${response.status}`);
+			}
 		}
+		catch (error) {
+			console.error(error);
+		}
+	};
 
-	}
-};
+	useEffect(() => {
+		const uploadAvatar = async () => {
+			if (file) {
+				const formData = new FormData();
+				formData.append('file', file);
+				const req = new Request("http://localhost:3000/users/upload", {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+					body: formData,
+				});
+				fetch(req)
+					.then((response) => {
+						if (response.ok) {
+							const responseStr = response.text();
+							return responseStr
+						} else {
+							alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+							return null
+						}
+					})
+					.then((data) => {
+						if (data) {
+							updateUserData(userData.id, userData.name, data);
+						}
+					})
+					.catch((error) => {
+						console.error(error);
+						alert("Invalid file: correct format are: (image/png, image/jpeg, image/gif).");
+					})
+			}
+		};
+		if (file && file !== oldfile) {
+			uploadAvatar()
+			setOldFile(file)
+		}
+	}, [file, oldfile, cookies.access_token, userData, updateUserData]);
 
-return (
-	<React.Fragment>
-		<Header />
-		<div id="container">
-			<Friends />
-			<div className='content-page'>
-				<div className='list-items'>
-					<div className='change-name'>
-						<h3 className='typo-settings'> Change your name: </h3>
-						<br />
-						<textarea id="inputName" name="inputName" value={inputValue}
-							onChange={(e) => setInputValue(e.target.value)}
-							onKeyDown={handleTextareaKeyPress}
-						/>
-					</div >
-					<div className='btn-pos '>
-						<button className="btn-size" onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
+
+
+
+	return (
+		<React.Fragment>
+			<Header />
+			<div id="container">
+				<Friends />
+				<div className='content-page'>
+					<div className='list-items'>
+						<div className='change-name'>
+							<h3 className='typo-settings'> Change your name: </h3>
+							<br />
+							<textarea id="inputName" name="inputName" value={inputValue}
+								onChange={(e) => setInputValue(e.target.value)}
+								onKeyDown={handleTextareaKeyPress}
+							/>
+						</div >
+						<div className='btn-pos '>
+							<button className="btn-size" onClick={handleClick}>{active2fa ? "Disable 2fa" : "Enable 2fa"}</button>
+						</div>
+						<div className='btn-pos'>
+							<button className="btn-size" >game option 1</button>
+						</div>
+						<div className='btn-pos'>
+							<button className="btn-size">game option 2</button>
+						</div>
 					</div>
-					<div className='btn-pos'>
-						<button className="btn-size" >game option 1</button>
-					</div>
-					<div className='btn-pos'>
-						<button className="btn-size">game option 2</button>
-					</div>
-				</div>
-				<div className='list-items'>
-					<div className='btn-pos'>
-						<button className="btn-size" onClick={() => document.getElementById('fileInput')?.click()}>
-							Change your avatar
-						</button>
-						<input
-							id="fileInput"
-							type="file"
-							accept="image/png,image/jpeg,image/gif"
-							style={{ display: 'none' }}
-							onChange={handleFileChange}
-						/>
+					<div className='list-items'>
+						<div className='btn-pos'>
+							<button className="btn-size" onClick={() => document.getElementById('fileInput')?.click()}>
+								Change your avatar
+							</button>
+							<input
+								id="fileInput"
+								type="file"
+								accept="image/png,image/jpeg,image/gif"
+								style={{ display: 'none' }}
+								onChange={handleFileChange}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</React.Fragment >
-);
+		</React.Fragment >
+	);
 };
 
 export default Settings;

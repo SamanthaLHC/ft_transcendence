@@ -78,7 +78,7 @@ const Statusconnectlist: React.FC<StatusProps> = ({photo, status}) => {
         height: '15px',
         border: `2px solid ${theme.palette.background.paper}`,
     }));
-    if (status == "CONNECTED") {
+    if (status === "CONNECTED") {
         return (
             <React.Fragment>
                 <StyledBadgeconnect
@@ -91,7 +91,7 @@ const Statusconnectlist: React.FC<StatusProps> = ({photo, status}) => {
 
         )
     }
-    else if (status == "DISCONNECTED") {
+    else if (status === "DISCONNECTED") {
         return (
             <React.Fragment>
                 <StyledBadgedisconnect
