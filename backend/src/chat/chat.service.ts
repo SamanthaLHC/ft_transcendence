@@ -597,7 +597,7 @@ export class ChatService {
 			this.leaveChannel(channelId, targetId);
 		}
 		else
-			return { "message": "Checkperm fail" }
+			return { "message": "You can't kick this user" }
 	}
 
 	async ban(channelId: number, userId: number, targetId: number) {
