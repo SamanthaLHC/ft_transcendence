@@ -488,7 +488,9 @@ export class ChatService {
 		if (!targetUser) {
 			return { message: "User not found in this channel" }
 		}
-
+		if (userId === targetUser.userId) {
+			return { "message": "You can't mute yourself"}
+		}
 		if (await this.checkPerm(channelId, targetUser.userId, userId)) {
 			return await this.prisma.userChannelMap.update({
 				where: {
@@ -599,6 +601,8 @@ export class ChatService {
 		if (await this.checkPerm(channelId, targetId, userId)) {
 			this.leaveChannel(channelId, targetId);
 		}
+		else if (targetId == userId)
+			return { "message": "You can't kick yourself" }
 		else
 			return { "message": "You don´t have the permission to kick this user" }
 	}
@@ -663,6 +667,8 @@ export class ChatService {
 				return { "message": "No entry found for user" + targetId + " in channel " + channelId };
 			}
 		}
+		else if (targetId == userId)
+			return { "message": "You can't unban yourself" }
 		else
 			return { "message": "You have not the permission to unban this user" }
 	}
