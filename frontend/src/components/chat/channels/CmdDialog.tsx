@@ -155,10 +155,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				body: JSON.stringify(obj),
 			});
 			try {
-				navToChat("/home")
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				if (datas.userId) {
+					navToChat("/home")
 					const req = new Request("http://localhost:3000/chat/channel/private/game/" + datas.userId, {
 						method: "POST",
 						headers: {
@@ -179,7 +179,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						});
 				}
 			}
-			catch { }
+			catch { alert("Not in channel") }
 		}
 	}
 
