@@ -431,7 +431,10 @@ export class ChatService {
 				channelId: channelId,
 				user: {
 					name: name,
-				}
+				},
+				status: {
+					not: "BANNED"
+				},
 			}
 
 		});
@@ -597,7 +600,7 @@ export class ChatService {
 			this.leaveChannel(channelId, targetId);
 		}
 		else
-			return { "message": "You have not the permission to kick this user" }
+			return { "message": "You don´t have the permission to kick this user" }
 	}
 
 	async ban(channelId: number, userId: number, targetId: number) {

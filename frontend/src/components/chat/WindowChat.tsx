@@ -64,6 +64,9 @@ const WindowChat: React.FC = () => {
 					name: "",
 					privacy: ""
 				}
+				socket.socket.off('connect');
+				socket.socket.off('accgame');
+				socket.socket.off('update_front');
 				socket.socket.disconnect();
 			}
 		};
@@ -89,6 +92,7 @@ const WindowChat: React.FC = () => {
 				if (data.message) // if error
 				{
 					actualiser()
+					return;
 				}
 				const fetchedMessages = data.map((item: any) => {
 					const tmp: Message = {
