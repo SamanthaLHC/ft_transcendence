@@ -4,6 +4,8 @@ import { useCookies } from 'react-cookie';
 import { Navigate, useNavigate } from 'react-router-dom';
 import MuteForm from './MuteForm';
 import PwdForm from './PwdForm';
+import { useUser } from "../../Context";
+
 interface Channel {
 	id: number;
 	name: string;
@@ -25,6 +27,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const socket = useChatSocket();
 	const { isOpen, onClose } = props;
 	const { channel } = props;
+	const { userData, updateUserData } = useUser();
 
 	const navToFriend = useNavigate();
 	const changeToFriend = (id: number) => {
@@ -215,7 +218,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			const response = await fetch(req);
 			const datas = await response.json();
 			if (datas.message) {
-				alert("Error banning: " + datas.message)
+				alert("Error : " + datas.message)
 				return 0
 			}
 			return 1
@@ -263,7 +266,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				if (datas) {
 					if (await kick(channel.id, datas.userId)) {
 						const body = {
-							msg: "Kick " + inputValue,
+							msg: inputValue + " was kicked from this channel",
 						};
 						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
@@ -299,6 +302,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
+			if (obj.name === userData.name) {
+				alert("You can't send yourself private messages")
+				return ;
+			}
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
@@ -340,11 +347,11 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const datas = await response.json();
 				if (datas) {
 					if (datas.status === "BANNED") {
-						alert("Already banned")
+						alert("This user is already banned")
 					}
 					else if (await ban(channel.id, datas.userId)) {
 						const body = {
-							msg: "Ban " + inputValue,
+							msg: inputValue + " was banned from the channel",
 						};
 						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
@@ -396,7 +403,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						alert("Not banned")
 					else if (await unban(channel.id, datas.userId)) {
 						const body = {
-							msg: "UnBan " + inputValue,
+							msg: inputValue + " is no longer banned from this channel",
 						};
 						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",

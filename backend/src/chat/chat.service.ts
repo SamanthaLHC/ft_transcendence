@@ -147,7 +147,7 @@ export class ChatService {
 
 		if (await this.isUserInChannelBanned(channelId, userId)) {
 			Logger.log(`User [${userId}] banned in channel [${channelId}]`, "ChatService");
-			return { message: "User banned in channel" };
+			return { message: "You are banned from channel" };
 		}
 
 		const channel = await this.prisma.channels.findUnique({
@@ -331,7 +331,7 @@ export class ChatService {
 
 	async createPrivateChannel(targetId: number, userId: number) {
 		if (targetId === userId) {
-			return { "message": "pas de mp avec toi meme" }
+			return { "message": "You can't send yourself private messages" }
 		}
 		let channel = await this.prisma.channels.findFirst({
 			where: {
@@ -597,7 +597,7 @@ export class ChatService {
 			this.leaveChannel(channelId, targetId);
 		}
 		else
-			return { "message": "Checkperm fail" }
+			return { "message": "You have not the permission to kick this user" }
 	}
 
 	async ban(channelId: number, userId: number, targetId: number) {
@@ -630,8 +630,10 @@ export class ChatService {
 				return { "message": "No entry found for user" + targetId + " in channel " + channelId };
 			}
 		}
-		else
-			return { "message": "Checkperm fail" }
+		else if (targetId == userId)
+			return { "message": "You can't ban yourself" }
+		else 
+			return { "message": "You don't have the permission to ban this user" }
 	}
 
 	async unban(channelId: number, userId: number, targetId: number) {
@@ -659,6 +661,6 @@ export class ChatService {
 			}
 		}
 		else
-			return { "message": "Checkperm fail" }
+			return { "message": "You have not the permission to unban this user" }
 	}
 }
