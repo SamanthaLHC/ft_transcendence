@@ -64,6 +64,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
+		onClose();
 	}
 
 	const addrelation = async (id: number, status: string) => {
@@ -92,28 +93,28 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
-	const removerelation = async (id: number) => {
-		const obj = {
-			target_id: id,
-		};
-		const req: Request = new Request('http://localhost:3000/users/rm_relation', {
-			method: "DELETE",
-			headers: {
-				"content-type": "application/json",
-				"Authorization": `Bearer ${cookies.access_token}`,
-			},
-			body: JSON.stringify(obj),
-		});
+	// const removerelation = async (id: number) => {
+	// 	const obj = {
+	// 		target_id: id,
+	// 	};
+	// 	const req: Request = new Request('http://localhost:3000/users/rm_relation', {
+	// 		method: "DELETE",
+	// 		headers: {
+	// 			"content-type": "application/json",
+	// 			"Authorization": `Bearer ${cookies.access_token}`,
+	// 		},
+	// 		body: JSON.stringify(obj),
+	// 	});
 
-		try {
-			const response = await fetch(req);
-			if (response.ok) {
-				alert("Succes");
-			}
-		} catch (error) {
-			console.error(error);
-		}
-	}
+	// 	try {
+	// 		const response = await fetch(req);
+	// 		if (response.ok) {
+	// 			alert("Succes");
+	// 		}
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// }
 
 	const handleClickblock = async () => {
 		if (inputValue !== "\n" && inputValue !== "") {
@@ -138,6 +139,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
+		onClose();
 	}
 
 
@@ -190,6 +192,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
+		onClose();
 	}
 
 	const kick = async (channelid: number, targetId: number) => {
@@ -299,6 +302,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
+		onClose();
 	}
 
 
@@ -332,6 +336,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
+		onClose();
 	}
 
 	const handleClickban = async () => {
@@ -385,6 +390,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
+		onClose();
 	}
 
 	const handleClickunban = async () => {
@@ -438,6 +444,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not banned") }
 		}
+		onClose();
 	}
 
 	const handleClickAdmin = async () => {
@@ -483,6 +490,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							.catch((error) => {
 								console.error("Error sending message:", error);
 							});
+						onClose();
 					}
 
 				})
@@ -490,7 +498,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					console.error("Error fetching channels:", error);
 				});
 		}
-
 	}
 
 
@@ -537,6 +544,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							.catch((error) => {
 								console.error("Error sending message:", error);
 							});
+						onClose();
 					}
 
 				})
@@ -544,7 +552,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					console.error("Error fetching channels:", error);
 				});
 		}
-
 	}
 
 	//__________________________________________________get user role_______
@@ -621,6 +628,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				console.error(error);
 			}
 		}
+		onClose();
 	};
 
 	// ____________________________________________handle password__________________
@@ -651,8 +659,11 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			const datas = await response.json();
 			if (datas.message)
 				alert(datas.message);
-			else
+			else {
 				alert(`Password succefully set`);
+				onClose();
+			}
+
 
 		} catch (error) {
 			console.error(error);
@@ -685,6 +696,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		} catch (error) {
 			console.error(error);
 		}
+		onClose();
 	}
 
 	// ___________________________________________handle leave
@@ -711,7 +723,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		} catch (error) {
 			console.error(error);
 		}
-
+		onClose();
 	}
 
 	if (!isOpen) {
