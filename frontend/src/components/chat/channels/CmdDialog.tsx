@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, NavigateFunction, useNavigate } from 'react-router-dom';
 import MuteForm from './MuteForm';
 import PwdForm from './PwdForm';
 import { useUser } from "../../Context";
@@ -27,7 +27,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const socket = useChatSocket();
 	const { isOpen, onClose } = props;
 	const { channel } = props;
-	const { userData, updateUserData } = useUser();
+	const { userData } = useUser();
 
 	const navToFriend = useNavigate();
 	const changeToFriend = (id: number) => {
@@ -35,8 +35,14 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		navToFriend(pathHome);
 	}
 
+	const navToProfil: NavigateFunction = useNavigate();
 	const handleClickProfile = async () => {
 		if (inputValue !== "\n" && inputValue !== "") {
+			if (inputValue === userData.name) {
+				let pathProfil: string = '/profil';
+				navToProfil(pathProfil);
+				return
+			}
 			const obj = {
 				name: inputValue,
 				ChannelId: channel.id
@@ -304,7 +310,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			};
 			if (obj.name === userData.name) {
 				alert("You can't send yourself private messages")
-				return ;
+				return;
 			}
 			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
 				method: "Post",
