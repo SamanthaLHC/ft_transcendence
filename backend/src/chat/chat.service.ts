@@ -431,7 +431,10 @@ export class ChatService {
 				channelId: channelId,
 				user: {
 					name: name,
-				}
+				},
+				status: {
+					not: "BANNED"
+				},
 			}
 
 		});

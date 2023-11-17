@@ -350,7 +350,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							method: "POST",
 							headers: {
 								Authorization: `Bearer ${cookies.access_token}`,
-								"Content-Type": "application/json", // Specify content type
+								"Content-Type": "application/json",
 							},
 							body: JSON.stringify(body),
 						})
@@ -533,8 +533,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 
 	}
-
-
 
 	//__________________________________________________get user role_______
 
