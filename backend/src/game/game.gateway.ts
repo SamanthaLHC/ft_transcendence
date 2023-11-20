@@ -1,4 +1,4 @@
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
@@ -149,7 +149,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	getroombyuser(user: User): number {
 		let i = this.rooms.length - 1;
-		console.log(this.rooms)
 		while (i => 0) {
 			if (this.rooms[i].userone)
 			{
@@ -199,16 +198,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100) {
 				if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey) {
-					let relativePosition = 2 * (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 20 - 1;
-					// this.rooms[roomid].data.speedballY = relativePosition * 3;
-					
-					let angle = relativePosition * Math.PI / 2;
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 10 - 1;
+					let angle = relativePosition * Math.PI / 3;
 					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
 					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
 					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
-					
 					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
-
 					this.rooms[roomid].data.posballex = 96
 					if (this.rooms[roomid].data.speedballX > 0)
 						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
@@ -223,17 +218,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3) {
 				if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey) {
-					let relativePosition = 2 * (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 20 -1;
-					// this.rooms[roomid].data.speedballY = relativePosition * 3;	
-					
-					let angle = relativePosition * Math.PI / 4;
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 10 - 1;
+					let angle = relativePosition * Math.PI / 3;
 					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
 					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
 					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
-					
-					// this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
-					
-
 					if (this.rooms[roomid].data.speedballX > 0)
 						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
 					else
