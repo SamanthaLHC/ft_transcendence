@@ -59,12 +59,12 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
+					onClose();
 					changeToFriend(datas.userId)
 				}
 			}
 			catch { alert("Not in channel") }
 		}
-		onClose();
 	}
 
 	const addrelation = async (id: number, status: string) => {
@@ -134,12 +134,12 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
+					onClose();
 					addrelation(datas.userId, "BLOCKED")
 				}
 			}
 			catch { alert("Not in channel") }
 		}
-		onClose();
 	}
 
 
@@ -181,8 +181,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						.then((response) => response.json())
 						.then((data) => {
 							if (data) {
-								if (datas)
+								if (datas) {
+									onClose();
 									changeToChat(datas.userId);
+								}
 							}
 						})
 						.catch((error) => {
@@ -192,7 +194,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
-		onClose();
 	}
 
 	const kick = async (channelid: number, targetId: number) => {
@@ -291,6 +292,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 								if (data.message) {
 									alert("Error sending message: " + data.message)
 								} else {
+									onClose();
 									socket.socket.emit('update', inputValue)
 								}
 							})
@@ -302,7 +304,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not in channel") }
 		}
-		onClose();
 	}
 
 
@@ -331,12 +332,12 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					alert("Error : " + datas.message)
 				}
 				else {
+					onClose();
 					changeToChat(datas.userId)
 				}
 			}
 			catch { alert("Not in channel") }
 		}
-		onClose();
 	}
 
 	const handleClickban = async () => {
@@ -378,19 +379,18 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 								if (data.message) {
 									alert("Error sending message: " + data.message)
 								} else {
+									onClose();
 									socket.socket.emit('update', inputValue)
 								}
 							})
 							.catch((error) => {
 								console.error("Error sending message:", error);
 							});
-						// }
 					}
 				}
 			}
 			catch { alert("Not in channel") }
 		}
-		onClose();
 	}
 
 	const handleClickunban = async () => {
@@ -431,6 +431,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 								if (data.message) {
 									alert("Error sending message: " + data.message)
 								} else {
+									onClose();
 									socket.socket.emit('update', inputValue)
 								}
 							})
@@ -444,7 +445,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			}
 			catch { alert("Not banned") }
 		}
-		onClose();
 	}
 
 	const handleClickAdmin = async () => {
@@ -621,14 +621,15 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const datas = await response.json();
 				if (datas.message)
 					alert(datas.message);
-				else
+				else {
+					onClose();
 					alert(`${inputValue} Sucessfully muted for ${time} secondes`);
+				}
 
 			} catch (error) {
 				console.error(error);
 			}
 		}
-		onClose();
 	};
 
 	// ____________________________________________handle password__________________
@@ -660,11 +661,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			if (datas.message)
 				alert(datas.message);
 			else {
-				alert(`Password succefully set`);
 				onClose();
+				alert(`Password succefully set`);
 			}
-
-
 		} catch (error) {
 			console.error(error);
 		}
@@ -690,13 +689,14 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			const datas = await response.json();
 			if (datas.message)
 				alert(datas.message);
-			else
+			else {
+				onClose();
 				alert(`Password succefully unset`);
+			}
 
 		} catch (error) {
 			console.error(error);
 		}
-		onClose();
 	}
 
 	// ___________________________________________handle leave
@@ -723,7 +723,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		} catch (error) {
 			console.error(error);
 		}
-		onClose();
 	}
 
 	if (!isOpen) {
