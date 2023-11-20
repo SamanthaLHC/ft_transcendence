@@ -191,9 +191,16 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100) {
 				if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey) {
-					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 20 - .5;
-					this.rooms[roomid].data.speedballY = relativePosition * 3;
+					let relativePosition = 2 * (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 20 - 1;
+					// this.rooms[roomid].data.speedballY = relativePosition * 3;
+					
+					let angle = relativePosition * Math.PI / 2;
+					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
+					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
+					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
+					
 					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+
 					this.rooms[roomid].data.posballex = 96
 					if (this.rooms[roomid].data.speedballX > 0)
 						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
@@ -208,9 +215,17 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3) {
 				if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey) {
-					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 20 -.5;
-					this.rooms[roomid].data.speedballY = relativePosition * 3;
-					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+					let relativePosition = 2 * (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 20 -1;
+					// this.rooms[roomid].data.speedballY = relativePosition * 3;	
+					
+					let angle = relativePosition * Math.PI / 4;
+					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
+					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
+					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
+					
+					// this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+					
+
 					if (this.rooms[roomid].data.speedballX > 0)
 						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
 					else
