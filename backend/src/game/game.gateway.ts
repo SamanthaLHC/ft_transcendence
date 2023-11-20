@@ -251,57 +251,65 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('OnKeyDownArrowDown')
 	async handleMessage_down(@ConnectedSocket() socket: Socket) {
 		const token = socket.handshake.auth.token;
-		const payload = await this.jwtService.verifyAsync(
-			token,
-			{
-				secret: process.env.JWTSECRET
+		try {
+			const payload = await this.jwtService.verifyAsync(
+				token,
+				{
+					secret: process.env.JWTSECRET
+				}
+			);
+			const user = await this.prisma.user.findFirst({
+				where: {
+					id: payload.sub,
+				},
+			})
+			if (!user)
+				socket.disconnect
+			const id = this.getroombyuser(user)
+			if (socket.id == this.rooms[id].data.jdscockid) {
+				if (this.rooms[id].data.jdroite < 8)
+					this.rooms[id].data.jdroite = this.rooms[id].data.jdroite + 1
 			}
-		);
-		const user = await this.prisma.user.findFirst({
-			where: {
-				id: payload.sub,
-			},
-		})
-		if (!user)
-			socket.disconnect
-		const id = this.getroombyuser(user)
-		if (socket.id == this.rooms[id].data.jdscockid) {
-			if (this.rooms[id].data.jdroite < 8)
-				this.rooms[id].data.jdroite = this.rooms[id].data.jdroite + 1
+			else if ((socket.id == this.rooms[id].data.jgscockid)) {
+				if (this.rooms[id].data.jgauche < 8)
+					this.rooms[id].data.jgauche = this.rooms[id].data.jgauche + 1
+			}
+			this.server.to((id).toString()).emit("update", this.rooms[id].data)
 		}
-		else if ((socket.id == this.rooms[id].data.jgscockid)) {
-			if (this.rooms[id].data.jgauche < 8)
-				this.rooms[id].data.jgauche = this.rooms[id].data.jgauche + 1
+		catch (e) {
 		}
-		this.server.to((id).toString()).emit("update", this.rooms[id].data)
 	}
 
 	@SubscribeMessage('OnKeyDownArrowUp')
 	async handleMessage_up(@ConnectedSocket() socket: Socket) {
 		const token = socket.handshake.auth.token;
-		const payload = await this.jwtService.verifyAsync(
-			token,
-			{
-				secret: process.env.JWTSECRET
+		try {
+			const payload = await this.jwtService.verifyAsync(
+				token,
+				{
+					secret: process.env.JWTSECRET
+				}
+			);
+			const user = await this.prisma.user.findFirst({
+				where: {
+					id: payload.sub,
+				},
+			})
+			if (!user)
+				socket.disconnect
+			const id = this.getroombyuser(user)
+			console.log("ee", id)
+			if (socket.id == this.rooms[id].data.jdscockid) {
+				if (this.rooms[id].data.jdroite > 0)
+					this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1
 			}
-		);
-		const user = await this.prisma.user.findFirst({
-			where: {
-				id: payload.sub,
-			},
-		})
-		if (!user)
-			socket.disconnect
-		const id = this.getroombyuser(user)
-		console.log("ee", id)
-		if (socket.id == this.rooms[id].data.jdscockid) {
-			if (this.rooms[id].data.jdroite > 0)
-				this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1
+			else if ((socket.id == this.rooms[id].data.jgscockid)) {
+				if (this.rooms[id].data.jgauche > 0)
+					this.rooms[id].data.jgauche = this.rooms[id].data.jgauche - 1
+			}
+			this.server.to((id).toString()).emit("update", this.rooms[id].data)
 		}
-		else if ((socket.id == this.rooms[id].data.jgscockid)) {
-			if (this.rooms[id].data.jgauche > 0)
-				this.rooms[id].data.jgauche = this.rooms[id].data.jgauche - 1
+		catch (e) {
 		}
-		this.server.to((id).toString()).emit("update", this.rooms[id].data)
 	}
 }
