@@ -53,6 +53,9 @@ const WindowChat: React.FC = () => {
 
 		return () => {
 			if (socket) {
+				socket.socket.off('connect')
+				socket.socket.off('accgame')
+				socket.socket.off('update_front')
 				socket.socket.disconnect();
 			}
 		};

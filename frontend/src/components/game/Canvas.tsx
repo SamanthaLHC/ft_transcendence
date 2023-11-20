@@ -84,7 +84,6 @@ type CanvasProps = {
         const canvas = canvasRef.current;
         if (canvas) {
             const context = canvas.getContext('2d');
-            console.log("ici")
             if (context) {
                 // context.clearRect(0, 0, canvas.width, canvas.height)
                 context.beginPath()

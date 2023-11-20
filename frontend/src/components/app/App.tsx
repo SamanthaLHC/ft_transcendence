@@ -36,6 +36,7 @@ const App: React.FC = () => {
 			});
 			return () => {
 				if (socket) {
+					socket.off('connect')
 					socket.disconnect();
 				}
 			}

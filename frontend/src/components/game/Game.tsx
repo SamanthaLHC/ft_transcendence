@@ -99,6 +99,12 @@ const Game: React.FC = () => {
 
 		return () => {
 			if (socket) {
+				socket.off('connect')
+				socket.off('connect_room')
+				socket.off('update')
+				socket.off('aff_win')
+				socket.off('game_finish')
+				socket.off('colpad')
 				socket.disconnect();
 			}
 		};
