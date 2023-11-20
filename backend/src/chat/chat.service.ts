@@ -372,15 +372,20 @@ export class ChatService {
 	}
 
 	async getUserIdbyNmaeInchannel(channelId: number, userName: string) {
-		const user = await this.prisma.userChannelMap.findFirst({
-			where: {
-				channelId: channelId,
-				user: {
-					name: userName,
+		if (/[^\s]+/.test(userName)) {
+
+			const user = await this.prisma.userChannelMap.findFirst({
+				where: {
+					channelId: channelId,
+					user: {
+						name: userName,
+					}
 				}
-			}
-		});
-		return user;
+			});
+			return user;
+		}
+		else
+			return { message: "Blank username" }
 	}
 
 	async gamePrivateChannel(targetId: number, userId: number, channelId: number) {
@@ -489,7 +494,7 @@ export class ChatService {
 			return { message: "User not found in this channel" }
 		}
 		if (userId === targetUser.userId) {
-			return { "message": "You can't mute yourself"}
+			return { "message": "You can't mute yourself" }
 		}
 		if (await this.checkPerm(channelId, targetUser.userId, userId)) {
 			return await this.prisma.userChannelMap.update({
@@ -639,7 +644,7 @@ export class ChatService {
 		}
 		else if (targetId == userId)
 			return { "message": "You can't ban yourself" }
-		else 
+		else
 			return { "message": "You don't have the permission to ban this user" }
 	}
 

@@ -58,7 +58,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				if (datas.message !== "Blank username") {
 					onClose();
 					changeToFriend(datas.userId)
 				}
