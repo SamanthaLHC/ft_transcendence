@@ -134,7 +134,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				if (datas.message !== "Blank username") {
 					addrelation(datas.userId, "BLOCKED")
 				}
 			}
@@ -181,7 +181,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						.then((response) => response.json())
 						.then((data) => {
 							if (data) {
-								if (datas) {
+								if (datas.message !== "Blank username") {
 									onClose();
 									changeToChat(datas.userId);
 								}
@@ -207,7 +207,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			const datas = await response.json();
-			if (datas.message) {
+			if (datas.message && datas.message !== "Blank username") {
 				alert("Error kicking: " + datas.message)
 				return 0
 			}
@@ -227,7 +227,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			const datas = await response.json();
-			if (datas.message) {
+			if (datas.message && datas.message !== "Blank username") {
 				alert("Error : " + datas.message)
 				return 0
 			}
@@ -247,7 +247,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			const datas = await response.json();
-			if (datas.message) {
+			if (datas.message && datas.message !== "Blank username") {
 				alert("Error unbanning: " + datas.message)
 				return 0
 			}
@@ -273,7 +273,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				if (datas && datas.message !== "Blank username") {
 					if (await kick(channel.id, datas.userId)) {
 						const body = {
 							msg: inputValue + " was kicked from this channel",
@@ -328,10 +328,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas.message) {
+				if (datas.message && datas.message !== "Blank username") {
 					alert("Error : " + datas.message)
 				}
-				else {
+				else if (datas.message !== "Blank username") {
 					onClose();
 					changeToChat(datas.userId)
 				}
@@ -357,7 +357,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				if (datas && datas.message !== "Blank username") {
 					if (datas.status === "BANNED") {
 						alert("This user is already banned")
 					}
@@ -410,7 +410,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas) {
+				if (datas && datas.message !== "Blank username") {
 					if (datas.status !== "BANNED")
 						alert("Not banned")
 					else if (await unban(channel.id, datas.userId)) {
@@ -440,8 +440,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							});
 					}
 				}
-				else
-					alert("test")
 			}
 			catch { alert("Not banned") }
 		}
@@ -619,9 +617,9 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				});
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas.message)
+				if (datas.message && datas.message !== "Blank username")
 					alert(datas.message);
-				else {
+				else if (datas.message !== "Blank username"){
 					onClose();
 					alert(`${inputValue} Sucessfully muted for ${time} secondes`);
 				}

@@ -487,29 +487,34 @@ export class ChatService {
 	}
 
 	async muteUser(channelId: number, targetName: string, time: number, userId: number) {
-		if (time < 0 || time > 86400)
-			return { message: "Time must be in range [0-86400] seconds" }
-		const targetUser = await this.getChannelUserByName(channelId, targetName)
-		if (!targetUser) {
-			return { message: "User not found in this channel" }
+		if (/[^\s]+/.test(targetName)) {
+			if (time < 0 || time > 86400)
+				return { message: "Time must be in range [0-86400] seconds" }
+			const targetUser = await this.getChannelUserByName(channelId, targetName)
+			if (!targetUser) {
+				return { message: "User not found in this channel" }
+			}
+			if (userId === targetUser.userId) {
+				return { "message": "You can't mute yourself" }
+			}
+			if (await this.checkPerm(channelId, targetUser.userId, userId)) {
+				return await this.prisma.userChannelMap.update({
+					where: {
+						id: { channelId: channelId, userId: targetUser.userId }
+					},
+					data: {
+						mutedUntil: new Date(Date.now() + time * 1000),
+					}
+				});
+			}
+			else {
+				return { message: "You can't mute this user" }
+			}
 		}
-		if (userId === targetUser.userId) {
-			return { "message": "You can't mute yourself" }
-		}
-		if (await this.checkPerm(channelId, targetUser.userId, userId)) {
-			return await this.prisma.userChannelMap.update({
-				where: {
-					id: { channelId: channelId, userId: targetUser.userId }
-				},
-				data: {
-					mutedUntil: new Date(Date.now() + time * 1000),
-				}
-			});
-		}
-		else {
-			return { message: "You can't mute this user" }
-		}
+		else
+			return { message: "Blank username" }
 	}
+
 
 	async setAdmin(channelId: number, targetName: string, userId: number) {
 
