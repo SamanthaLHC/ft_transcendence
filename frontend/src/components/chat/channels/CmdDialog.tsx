@@ -84,6 +84,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			if (response.ok) {
+				onClose();
 				alert("Succes");
 			}
 			else
@@ -134,7 +135,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas) {
-					onClose();
 					addrelation(datas.userId, "BLOCKED")
 				}
 			}
