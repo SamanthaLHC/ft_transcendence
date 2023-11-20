@@ -191,9 +191,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100) {
 				if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey) {
-					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 20 - .5; // Valeur normalisée entre -1 et 1
-					console.log(relativePosition)
-					this.rooms[roomid].data.speedballY = relativePosition * 3; // Ajustez le facteur selon vos besoins
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 20 - .5;
+					this.rooms[roomid].data.speedballY = relativePosition * 3;
 					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
 					this.rooms[roomid].data.posballex = 96
 					if (this.rooms[roomid].data.speedballX > 0)
@@ -209,9 +208,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3) {
 				if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey) {
-					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 20 -.5; // Valeur normalisée entre -1 et 1
-					console.log(relativePosition)
-					this.rooms[roomid].data.speedballY = relativePosition * 3; // Ajustez le facteur selon vos besoins
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 20 -.5;
+					this.rooms[roomid].data.speedballY = relativePosition * 3;
 					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
 					if (this.rooms[roomid].data.speedballX > 0)
 						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
