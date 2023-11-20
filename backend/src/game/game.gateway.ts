@@ -140,6 +140,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		const roomid = this.getroombyuser(user)
 		if (roomid != -1 && this.rooms[roomid].data) {
 			if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id) {
+				console.log("del room")
 				this.rooms.pop()
 			}
 		}
@@ -148,12 +149,19 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 	getroombyuser(user: User): number {
 		let i = this.rooms.length - 1;
-		while (this.rooms[i]) {
-			if (this.rooms[i].userone.id === user.id)
-				return i
-			if (this.rooms[i].usertwo && this.rooms[i].usertwo.id === user.id)
-				return i
-			i++
+		console.log(this.rooms)
+		while (i => 0) {
+			if (this.rooms[i].userone)
+			{
+				if (this.rooms[i].userone.id === user.id)
+					return i
+			}
+			if (this.rooms[i].usertwo)
+			{
+				if (this.rooms[i].usertwo.id === user.id)
+					return i
+			}
+			i--
 		}
 		return -1
 	}
@@ -296,6 +304,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		if (!user)
 			socket.disconnect
 		const id = this.getroombyuser(user)
+		console.log("ee", id)
 		if (socket.id == this.rooms[id].data.jdscockid) {
 			if (this.rooms[id].data.jdroite > 0)
 				this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1
