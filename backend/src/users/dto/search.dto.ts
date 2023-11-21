@@ -1,4 +1,4 @@
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, Matches, MaxLength } from 'class-validator';
 
 export class SearchDto {
     @IsNotEmpty()
@@ -9,6 +9,8 @@ export class SearchDto {
 export class upNameDto {
     @IsNotEmpty()
     @IsString()
+	@MaxLength(100, {message: "The name must be between 1 and 15 characters."})
+	@Matches(/^(?=.*[a-zA-Z0-9])[a-zA-Z0-9_-]+$/, {message: "The name must only contain letters, digits and '-' or '_'. It must have at least a letter or a digit."})
     name: string;
 }
 

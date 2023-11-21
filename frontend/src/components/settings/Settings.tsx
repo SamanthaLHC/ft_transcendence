@@ -118,7 +118,9 @@ const Settings: React.FC = () => {
 				try {
 					const response = await fetch(req);
 					if (!response.ok) {
-						alert("Invalid Name. Already exist or is not between 1 and 15 caracters.");
+						const data = await response.json();
+						if (data && data.message)
+							alert(data.message)
 					}
 					else {
 						updateUserData(userData.id, inputValue, userData.photo);
