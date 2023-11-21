@@ -17,6 +17,7 @@ const Settings: React.FC = () => {
 	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
+	const [oldfile, setOldFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 

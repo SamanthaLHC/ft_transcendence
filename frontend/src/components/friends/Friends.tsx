@@ -4,8 +4,6 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import { Divider } from '@mui/material';
 import { useNavigate } from 'react-router';
-import Avatar from '@mui/material/Avatar';
-import rubber from '../../assets/duck_in_lake.png'
 import SearchBar from './SearchBar';
 import { useEffect, useState, MouseEvent} from 'react';
 import { useCookies } from 'react-cookie';
@@ -21,7 +19,7 @@ interface User {
 const Friends: React.FC = () => {
 
 	const [users, setUsers] = useState<User[]>([]);
-	const [UserCreated, setUserCreated] = useState(false);
+	// const [UserCreated, setUserCreated] = useState(false);
 	const [cookies] = useCookies(["access_token"]);
 	const [searchQuery, setSearchQuery] = useState("");
 	let navToFriendProfil = useNavigate();
@@ -39,9 +37,6 @@ const Friends: React.FC = () => {
 		setSearchQuery(query);
 	};
 
-	const handleUpdateUsers = () => {
-		setUserCreated(true);
-	}
 	useEffect(() => {
 		async function getFriend(): Promise<void> {
 			const req = new Request('http://localhost:3000/users/get_friend', {
@@ -81,7 +76,7 @@ const Friends: React.FC = () => {
 				return fetch(req)
 					.then((response) => response.json())
 					.then((data) => {
-						if (data.statusCode != 404) {
+						if (data.statusCode !== 404) {
 							const fetchedUsers = data.map((item: any) => {
 								return { name: item.name, id: item.id, photo: item.photo, status: item.status};
 							});
@@ -109,7 +104,7 @@ const Friends: React.FC = () => {
 				<h5 className='typo-friends yellow'>
 					Friends
 				</h5>
-				<SearchBar onSearchChange={handleSearchChange} updateUsers={handleUpdateUsers}/>
+				<SearchBar onSearchChange={handleSearchChange}/>
 				<div>
 					<React.Fragment>
 						<ul>

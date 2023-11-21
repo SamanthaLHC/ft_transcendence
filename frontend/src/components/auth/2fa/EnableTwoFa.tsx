@@ -23,19 +23,8 @@ const EnableTwoFa = () => {
 
     const onChange = (value: string) => setOtp(value);
 
-    const handleClose = async () => {
-        try {
-            const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
-                method: 'POST',
-                headers: {
-                    Authorization: `Bearer ${cookies.access_token}`,
-                },
-            });
-            navigate("/home");
-        }
-        catch (error) {
-            console.error(error);
-        }
+    const handleClose = () => {
+        navigate("/home");
     }
 
     const handleClick = async () => {

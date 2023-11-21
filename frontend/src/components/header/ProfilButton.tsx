@@ -72,9 +72,9 @@ const ProfilButton: React.FC = () => {
 			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
-				if (userData.id != datas.id
-					|| userData.name != datas.name
-					|| userData.photo != datas.photo) {
+				if (userData.id !== datas.id
+					|| userData.name !== datas.name
+					|| userData.photo !== datas.photo) {
 					updateUserData(datas.id, datas.name, datas.photo);
 				}
 			}

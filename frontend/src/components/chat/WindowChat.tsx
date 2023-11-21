@@ -25,8 +25,6 @@ const WindowChat: React.FC = () => {
 	const [isCmdDialogOpen, setCmdDialogOpen] = useState(false);
 
 
-	//Socket
-
 	const navTo = useNavigate();
 	const changetogamefriend = (id: string) => {
 		navTo("/gamefriend?id=" + id)
@@ -34,20 +32,25 @@ const WindowChat: React.FC = () => {
 	const actualiser = () => {
 		navTo(0)
 	}
+
 	useEffect(() => {
-		// , {
-		// 	autoConnect: false,
-		//   });
+		console.log("socket: ", socket.socket)
 		let token = cookies.access_token;
 		socket.socket.auth = { token };
 		socket.socket.connect()
-		// setSocket(socketInstance);
 
-		// listen for events emitted by the server
+		return () => {
+			if (socket.socket) {
+				console.log("Chat disconnected")
+				socket.socket.disconnect();
+			}
+		};
+	}, []);
 
+	useEffect(() => {
 		socket.socket.on('connect', () => {
-			console.log('Chat connected to server');
-		});
+			console.log('Chat connected to server', socket);
+		})
 
 		socket.socket.on('accgame', (data: any) => {
 			changetogamefriend(data)
@@ -56,7 +59,6 @@ const WindowChat: React.FC = () => {
 		socket.socket.on('update_front', () => {
 			updateMessages();
 		});
-
 		return () => {
 			if (socket) {
 				socket.channel = {

@@ -15,45 +15,26 @@ let finish = false
 let id = ""
 
 const Game: React.FC = () => {
-	let logindroite = ""
-	let logingauche = ""
 	const [cookies] = useCookies(["access_token"]);
-	const navToHome = useNavigate();
-	const gamefinish = () => {
-		let pathHome: string = '/home';
-		finish = false
-		id = ""
-		navToHome(pathHome);
-	}
 	const [data, setData] = useState(null);
-	const getnamebyid = async (id: string): Promise<string> => {
-		try {
-			const req = new Request(`http://localhost:3000/users/id/${id}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			});
+	const socket = io('http://localhost:3000/game', {
+		autoConnect: false,
+	});
 
-			const response = await fetch(req);
-
-			if (response.ok) {
-				const user = await response.json();
-				return user.name
-			} else {
-				console.log("request failed");
-				return "Unknown";
-			}
-		} catch (error) {
-			console.error("An error occurred while fetching user data:", error);
-			return "Unknown";
-		}
-	}
+	socket.on('aff_win', (data) => {
+		finish = true
+		setData(data)
+	});
+	const navToHome = useNavigate();
 	useEffect(() => {
 
-		const socket = io('http://localhost:3000/game', {
-			autoConnect: false,
-		});
+		const gamefinish = () => {
+			let pathHome: string = '/home';
+			finish = false
+			id = ""
+			navToHome(pathHome);
+		}
+
 		let token = cookies.access_token;
 		socket.auth = { token };
 		socket.connect()
@@ -71,10 +52,6 @@ const Game: React.FC = () => {
 			setData(data)
 		});
 		socket.on('update', (data) => {
-			setData(data)
-		});
-		socket.on('aff_win', (data) => {
-			finish = true
 			setData(data)
 		});
 		socket.on('game_finish', () => {
@@ -101,7 +78,7 @@ const Game: React.FC = () => {
 				socket.disconnect();
 			}
 		};
-	}, []);
+	}, [cookies.access_token, navToHome]);
 	const handleClick = () => {
 		if (!canardmod) {
 			canardmod = true

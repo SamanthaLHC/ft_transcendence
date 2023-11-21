@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
-import { useUser } from "../Context";
 
 interface Game {
 	gameId: number;
@@ -50,34 +49,36 @@ const MatchHistory: React.FC = () => {
 			}
 		};
 		getMatch();
-	}, []);
+	}, [cookies.access_token, ]);
 
 	// Function to get user name by ID
-	const getUserNameById = async (idUser: number) => {
-		try {
-			const req = new Request(`http://localhost:3000/users/id/${idUser}`, {
-				method: "GET",
-				headers: {
-					Authorization: `Bearer ${cookies.access_token}`,
-				},
-			});
-
-			const response = await fetch(req);
-
-			if (response.ok) {
-				const user = await response.json();
-				return user.name;
-			} else {
-				console.log("request get name by id failed");
-				return "Unknown";
-			}
-		} catch (error) {
-			console.error("An error occurred while fetching user name by id:", error);
-			return "Unknown";
-		}
-	};
+	
 
 	useEffect(() => {
+
+		const getUserNameById = async (idUser: number) => {
+			try {
+				const req = new Request(`http://localhost:3000/users/id/${idUser}`, {
+					method: "GET",
+					headers: {
+						Authorization: `Bearer ${cookies.access_token}`,
+					},
+				});
+	
+				const response = await fetch(req);
+	
+				if (response.ok) {
+					const user = await response.json();
+					return user.name;
+				} else {
+					console.log("request get name by id failed");
+					return "Unknown";
+				}
+			} catch (error) {
+				console.error("An error occurred while fetching user name by id:", error);
+				return "Unknown";
+			}
+		};
 		const uniqueIds: Array<number> = gameHistory.reduce((ids: Array<number>, game) => {
 			if (ids.indexOf(game.gagnantId) === -1) {
 				ids.push(game.gagnantId);
@@ -99,7 +100,7 @@ const MatchHistory: React.FC = () => {
 					console.error('Error fetching winner name:', error);
 				});
 		});
-	}, [gameHistory]);
+	}, [gameHistory, cookies.access_token]);
 
 	return (
 		<React.Fragment>
