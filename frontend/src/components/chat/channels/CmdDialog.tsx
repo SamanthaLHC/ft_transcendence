@@ -94,28 +94,28 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		}
 	}
 
-	// const removerelation = async (id: number) => {
-	// 	const obj = {
-	// 		target_id: id,
-	// 	};
-	// 	const req: Request = new Request('http://localhost:3000/users/rm_relation', {
-	// 		method: "DELETE",
-	// 		headers: {
-	// 			"content-type": "application/json",
-	// 			"Authorization": `Bearer ${cookies.access_token}`,
-	// 		},
-	// 		body: JSON.stringify(obj),
-	// 	});
+	const removerelation = async (id: number) => {
+		const obj = {
+			target_id: id,
+		};
+		const req: Request = new Request('http://localhost:3000/users/rm_relation', {
+			method: "DELETE",
+			headers: {
+				"content-type": "application/json",
+				"Authorization": `Bearer ${cookies.access_token}`,
+			},
+			body: JSON.stringify(obj),
+		});
 
-	// 	try {
-	// 		const response = await fetch(req);
-	// 		if (response.ok) {
-	// 			alert("Succes");
-	// 		}
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	}
-	// }
+		try {
+			const response = await fetch(req);
+			if (response.ok) {
+				alert("Succes");
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 
 	const handleClickblock = async () => {
 		if (inputValue !== "\n" && inputValue !== "") {
@@ -139,6 +139,32 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						alert( "You can't block yourself")
 					else 
 						addrelation(datas.userId, "BLOCKED")
+				}
+			}
+			catch { alert("Not in channel") }
+		}
+	}
+
+	const handleClickUnblock = async () => {
+		if (inputValue !== "\n" && inputValue !== "") {
+			const obj = {
+				name: inputValue,
+				ChannelId: channel.id
+			};
+			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+				method: "Post",
+				headers: {
+					"content-type": "application/json",
+					"Authorization": `Bearer ${cookies.access_token}`,
+				},
+				body: JSON.stringify(obj),
+			});
+			try {
+				const response = await fetch(req);
+				const datas = await response.json();
+				if (datas.message !== "Blank username") {
+					removerelation(datas.userId)
+					onClose();
 				}
 			}
 			catch { alert("Not in channel") }
@@ -622,7 +648,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const datas = await response.json();
 				if (datas.message && datas.message !== "Blank username")
 					alert(datas.message);
-				else if (datas.message !== "Blank username"){
+				else if (datas.message !== "Blank username") {
 					onClose();
 					alert(`${inputValue} Sucessfully muted for ${time} secondes`);
 				}
@@ -763,6 +789,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						<button className="btn-dialog" onClick={handleClickProfile}>See profile page</button>
 						<button className="btn-dialog" onClick={handleClickMP}>Private message</button>
 						<button className="btn-dialog" onClick={handleClickblock}>Block</button>
+						<button className="btn-dialog" onClick={handleClickUnblock}>UnBlock</button>
 					</div>
 					{(isAdmin || isOwner) && (
 						<div className="form-admin-section">
