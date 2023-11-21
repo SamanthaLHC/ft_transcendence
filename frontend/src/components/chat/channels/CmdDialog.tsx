@@ -134,8 +134,11 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			try {
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas.message !== "Blank username") {
-					addrelation(datas.userId, "BLOCKED")
+				if (datas && datas.message !== "Blank username") {
+					if (datas.userId === userData.id) 
+						alert( "You can't block yourself")
+					else 
+						addrelation(datas.userId, "BLOCKED")
 				}
 			}
 			catch { alert("Not in channel") }
