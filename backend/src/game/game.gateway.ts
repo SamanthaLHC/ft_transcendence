@@ -1,4 +1,4 @@
-import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+import { ConnectedSocket, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
@@ -140,6 +140,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		const roomid = this.getroombyuser(user)
 		if (roomid != -1 && this.rooms[roomid].data) {
 			if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id) {
+				console.log("del room")
 				this.rooms.pop()
 			}
 		}
@@ -150,12 +151,18 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		if(!this.rooms)
 			return -1
 		let i = this.rooms.length - 1;
-		while (this.rooms[i]) {
-			if (this.rooms[i].userone.id === user.id)
-				return i
-			if (this.rooms[i].usertwo && this.rooms[i].usertwo.id === user.id)
-				return i
-			i++
+		while (i => 0) {
+			if (this.rooms[i].userone)
+			{
+				if (this.rooms[i].userone.id === user.id)
+					return i
+			}
+			if (this.rooms[i].usertwo)
+			{
+				if (this.rooms[i].usertwo.id === user.id)
+					return i
+			}
+			i--
 		}
 		return -1
 	}
@@ -193,6 +200,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100) {
 				if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey) {
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 10 - 1;
+					let angle = relativePosition * Math.PI / 3;
+					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
+					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
+					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
 					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
 					this.rooms[roomid].data.posballex = 96
 					if (this.rooms[roomid].data.speedballX > 0)
@@ -208,7 +220,11 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			}
 			else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3) {
 				if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey) {
-					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 10 - 1;
+					let angle = relativePosition * Math.PI / 3;
+					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
+					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
+					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
 					if (this.rooms[roomid].data.speedballX > 0)
 						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
 					else
@@ -237,56 +253,65 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	@SubscribeMessage('OnKeyDownArrowDown')
 	async handleMessage_down(@ConnectedSocket() socket: Socket) {
 		const token = socket.handshake.auth.token;
-		const payload = await this.jwtService.verifyAsync(
-			token,
-			{
-				secret: process.env.JWTSECRET
+		try {
+			const payload = await this.jwtService.verifyAsync(
+				token,
+				{
+					secret: process.env.JWTSECRET
+				}
+			);
+			const user = await this.prisma.user.findFirst({
+				where: {
+					id: payload.sub,
+				},
+			})
+			if (!user)
+				socket.disconnect
+			const id = this.getroombyuser(user)
+			if (socket.id == this.rooms[id].data.jdscockid) {
+				if (this.rooms[id].data.jdroite < 8)
+					this.rooms[id].data.jdroite = this.rooms[id].data.jdroite + 1
 			}
-		);
-		const user = await this.prisma.user.findFirst({
-			where: {
-				id: payload.sub,
-			},
-		})
-		if (!user)
-			socket.disconnect
-		const id = this.getroombyuser(user)
-		if (socket.id == this.rooms[id].data.jdscockid) {
-			if (this.rooms[id].data.jdroite < 8)
-				this.rooms[id].data.jdroite = this.rooms[id].data.jdroite + 1
+			else if ((socket.id == this.rooms[id].data.jgscockid)) {
+				if (this.rooms[id].data.jgauche < 8)
+					this.rooms[id].data.jgauche = this.rooms[id].data.jgauche + 1
+			}
+			this.server.to((id).toString()).emit("update", this.rooms[id].data)
 		}
-		else if ((socket.id == this.rooms[id].data.jgscockid)) {
-			if (this.rooms[id].data.jgauche < 8)
-				this.rooms[id].data.jgauche = this.rooms[id].data.jgauche + 1
+		catch (e) {
 		}
-		this.server.to((id).toString()).emit("update", this.rooms[id].data)
 	}
 
 	@SubscribeMessage('OnKeyDownArrowUp')
 	async handleMessage_up(@ConnectedSocket() socket: Socket) {
 		const token = socket.handshake.auth.token;
-		const payload = await this.jwtService.verifyAsync(
-			token,
-			{
-				secret: process.env.JWTSECRET
+		try {
+			const payload = await this.jwtService.verifyAsync(
+				token,
+				{
+					secret: process.env.JWTSECRET
+				}
+			);
+			const user = await this.prisma.user.findFirst({
+				where: {
+					id: payload.sub,
+				},
+			})
+			if (!user)
+				socket.disconnect
+			const id = this.getroombyuser(user)
+			console.log("ee", id)
+			if (socket.id == this.rooms[id].data.jdscockid) {
+				if (this.rooms[id].data.jdroite > 0)
+					this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1
 			}
-		);
-		const user = await this.prisma.user.findFirst({
-			where: {
-				id: payload.sub,
-			},
-		})
-		if (!user)
-			socket.disconnect
-		const id = this.getroombyuser(user)
-		if (socket.id == this.rooms[id].data.jdscockid) {
-			if (this.rooms[id].data.jdroite > 0)
-				this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1
+			else if ((socket.id == this.rooms[id].data.jgscockid)) {
+				if (this.rooms[id].data.jgauche > 0)
+					this.rooms[id].data.jgauche = this.rooms[id].data.jgauche - 1
+			}
+			this.server.to((id).toString()).emit("update", this.rooms[id].data)
 		}
-		else if ((socket.id == this.rooms[id].data.jgscockid)) {
-			if (this.rooms[id].data.jgauche > 0)
-				this.rooms[id].data.jgauche = this.rooms[id].data.jgauche - 1
+		catch (e) {
 		}
-		this.server.to((id).toString()).emit("update", this.rooms[id].data)
 	}
 }
