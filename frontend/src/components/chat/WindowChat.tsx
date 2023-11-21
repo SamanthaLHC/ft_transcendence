@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+
 import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
