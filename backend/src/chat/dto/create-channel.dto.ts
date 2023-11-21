@@ -13,7 +13,7 @@ export class CreateChannelDto {
 	@IsNotEmpty()
 	@MaxLength(100)
 	@IsString()
-	@Matches(/^[A-Za-z0-9_-]*$/)
+	@Matches(/^[A-Za-z0-9_-]*$/, { message: "The channel name must only contain letters, digits, and '-' or '_'" })
 	name: string;
 
 	@IsEnum(Privacy)
