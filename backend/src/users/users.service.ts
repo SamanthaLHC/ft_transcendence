@@ -305,7 +305,7 @@ export class UsersService {
             })
         }
         else {
-            throw new ConflictException("Un utilisateur a deja ce nom !")
+            throw new ConflictException("This name is already used !")
         }
     }
 }
