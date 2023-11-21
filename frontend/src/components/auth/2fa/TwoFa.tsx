@@ -46,7 +46,6 @@ const TwoFa = () => {
 					navigate(tmp.pathname);
 				}
 				else {
-					console.log(datas);
 					alert("INVALID OTP");
 				}
 			} catch (error) {
