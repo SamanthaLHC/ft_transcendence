@@ -18,7 +18,6 @@ const MatchHistory: React.FC = () => {
 		let url_str: string = window.location.search;
 		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
 		let code_param: string | null = strToSearch.get("id");
-        console.log(code_param)
 		return code_param;
 	}
 

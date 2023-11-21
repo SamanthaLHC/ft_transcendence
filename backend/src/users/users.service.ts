@@ -52,7 +52,6 @@ export class UsersService {
 
     async getHistoFromId(id: string) {
         var id_num: number = +id
-        console.log("id reçu ", id);
         if (!id_num)
             throw new BadRequestException()
         const hist = await this.prisma.gameHistory.findMany({

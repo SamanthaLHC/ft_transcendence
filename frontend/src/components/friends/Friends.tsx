@@ -63,7 +63,6 @@ const Friends: React.FC = () => {
 				}
 			}
 			async function getUsers() {
-				console.log("getUsers:", searchQuery);
 				let uri_str: string
 				uri_str = 'http://localhost:3000/users/search?search=' + searchQuery
 				const req = new Request(uri_str, {
@@ -131,9 +130,3 @@ const Friends: React.FC = () => {
 }
 
 export default 	Friends;
-
-
-//TODO on click friends: ajouter les options 
-//TODO ajouter la diode de connexion
-//TODO get friends's pp with fetch get
-//TODO get friend profil page  (how ??)

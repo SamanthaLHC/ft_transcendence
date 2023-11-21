@@ -61,7 +61,6 @@ export class GameFGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('conection')
   async messconnect(@ConnectedSocket() socket: Socket, @MessageBody() id: string) {
     const id_num: number = +id
-    console.log("id_num ", id_num)
     if (!id_num) {
       socket.disconnect
       return;

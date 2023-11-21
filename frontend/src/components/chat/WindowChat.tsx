@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
+import CmdDialog from './channels/CmdDialog';
 import MessageChat from './MessageChat';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,10 +22,15 @@ const WindowChat: React.FC = () => {
 	const messageRef = useRef<HTMLDivElement | null>(null);
 	const { userData } = useUser();
 	const [displayName, setDisplayName] = useState("");
+	const [isCmdDialogOpen, setCmdDialogOpen] = useState(false);
+
 
 	const navTo = useNavigate();
 	const changetogamefriend = (id: string) => {
 		navTo("/gamefriend?id=" + id)
+	}
+	const actualiser = () => {
+		navTo(0)
 	}
 
 	useEffect(() => {
@@ -46,7 +52,7 @@ const WindowChat: React.FC = () => {
 			console.log('Chat connected to server', socket);
 		})
 
-		socket.socket.on('accgame', (data) => {
+		socket.socket.on('accgame', (data: any) => {
 			changetogamefriend(data)
 		});
 
@@ -54,10 +60,19 @@ const WindowChat: React.FC = () => {
 			updateMessages();
 		});
 		return () => {
-			socket.socket.off('connect')
-			socket.socket.off('update_front')
-		}
-	}, [])
+			if (socket) {
+				socket.channel = {
+					id: -1,
+					name: "",
+					privacy: ""
+				}
+				socket.socket.off('connect');
+				socket.socket.off('accgame');
+				socket.socket.off('update_front');
+				socket.socket.disconnect();
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		if (messageRef.current) {
@@ -66,7 +81,6 @@ const WindowChat: React.FC = () => {
 	}, [messages])
 
 	const updateMessages = () => {
-		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
 
 		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
@@ -78,7 +92,10 @@ const WindowChat: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.message) // if error
+				{
+					actualiser()
 					return;
+				}
 				const fetchedMessages = data.map((item: any) => {
 					const tmp: Message = {
 						id: item.id,
@@ -90,7 +107,6 @@ const WindowChat: React.FC = () => {
 					return tmp;
 				});
 				setMessages(fetchedMessages);
-				console.log("messages :", messages)
 			})
 			.catch((error) => {
 				console.error("Error updating channel " + socket.channel.name + ":", error);
@@ -158,7 +174,6 @@ const WindowChat: React.FC = () => {
 				.then((response) => response.json())
 				.then((data) => {
 					if (data) { // if error
-						console.log("return ", data.name)
 						setDisplayName("[DM] " + data.name);
 						// socket.channel.name = "[DM] " + data.name
 					}
@@ -178,6 +193,16 @@ const WindowChat: React.FC = () => {
 		fetchData();
 	}, [socket.channel]);
 
+	//_____________________________________handle cmd form for / button
+
+	const openCmdDialog = () => {
+		setCmdDialogOpen(true);
+	}
+
+	const closeCmdDialog = () => {
+		setCmdDialogOpen(false);
+	}
+
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
@@ -192,16 +217,21 @@ const WindowChat: React.FC = () => {
 					))}
 				</ul>
 			</div>
-			<div id="input-area">
-				<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
-					onChange={(e) => setInputValue(e.target.value)}
-					onKeyDown={handleSendKey} />
-				<button className="send-button" onClick={handleSendClick}> SEND </button>
-			</div >
-		</div >
+
+			{/* display only if in a channel:  */}
+			{(displayName || socket.channel.name) && (
+				<div id="input-area">
+					<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
+						onChange={(e) => setInputValue(e.target.value)}
+						onKeyDown={handleSendKey} />
+					<button className="send-button" onClick={handleSendClick}> SEND </button>
+					<button className="send-button" onClick={openCmdDialog}> / </button>
+					<CmdDialog isOpen={isCmdDialogOpen} channel={socket.channel} onClose={closeCmdDialog} />
+				</div>
+			)}
+			{/* ___________ */}
+		</div>
 	)
 }
 
 export default WindowChat;
-
-//HERE set de faux users et un lorem ipsum pour voir le rendu du chan
