@@ -68,7 +68,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 		let pos = this.sockets.indexOf(findSocket);
 		let removedItem = this.sockets.splice(pos, 1);
-		console.log("User " + removedItem["user"] + " was disconnected from " + removedItem["socket"])
 	}
 
 	@SubscribeMessage('change_room')
@@ -78,7 +77,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			findSocket.socket.leave(findSocket.room)
 		}
 		findSocket.socket.join(new_room)
-		console.log("Joining " + new_room)
 		findSocket.room = new_room
 		client.emit("update_front")
 	}

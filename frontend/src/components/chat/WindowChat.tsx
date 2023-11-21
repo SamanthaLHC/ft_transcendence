@@ -34,14 +34,12 @@ const WindowChat: React.FC = () => {
 	}
 
 	useEffect(() => {
-		console.log("socket: ", socket.socket)
 		let token = cookies.access_token;
 		socket.socket.auth = { token };
 		socket.socket.connect()
 
 		return () => {
 			if (socket.socket) {
-				console.log("Chat disconnected")
 				socket.socket.disconnect();
 			}
 		};
@@ -49,7 +47,7 @@ const WindowChat: React.FC = () => {
 
 	useEffect(() => {
 		socket.socket.on('connect', () => {
-			console.log('Chat connected to server', socket);
+			console.log('Chat connected to server');
 		})
 
 		socket.socket.on('accgame', (data: any) => {

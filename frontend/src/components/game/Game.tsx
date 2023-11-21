@@ -43,12 +43,11 @@ const Game: React.FC = () => {
 		// listen for events emitted by the server
 
 		socket.on('connect', () => {
-			console.log('Connected to server');
+			console.log('Game connected to server');
 			id = socket.id
 		});
 
 		socket.on('connect_room', (data) => {
-			console.log(`Received conect room: ${data}`);
 			setData(data)
 		});
 		socket.on('update', (data) => {

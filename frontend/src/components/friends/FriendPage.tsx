@@ -227,7 +227,6 @@ const Profil: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data) {
-					console.log("id ", id)
 					if (id)
 						changeToChat(id);
 				}

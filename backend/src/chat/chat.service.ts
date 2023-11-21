@@ -358,13 +358,6 @@ export class ChatService {
 			while (!channel || channel["message"]) {
 				const channelName = `priv_${userId}_${targetId}_` + Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
 				channel = await this.createChannelIfNotExists({ name: channelName, privacy: "PRIVATE" }, userId);
-				if (channel["message"]) {
-					console.log(channel["message"]);
-				}
-				else {
-					console.log("channel created");
-					console.log(channel);
-				}
 			}
 			await this.joinChannel(channel.id, targetId);
 			return channel;
@@ -638,7 +631,6 @@ export class ChatService {
 						status: "BANNED"
 					}
 				});
-				console.log("ret ", ret)
 				Logger.log(`User [${targetId}] banned channel [${channelId}]`, "ChatService");
 				return {};
 			}
