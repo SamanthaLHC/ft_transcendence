@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
@@ -47,7 +48,7 @@ const Profil: React.FC = () => {
 
 				const response = await fetch(req);
 				const datas = await response.json();
-				if (datas.id == id_num) {
+				if (datas.id === id_num) {
 					changeToProfile()
 				}
 			}

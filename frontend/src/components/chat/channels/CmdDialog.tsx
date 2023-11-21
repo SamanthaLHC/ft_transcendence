@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
@@ -25,7 +26,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [isPwdFormOpen, setPwdFormOpen] = useState(false);
 	const [cookies] = useCookies(['access_token']);
 	const socket = useChatSocket();
-	const { isOpen, onClose: onClose } = props;
+	const { isOpen, onClose } = props;
 	const { channel } = props;
 	const { userData } = useUser();
 
@@ -598,7 +599,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			setIsAdmin(false);
 			setIsOwner(false);
 
-			if (socket.channel.id != -1) {
+			if (socket.channel.id !== -1) {
 
 				const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/status', {
 					method: "GET",
@@ -613,10 +614,10 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					const datas = await response.json();
 
 					if (response.ok) {
-						if (datas.status == 'ADMIN') {
+						if (datas.status === 'ADMIN') {
 							setIsAdmin(true);
 						}
-						if (datas.status == 'OWNER') {
+						if (datas.status === 'OWNER') {
 							setIsOwner(true);
 						}
 					}

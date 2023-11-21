@@ -1,5 +1,6 @@
 import React from 'react'
 import { Avatar } from "@mui/material";
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react'
 import { useCookies } from "react-cookie";
 import Header from '../header/Header'
@@ -17,7 +18,7 @@ const Settings: React.FC = () => {
 	const [active2fa, setActive2fa] = useState<boolean>(false);
 	const [inputValue, setInputValue] = useState(''); // change name handle key event
 	const [file, setFile] = useState<File | null>(null); // Store the selected file	
-	const [oldfile, setOldFile] = useState<File | null>(null); // Store the selected file	
+	// const [oldfile, setOldFile] = useState<File | null>(null); // Store the selected file	
 	const { userData, updateUserData } = useUser();
 	const navigate = useNavigate(); // handle redirection
 

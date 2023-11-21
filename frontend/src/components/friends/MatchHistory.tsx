@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
 import { useCookies } from "react-cookie";
 
@@ -14,7 +15,7 @@ const MatchHistory: React.FC = () => {
 	const [playerNames, setPlayerNames] = useState<{ [key: number]: string }>({});
 	const [cookies] = useCookies(['access_token']);
 
-    function getId(): string | null {
+	function getId(): string | null {
 		let url_str: string = window.location.search;
 		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
 		let code_param: string | null = strToSearch.get("id");
@@ -49,10 +50,8 @@ const MatchHistory: React.FC = () => {
 			}
 		};
 		getMatch();
-	}, [cookies.access_token, ]);
+	}, [cookies.access_token,]);
 
-	// Function to get user name by ID
-	
 
 	useEffect(() => {
 
@@ -64,9 +63,9 @@ const MatchHistory: React.FC = () => {
 						Authorization: `Bearer ${cookies.access_token}`,
 					},
 				});
-	
+
 				const response = await fetch(req);
-	
+
 				if (response.ok) {
 					const user = await response.json();
 					return user.name;
