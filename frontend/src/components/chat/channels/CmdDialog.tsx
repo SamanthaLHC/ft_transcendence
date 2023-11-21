@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useChatSocket } from '../../Context';
 import { useCookies } from 'react-cookie';
-import { Navigate, NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import MuteForm from './MuteForm';
 import PwdForm from './PwdForm';
 import { useUser } from "../../Context";
@@ -25,9 +25,14 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const [isPwdFormOpen, setPwdFormOpen] = useState(false);
 	const [cookies] = useCookies(['access_token']);
 	const socket = useChatSocket();
-	const { isOpen, onClose } = props;
+	const { isOpen, onClose: onClose } = props;
 	const { channel } = props;
 	const { userData } = useUser();
+
+	const myOnClose = () => {
+		setInputValue('');
+		onClose();
+	}
 
 	const navToFriend = useNavigate();
 	const changeToFriend = (id: number) => {
@@ -59,7 +64,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas.message !== "Blank username") {
-					onClose();
+					myOnClose();
 					changeToFriend(datas.userId)
 				}
 			}
@@ -84,7 +89,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		try {
 			const response = await fetch(req);
 			if (response.ok) {
-				onClose();
+				myOnClose();
 				alert("Succes");
 			}
 			else
@@ -167,7 +172,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						alert("You never blocked yourself")
 					else {
 						removerelation(datas.userId)
-						onClose();
+						myOnClose();
 					}
 				}
 			}
@@ -215,7 +220,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						.then((data) => {
 							if (data) {
 								if (datas.message !== "Blank username") {
-									onClose();
+									myOnClose();
 									changeToChat(datas.userId);
 								}
 							}
@@ -325,7 +330,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 								if (data.message) {
 									alert("Error sending message: " + data.message)
 								} else {
-									onClose();
+									myOnClose();
 									socket.socket.emit('update', inputValue)
 								}
 							})
@@ -365,7 +370,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 					alert("Error : " + datas.message)
 				}
 				else if (datas.message !== "Blank username") {
-					onClose();
+					myOnClose();
 					changeToChat(datas.userId)
 				}
 			}
@@ -412,7 +417,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 								if (data.message) {
 									alert("Error sending message: " + data.message)
 								} else {
-									onClose();
+									myOnClose();
 									socket.socket.emit('update', inputValue)
 								}
 							})
@@ -464,7 +469,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 								if (data.message) {
 									alert("Error sending message: " + data.message)
 								} else {
-									onClose();
+									myOnClose();
 									socket.socket.emit('update', inputValue)
 								}
 							})
@@ -521,7 +526,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							.catch((error) => {
 								console.error("Error sending message:", error);
 							});
-						onClose();
+						myOnClose();
 					}
 
 				})
@@ -575,7 +580,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							.catch((error) => {
 								console.error("Error sending message:", error);
 							});
-						onClose();
+						myOnClose();
 					}
 
 				})
@@ -653,7 +658,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				if (datas.message && datas.message !== "Blank username")
 					alert(datas.message);
 				else if (datas.message !== "Blank username") {
-					onClose();
+					myOnClose();
 					alert(`${inputValue} Sucessfully muted for ${time} secondes`);
 				}
 
@@ -692,7 +697,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			if (datas.message)
 				alert(datas.message);
 			else {
-				onClose();
+				myOnClose();
 				alert(`Password succefully set`);
 			}
 		} catch (error) {
@@ -721,7 +726,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			if (datas.message)
 				alert(datas.message);
 			else {
-				onClose();
+				myOnClose();
 				alert(`Password succefully unset`);
 			}
 
@@ -765,7 +770,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			<div className='dialog-header'>
 				<div className="dialog-title azonix yellow ">Who?</div>
 				<div className='close-btn-pos '>
-					<button className='close-btn' onClick={onClose}>x</button>
+					<button className='close-btn' onClick={myOnClose}>x</button>
 				</div>
 			</div>
 			<div className="dialog-content">
