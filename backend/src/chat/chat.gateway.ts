@@ -46,7 +46,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 		let findSocket = this.sockets.find(sockets => sockets.socket === socket)
 		let pos = this.sockets.indexOf(findSocket);
-		console.log("hello chat ")
 	}
 
 	async handleDisconnect(@ConnectedSocket() client: Socket) {

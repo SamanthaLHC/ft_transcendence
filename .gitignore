@@ -41,3 +41,4 @@ lerna-debug.log*
 start.sh
 notes
 tests.txt
+backend/prisma/.nfs*

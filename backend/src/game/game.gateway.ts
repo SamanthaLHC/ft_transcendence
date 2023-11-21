@@ -147,6 +147,8 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	}
 
 	getroombyuser(user: User): number {
+		if(!this.rooms)
+			return -1
 		let i = this.rooms.length - 1;
 		while (this.rooms[i]) {
 			if (this.rooms[i].userone.id === user.id)

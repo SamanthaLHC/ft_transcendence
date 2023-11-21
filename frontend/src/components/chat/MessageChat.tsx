@@ -49,7 +49,6 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 
 	const { userData } = useUser();
 	const [cookies] = useCookies(["access_token"]);
-	console.log("mess type ", message.type)
 
 	const navTo = useNavigate();
 	const changetogamefriend = (id:string) => {
@@ -81,7 +80,6 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 		})
 		fetch(req)
 			.then((response) => {
-				console.log("mess ", message)
 				socket.emit('accepterinvgame', message.id)
 				changetogamefriend((message.senderId).toString())
 			})

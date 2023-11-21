@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useChatSocket } from '../Context';
 import { useCookies } from "react-cookie";
 import { useUser } from "../Context";
+import CmdDialog from './channels/CmdDialog';
 import MessageChat from './MessageChat';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,41 +22,53 @@ const WindowChat: React.FC = () => {
 	const messageRef = useRef<HTMLDivElement | null>(null);
 	const { userData } = useUser();
 	const [displayName, setDisplayName] = useState("");
+	const [isCmdDialogOpen, setCmdDialogOpen] = useState(false);
 
-	//Socket
 
 	const navTo = useNavigate();
-	const changetogamefriend = (id:string) => {
+	const changetogamefriend = (id: string) => {
 		navTo("/gamefriend?id=" + id)
 	}
+	const actualiser = () => {
+		navTo(0)
+	}
+
 	useEffect(() => {
-		// , {
-		// 	autoConnect: false,
-		//   });
+		console.log("socket: ", socket.socket)
 		let token = cookies.access_token;
 		socket.socket.auth = { token };
 		socket.socket.connect()
-		// setSocket(socketInstance);
 
-		// listen for events emitted by the server
+		return () => {
+			if (socket.socket) {
+				console.log("Chat disconnected")
+				socket.socket.disconnect();
+			}
+		};
+	}, []);
 
+	useEffect(() => {
 		socket.socket.on('connect', () => {
-			console.log('Chat connected to server');
-		});
+			console.log('Chat connected to server', socket);
+		})
 
-		socket.socket.on('accgame', (data) => {
+		socket.socket.on('accgame', (data: any) => {
 			changetogamefriend(data)
 		});
 
 		socket.socket.on('update_front', () => {
 			updateMessages();
 		});
-
 		return () => {
 			if (socket) {
-				socket.socket.off('connect')
-				socket.socket.off('accgame')
-				socket.socket.off('update_front')
+				socket.channel = {
+					id: -1,
+					name: "",
+					privacy: ""
+				}
+				socket.socket.off('connect');
+				socket.socket.off('accgame');
+				socket.socket.off('update_front');
 				socket.socket.disconnect();
 			}
 		};
@@ -68,7 +81,6 @@ const WindowChat: React.FC = () => {
 	}, [messages])
 
 	const updateMessages = () => {
-		console.log('I must update', socket.channel.name, '(ID:', socket.channel.id, ')');
 
 		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
@@ -80,10 +92,13 @@ const WindowChat: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data.message) // if error
+				{
+					actualiser()
 					return;
+				}
 				const fetchedMessages = data.map((item: any) => {
-					const tmp:Message = {
-						id:	item.id,
+					const tmp: Message = {
+						id: item.id,
 						sender: item.sender.name,
 						senderId: item.sender.id,
 						msg: item.content,
@@ -92,7 +107,6 @@ const WindowChat: React.FC = () => {
 					return tmp;
 				});
 				setMessages(fetchedMessages);
-				console.log("messages :", messages)
 			})
 			.catch((error) => {
 				console.error("Error updating channel " + socket.channel.name + ":", error);
@@ -155,12 +169,11 @@ const WindowChat: React.FC = () => {
 					Authorization: `Bearer ${cookies.access_token}`,
 				},
 			});
-	
+
 			await fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
 					if (data) { // if error
-						console.log("return ", data.name)
 						setDisplayName("[DM] " + data.name);
 						// socket.channel.name = "[DM] " + data.name
 					}
@@ -169,41 +182,56 @@ const WindowChat: React.FC = () => {
 					console.error("Error fetching channels:", error);
 				});
 		};
-        const fetchData = async () => {
-            if (socket.channel.privacy === "PRIVATE") {
-                await getnamedm(socket.channel.id);
-            }
+		const fetchData = async () => {
+			if (socket.channel.privacy === "PRIVATE") {
+				await getnamedm(socket.channel.id);
+			}
 			else
 				setDisplayName("");
-        };
+		};
 
-        fetchData();
-    }, [socket.channel]);
+		fetchData();
+	}, [socket.channel]);
+
+	//_____________________________________handle cmd form for / button
+
+	const openCmdDialog = () => {
+		setCmdDialogOpen(true);
+	}
+
+	const closeCmdDialog = () => {
+		setCmdDialogOpen(false);
+	}
 
 	return (
 		<div className='chat-content'> {/* the big window */}
 			<div className='chat-header'> {/* en tete avec tite du chan */}
-				{ displayName || socket.channel.name }
+				{displayName || socket.channel.name}
 			</div >
 			<div className='messages-area' ref={element => (messageRef.current = element)}>	{/* the conv space */}
 				<ul>
 					{messages.map((message, index) => (
-						<li key={index} className={ message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
-							<MessageChat message={message}/>
+						<li key={index} className={message.sender === userData.name ? 'my-message typo-message' : 'other-message typo-message'}>
+							<MessageChat message={message} />
 						</li>
 					))}
 				</ul>
 			</div>
-			<div id="input-area">
-				<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
-					onChange={(e) => setInputValue(e.target.value)}
-					onKeyDown={handleSendKey} />
-				<button className="send-button" onClick={handleSendClick}> SEND </button>
-			</div>
+
+			{/* display only if in a channel:  */}
+			{(displayName || socket.channel.name) && (
+				<div id="input-area">
+					<textarea id="inputMsg" name="inputMsg" value={inputValue} maxLength={5000}
+						onChange={(e) => setInputValue(e.target.value)}
+						onKeyDown={handleSendKey} />
+					<button className="send-button" onClick={handleSendClick}> SEND </button>
+					<button className="send-button" onClick={openCmdDialog}> / </button>
+					<CmdDialog isOpen={isCmdDialogOpen} channel={socket.channel} onClose={closeCmdDialog} />
+				</div>
+			)}
+			{/* ___________ */}
 		</div>
 	)
 }
 
 export default WindowChat;
-
-//HERE set de faux users et un lorem ipsum pour voir le rendu du chan

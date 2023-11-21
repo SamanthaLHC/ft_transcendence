@@ -66,7 +66,6 @@ type CanvasProps = {
 
     const drawback = (ctx: CanvasRenderingContext2D, wight: number, height: number) => {
         ctx.fillStyle = '#000000';
-        console.log("D", data.jgauche*height/10)
         ctx.fillRect(0, 0, 2*wight/100, data.jgauche*height/10);
         ctx.fillRect(0, (data.jgauche*height/10)+10*wight/100, 2*wight/100, height);
         ctx.fillRect(2*wight/100, 0, (wight-2*wight/100)-2*wight/100, height);
@@ -84,7 +83,6 @@ type CanvasProps = {
         const canvas = canvasRef.current;
         if (canvas) {
             const context = canvas.getContext('2d');
-            console.log("ici")
             if (context) {
                 // context.clearRect(0, 0, canvas.width, canvas.height)
                 context.beginPath()
