@@ -207,7 +207,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const response = await fetch(req);
 				const datas = await response.json();
 				if (datas.userId) {
-					navToChat("/home")
 					const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/private/game/" + datas.userId, {
 						method: "POST",
 						headers: {
@@ -221,7 +220,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 							if (data) {
 								if (datas.message !== "Blank username") {
 									myOnClose();
-									changeToChat(datas.userId);
+									socket.socket.emit('update_otherchan', data.channelId)
 								}
 							}
 						})

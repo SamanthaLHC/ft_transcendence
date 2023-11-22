@@ -89,6 +89,19 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		}
 	}
 
+	@SubscribeMessage('update_otherchan')
+	async updateotherchan(@MessageBody() messid: number, @ConnectedSocket() client: Socket) {
+		const chan = await this.prisma.channels.findFirst({
+			where: {
+				id: messid
+			}
+		})
+		let findSocket = this.sockets.find(sockets => sockets.room === chan.name)
+		if (findSocket.room !== "") {
+			this.server.to(findSocket.room).emit("update_front", findSocket.room)
+		}
+	}
+
 	@SubscribeMessage('accepterinvgame')
 	async acceptergame(@MessageBody() messid: string, @ConnectedSocket() client: Socket) {
 		const message = await this.prisma.messages.findFirst({
