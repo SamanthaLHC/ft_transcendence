@@ -56,7 +56,7 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 	}
 
 	const handleRefuseClick = () => {
-		const req = new Request("http://localhost:3000/chat/gameinvite/refuser/" + message.id, {
+		const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/gameinvite/refuser/" + message.id, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
@@ -72,7 +72,7 @@ const MessageChat: React.FC<MessageProps> = ({ message }) => {
 	}
 
 	const handleAccepterClick = () => {
-		const req = new Request("http://localhost:3000/chat/gameinvite/accepter/" + message.id, {
+		const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/gameinvite/accepter/" + message.id, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,

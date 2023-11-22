@@ -28,7 +28,7 @@ const TwoFa = () => {
 			const obj = {
 				code: otp
 			};
-			const req: Request = new Request('http://localhost:3000/auth/2fa', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/auth/2fa', {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",

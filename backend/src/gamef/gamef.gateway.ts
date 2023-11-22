@@ -7,7 +7,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { GameFService } from './gamef.service';
 
-@WebSocketGateway({ cors: { origin: ['http://localhost:8000'] }, namespace: 'fgame' })
+@WebSocketGateway({ cors: { origin: ['http://' + process.env.REACT_APP_HOSTNAME + ':8000'] }, namespace: 'fgame' })
 export class GameFGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private jwtService: JwtService, private usersService: UsersService, private prisma: PrismaService, private gameFService: GameFService) { }
   @WebSocketServer()

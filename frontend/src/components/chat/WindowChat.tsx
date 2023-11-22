@@ -82,7 +82,7 @@ const WindowChat: React.FC = () => {
 
 	const updateMessages = () => {
 
-		const req = new Request("http://localhost:3000/chat/messages/" + socket.channel.id, {
+		const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/messages/" + socket.channel.id, {
 			method: "GET",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
@@ -136,7 +136,7 @@ const WindowChat: React.FC = () => {
 			const body = {
 				msg: inputValue,
 			};
-			const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+			const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/new_message/" + socket.channel.id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -163,7 +163,7 @@ const WindowChat: React.FC = () => {
 	useEffect(() => {
 
 		const getnamedm = async (id: number) => {
-			const req = new Request("http://localhost:3000/chat/channel/private/getname/" + id, {
+			const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/private/getname/" + id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,

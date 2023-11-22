@@ -57,7 +57,7 @@ interface ChatSocketType {
 	channel: Channel;
 }
 
-export const socket = io('http://localhost:3000/chat', {autoConnect: false});
+export const socket = io('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat', {autoConnect: false});
 export const ChatSocketContext = React.createContext<ChatSocketType>({socket: socket, channel: {id: -1, name: "", privacy: ""}});
 
 export const ChatSocketProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

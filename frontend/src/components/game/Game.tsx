@@ -18,7 +18,7 @@ let id = ""
 const Game: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [data, setData] = useState(null);
-	const socket = io('http://localhost:3000/game', {
+	const socket = io('http://' + process.env.REACT_APP_HOSTNAME + ':3000/game', {
 		autoConnect: false,
 	});
 

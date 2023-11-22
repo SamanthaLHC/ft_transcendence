@@ -29,7 +29,7 @@ const Settings: React.FC = () => {
 	useEffect(() => {
 		const initTwofa = async () => {
 			try {
-				const req: Request = new Request('http://localhost:3000/users/2fa/state', {
+				const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/2fa/state', {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${cookies.access_token}`,
@@ -49,7 +49,7 @@ const Settings: React.FC = () => {
 
 	const enableTwofa = async () => {
 		try {
-			const req: Request = new Request('http://localhost:3000/users/2fa/turn-on', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/2fa/turn-on', {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -69,7 +69,7 @@ const Settings: React.FC = () => {
 
 	const disableTwofa = async () => {
 		try {
-			const req: Request = new Request('http://localhost:3000/users/2fa/turn-off', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/2fa/turn-off', {
 				method: 'POST',
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -107,7 +107,7 @@ const Settings: React.FC = () => {
 				const obj = {
 					name: inputValue
 				};
-				const req: Request = new Request('http://localhost:3000/users/update_name', {
+				const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/update_name', {
 					method: "POST",
 					headers: {
 						"content-type": "application/json",
@@ -156,7 +156,7 @@ const Settings: React.FC = () => {
 			const formData = new FormData();
 			formData.append('file', file);
 			try {
-				const req = new Request("http://localhost:3000/users/upload", {
+				const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/users/upload", {
 					method: "POST",
 					headers: {
 						Authorization: `Bearer ${cookies.access_token}`,
