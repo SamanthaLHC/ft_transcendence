@@ -185,7 +185,6 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	const navToChat = useNavigate();
 	const changeToChat = (id: string) => {
 		let pathChat: string = '/chat?mpid=' + id;
-		console.log("PATH IN CHANGE TO CHAT :", pathChat);
 		navToChat(pathChat);
 		navToChat(0)
 	}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import SearchBar from './SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -28,7 +29,6 @@ const Channels: React.FC = () => {
 		let url_str: string = window.location.search;
 		let strToSearch: URLSearchParams = new URLSearchParams(url_str);
 		let code_param: string | null = strToSearch.get("mpid");
-		console.log(code_param)
 		return code_param;
 	}
 
@@ -61,11 +61,9 @@ const Channels: React.FC = () => {
 			return fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
-					console.log(data);
 					const fetchedChannels = data.map((item: any) => {
 						let newchan:Channel = item
 						newchan.displayname = item.name
-						console.log("coucou ", newchan)
 						return newchan;
 					});
 					setChannels(fetchedChannels);
@@ -87,6 +85,10 @@ const Channels: React.FC = () => {
 			fetch(req)
 				.then((response) => response.json())
 				.then((data) => {
+					if (data.message)
+					{
+						alert("Error :" + data.message);
+					}
 					if (data.name) {
 						tochat()
 						socket.socket.emit('change_room', data.name);
@@ -95,7 +97,6 @@ const Channels: React.FC = () => {
 					}
 					else
 					{
-						console.log("nop")
 						tochat()
 					}
 				})

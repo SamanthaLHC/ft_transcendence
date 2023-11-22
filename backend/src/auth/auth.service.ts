@@ -104,7 +104,7 @@ export class AuthService {
         })
         var data = await raiponce.json();
         if (raiponce.status != 200) {
-            console.log("nop 1")
+            console.log("API key expired")
             throw new HttpException({
                 status: 401,
                 error: 'Erreur API 42',
@@ -118,7 +118,7 @@ export class AuthService {
         })
         var data2 = await raiponce2.json()
         if (raiponce2.status != 200) {
-            console.log("nop 2")
+            console.log("API 42 error")
             throw new HttpException({
                 status: 401,
                 error: 'Erreur API 42',

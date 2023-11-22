@@ -12,6 +12,7 @@ import TwoFaQRCodePage from "../auth/2fa/TwoFaQRCodePage";
 import TwoFa from "../auth/2fa/TwoFa";
 import { ChatSocketProvider, UserProvider } from "../Context"
 import { useEffect } from 'react';
+// import { useState } from 'react';
 import { io } from 'socket.io-client';
 import { useCookies } from 'react-cookie';
 import GameF from "../gamefriend/GameF";
@@ -23,11 +24,11 @@ const App: React.FC = () => {
 	const imageUrl = params.imageUrl || '';
 
 	const [cookies] = useCookies(["access_token"]);
+	// const [isLogged, setIslogged] = useState(false)
 	useEffect(() => {
 		const socket = io('http://localhost:3000/status', {
 			autoConnect: false,
 		});
-		console.log(cookies.access_token)
 		if (cookies.access_token) {
 			let token = cookies.access_token;
 			socket.auth = { token };
@@ -37,6 +38,7 @@ const App: React.FC = () => {
 			});
 			return () => {
 				if (socket) {
+					socket.off('connect')
 					socket.disconnect();
 				}
 			}

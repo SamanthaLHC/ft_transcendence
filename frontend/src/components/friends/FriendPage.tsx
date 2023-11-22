@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import Header from '../header/Header'
 import Friends from '../friends/Friends'
@@ -47,7 +48,6 @@ const Profil: React.FC = () => {
 
 				const response = await fetch(req);
 				const datas = await response.json();
-				console.log(datas)
 				if (datas.id === id_num) {
 					changeToProfile()
 				}
@@ -91,7 +91,7 @@ const Profil: React.FC = () => {
 			checkme(id)
 			initstatusfa(id);
 		}
-	}, [cookies.access_token, setFriend, setblock, getId, navToHome]);
+	}, [cookies.access_token, setFriend, setblock, navToHome]);
 
 
 	useEffect(() => {
@@ -115,7 +115,7 @@ const Profil: React.FC = () => {
 		let id = getId()
 		if (id)
 			getUserInfo(id);
-	}, [cookies.access_token, getId, changeToHome]);
+	}, [cookies.access_token]);
 	if (!userInfos) {
 		return null
 	}
@@ -228,7 +228,6 @@ const Profil: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				if (data) {
-					console.log("id ", id)
 					if (id)
 						changeToChat(id);
 				}
@@ -252,16 +251,16 @@ const Profil: React.FC = () => {
 						<div className='typo-friends yellow'>
 							{userInfos.name}
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickfriend}> {friend ? "Remove friend" : "add Friend"}</button>
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickblock}>{block ? "Unblock" : "block"}</button>
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickMP}>Direct Message</button>
 						</div>
-						<div className='btn-pos'>
+						<div className='btn-friend-page'>
 							<button className="btn-size" onClick={handleClickGame}>Invite Game</button>
 						</div>
 					</div>

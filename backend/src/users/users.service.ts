@@ -52,7 +52,6 @@ export class UsersService {
 
     async getHistoFromId(id: string) {
         var id_num: number = +id
-        console.log("id reçu ", id);
         if (!id_num)
             throw new BadRequestException()
         const hist = await this.prisma.gameHistory.findMany({
@@ -297,7 +296,12 @@ export class UsersService {
         if (name.length > 15)
             throw new BadRequestException("Name too long: should be between 1 and 15 caracters")
         const user = await this.prisma.user.findFirst({
-            where: { name: name },
+            where: { 
+                name:{
+                    contains: name,
+                    mode: 'insensitive'
+                },
+            },
         })
         if (!user) {
             await this.prisma.user.update({
@@ -306,7 +310,7 @@ export class UsersService {
             })
         }
         else {
-            throw new ConflictException("Un utilisateur a deja ce nom !")
+            throw new ConflictException("This name is already used !")
         }
     }
 }

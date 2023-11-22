@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import ducky from '../../assets/fire.gif'
 import win from '../../assets/win.gif'
@@ -41,7 +42,6 @@ const GameF: React.FC = () => {
 		});
 		let token = cookies.access_token;
 		socket.auth = { token };
-		console.log("commect")
 		socket.connect()
 		// setSocket(socketInstance);
 
@@ -54,11 +54,9 @@ const GameF: React.FC = () => {
 		});
 
 		socket.on('connect_room', (data) => {
-			console.log(`Received conect room: ${data}`);
 			setData(data)
 		});
 		socket.on('update', (data) => {
-			// console.log("balle ", data.posballex, data.posballey)
 			setData(data)
 		});
 		socket.on('aff_win', (data) => {
@@ -86,6 +84,12 @@ const GameF: React.FC = () => {
 
 		return () => {
 			if (socket) {
+				socket.off('connect')
+				socket.off('connect_room')
+				socket.off('update')
+				socket.off('aff_win')
+				socket.off('game_finish')
+				socket.off('colpad')
 				socket.disconnect();
 			}
 		};
