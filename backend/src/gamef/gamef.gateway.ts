@@ -194,36 +194,45 @@ export class GameFGateway implements OnGatewayConnection, OnGatewayDisconnect {
         this.server.to("friend_" + (roomid).toString()).emit("update", this.rooms[roomid].data)
         await new Promise(f => setTimeout(f, 3000));
       }
-      if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100) {
-        if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey) {
-          this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
-          this.rooms[roomid].data.posballex = 96
-          if (this.rooms[roomid].data.speedballX > 0)
-            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
-          else
-            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX - 0.05
-          if (this.rooms[roomid].data.speedballY > 0)
-            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY + 0.05
-          else
-            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY - 0.05
-          this.server.to("friend_" + (roomid).toString()).emit("colpad")
-        }
-      }
-      else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3) {
-        if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey) {
-          this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
-          if (this.rooms[roomid].data.speedballX > 0)
-            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
-          else
-            this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX - 0.05
-          if (this.rooms[roomid].data.speedballY > 0)
-            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY + 0.05
-          else
-            this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY - 0.05
-          this.rooms[roomid].data.posballex = 4
-          this.server.to("friend_" + (roomid).toString()).emit("colpad")
-        }
-      }
+			if (this.rooms[roomid].data.posballex >= 97 && this.rooms[roomid].data.posballex <= 100) {
+				if ((this.rooms[roomid].data.jdroite * 10) <= this.rooms[roomid].data.posballey && (this.rooms[roomid].data.jdroite * 10) + 20 >= this.rooms[roomid].data.posballey) {
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jdroite * 10)) / 10 - 1;
+					let angle = relativePosition * Math.PI / 3;
+					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
+					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
+					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
+					this.rooms[roomid].data.speedballX = -this.rooms[roomid].data.speedballX
+					this.rooms[roomid].data.posballex = 96
+					if (this.rooms[roomid].data.speedballX > 0)
+						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
+					else
+						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX - 0.05
+					if (this.rooms[roomid].data.speedballY > 0)
+						this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY + 0.05
+					else
+						this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY - 0.05
+					this.server.to((roomid).toString()).emit("colpad")
+				}
+			}
+			else if (this.rooms[roomid].data.posballex >= 0 && this.rooms[roomid].data.posballex <= 3) {
+				if ((this.rooms[roomid].data.jgauche * 10) <= this.rooms[roomid].data.posballey && this.rooms[roomid].data.jgauche * 10 + 20 >= this.rooms[roomid].data.posballey) {
+					let relativePosition = (this.rooms[roomid].data.posballey - (this.rooms[roomid].data.jgauche * 10)) / 10 - 1;
+					let angle = relativePosition * Math.PI / 3;
+					let originalSpeed = Math.sqrt(this.rooms[roomid].data.speedballX ** 2 + this.rooms[roomid].data.speedballY ** 2);
+					this.rooms[roomid].data.speedballX = originalSpeed * Math.cos(angle);
+					this.rooms[roomid].data.speedballY = originalSpeed * Math.sin(angle);
+					if (this.rooms[roomid].data.speedballX > 0)
+						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX + 0.05
+					else
+						this.rooms[roomid].data.speedballX = this.rooms[roomid].data.speedballX - 0.05
+					if (this.rooms[roomid].data.speedballY > 0)
+						this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY + 0.05
+					else
+						this.rooms[roomid].data.speedballY = this.rooms[roomid].data.speedballY - 0.05
+					this.rooms[roomid].data.posballex = 4
+					this.server.to((roomid).toString()).emit("colpad")
+				}
+			}
       if (this.rooms[roomid].data.posballey <= 0 || this.rooms[roomid].data.posballey >= 100)
         this.rooms[roomid].data.speedballY = -this.rooms[roomid].data.speedballY
       this.server.to("friend_" + (roomid).toString()).emit("update", this.rooms[roomid].data)
