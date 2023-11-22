@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import SearchBar from './SearchBar';
 import AddCircleIcon from '@mui/icons-material/AddCircle';

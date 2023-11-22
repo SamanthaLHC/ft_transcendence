@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router";
-import { useUser } from "../Context";
 
 function getCode(): string | null {
 	let url_str: string = window.location.search;
@@ -10,12 +9,11 @@ function getCode(): string | null {
 	return code_param;
 }
 
-//renderless component
 const AuthProcess: React.FC = () => {
 
 	const [cookies, setCookie] = useCookies(["access_token"]);
 	const [authDone, setAuthDone] = useState(false);
-	const navigate = useNavigate(); 
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		async function getTok(): Promise<void> {

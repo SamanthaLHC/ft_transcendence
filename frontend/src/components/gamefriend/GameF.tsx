@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react'
 import ducky from '../../assets/fire.gif'
 import win from '../../assets/win.gif'
