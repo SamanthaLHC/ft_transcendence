@@ -93,7 +93,7 @@ const Profil: React.FC = () => {
 			checkme(id)
 			initstatusfa(id);
 		}
-	}, [cookies.access_token, setFriend, setblock, navToHome]);
+	}, [cookies.access_token, setFriend, setblock, navToHome, window.location.search]);
 
 
 	useEffect(() => {
@@ -117,7 +117,7 @@ const Profil: React.FC = () => {
 		let id = getId()
 		if (id)
 			getUserInfo(id);
-	}, [cookies.access_token]);
+	}, [cookies.access_token, window.location.search]);
 	if (!userInfos) {
 		return null
 	}

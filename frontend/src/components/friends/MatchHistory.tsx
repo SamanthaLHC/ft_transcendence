@@ -49,7 +49,7 @@ const MatchHistory: React.FC = () => {
 			}
 		};
 		getMatch();
-	}, [cookies.access_token,]);
+	}, [cookies.access_token, window.location.search]);
 
 
 	useEffect(() => {

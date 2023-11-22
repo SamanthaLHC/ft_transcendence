@@ -39,7 +39,7 @@ const WinsAndLoses: React.FC = () => {
         let id = getId()
         if (id)
             getWinsAndLoses(id);
-    }, [cookies.access_token]);
+    }, [cookies.access_token, window.location.search]);
 
     return (
         <React.Fragment>
