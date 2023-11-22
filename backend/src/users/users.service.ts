@@ -295,9 +295,13 @@ export class UsersService {
     async updateName(id: number, name: string) {
         if (name.length > 15)
             throw new BadRequestException("Name too long: should be between 1 and 15 caracters")
-        name = name.toLowerCase()
         const user = await this.prisma.user.findFirst({
-            where: { name: name },
+            where: { 
+                name:{
+                    contains: name,
+                    mode: 'insensitive'
+                },
+            },
         })
         if (!user) {
             await this.prisma.user.update({
