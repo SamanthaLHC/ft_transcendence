@@ -37,7 +37,7 @@ const GameF: React.FC = () => {
 
 	useEffect(() => {
 
-		const socket = io('http://localhost:3000/fgame', {
+		const socket = io('http://' + process.env.REACT_APP_HOSTNAME + ':3000/fgame', {
 			autoConnect: false,
 		});
 		let token = cookies.access_token;

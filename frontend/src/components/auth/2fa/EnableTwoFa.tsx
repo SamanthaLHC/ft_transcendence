@@ -32,7 +32,7 @@ const EnableTwoFa = () => {
             const obj = {
                 code: otp
             };
-            const req: Request = new Request('http://localhost:3000/users/2fa/validate', {
+            const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/2fa/validate', {
                 method: "POST",
                 headers: {
                     "content-type": "application/json",

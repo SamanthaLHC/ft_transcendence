@@ -53,7 +53,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -78,7 +78,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			target_id: id,
 			status: status
 		};
-		const req: Request = new Request('http://localhost:3000/users/addup_relation', {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/addup_relation', {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",
@@ -104,7 +104,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		const obj = {
 			target_id: id,
 		};
-		const req: Request = new Request('http://localhost:3000/users/rm_relation', {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/rm_relation', {
 			method: "DELETE",
 			headers: {
 				"content-type": "application/json",
@@ -129,7 +129,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -157,7 +157,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -196,7 +196,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -209,7 +209,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				const datas = await response.json();
 				if (datas.userId) {
 					navToChat("/home")
-					const req = new Request("http://localhost:3000/chat/channel/private/game/" + datas.userId, {
+					const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/private/game/" + datas.userId, {
 						method: "POST",
 						headers: {
 							Authorization: `Bearer ${cookies.access_token}`,
@@ -236,7 +236,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	}
 
 	const kick = async (channelid: number, targetId: number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/' + channel.id + '/kick/' + targetId, {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel/' + channel.id + '/kick/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -256,7 +256,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	}
 
 	const ban = async (channelid: number, targetId: number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/' + channel.id + '/ban/' + targetId, {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel/' + channel.id + '/ban/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -276,7 +276,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 	}
 
 	const unban = async (channelid: number, targetId: number) => {
-		const req: Request = new Request('http://localhost:3000/chat/channel/' + channel.id + '/unban/' + targetId, {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel/' + channel.id + '/unban/' + targetId, {
 			method: "Post",
 			headers: {
 				"content-type": "application/json",
@@ -301,7 +301,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -317,7 +317,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						const body = {
 							msg: inputValue + " was kicked from this channel",
 						};
-						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
 							headers: {
 								Authorization: `Bearer ${cookies.access_token}`,
@@ -356,7 +356,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				alert("You can't send yourself private messages")
 				return;
 			}
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -385,7 +385,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -404,7 +404,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						const body = {
 							msg: inputValue + " was banned from the channel",
 						};
-						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
 							headers: {
 								Authorization: `Bearer ${cookies.access_token}`,
@@ -438,7 +438,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 				name: inputValue,
 				ChannelId: channel.id
 			};
-			const req: Request = new Request('http://localhost:3000/chat/getUserIdbyname', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/getUserIdbyname', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -456,7 +456,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						const body = {
 							msg: inputValue + " is no longer banned from this channel",
 						};
-						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
 							headers: {
 								Authorization: `Bearer ${cookies.access_token}`,
@@ -489,7 +489,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			const body = {
 				name: inputValue,
 			};
-			const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/setAdmin', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel/' + socket.channel.id + '/setAdmin', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -507,7 +507,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						const body = {
 							msg: inputValue + " is now admin of this channel",
 						};
-						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
 							headers: {
 								Authorization: `Bearer ${cookies.access_token}`,
@@ -543,7 +543,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			const body = {
 				name: inputValue,
 			};
-			const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/unsetAdmin', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel/' + socket.channel.id + '/unsetAdmin', {
 				method: "Post",
 				headers: {
 					"content-type": "application/json",
@@ -561,7 +561,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 						const body = {
 							msg: inputValue + " is no more an admin of this channel (Cheh !)",
 						};
-						const req = new Request("http://localhost:3000/chat/new_message/" + socket.channel.id, {
+						const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/new_message/" + socket.channel.id, {
 							method: "POST",
 							headers: {
 								Authorization: `Bearer ${cookies.access_token}`,
@@ -601,7 +601,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 			if (socket.channel.id !== -1) {
 
-				const req: Request = new Request('http://localhost:3000/chat/channel/' + socket.channel.id + '/status', {
+				const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel/' + socket.channel.id + '/status', {
 					method: "GET",
 					headers: {
 						"content-type": "application/json",
@@ -646,7 +646,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 			};
 
 			try {
-				const req: Request = new Request(`http://localhost:3000/chat/channel/${channel.id}/mute`, {
+				const req: Request = new Request(`http://` + process.env.REACT_APP_HOSTNAME + `:3000/chat/channel/${channel.id}/mute`, {
 					method: "POST",
 					headers: {
 						"content-type": "application/json",
@@ -685,7 +685,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		};
 
 		try {
-			const req: Request = new Request(`http://localhost:3000/chat/channel/${channel.id}/edit`, {
+			const req: Request = new Request(`http://` + process.env.REACT_APP_HOSTNAME + `:3000/chat/channel/${channel.id}/edit`, {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",
@@ -714,7 +714,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 		};
 
 		try {
-			const req: Request = new Request(`http://localhost:3000/chat/channel/${channel.id}/edit`, {
+			const req: Request = new Request(`http://` + process.env.REACT_APP_HOSTNAME + `:3000/chat/channel/${channel.id}/edit`, {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",
@@ -740,7 +740,7 @@ const CmdDialog: React.FC<CmdDialogProps> = (props) => {
 
 	const handleClickLeave = async () => {
 		try {
-			const req: Request = new Request(`http://localhost:3000/chat/channel/leave/${channel.id}`, {
+			const req: Request = new Request(`http://` + process.env.REACT_APP_HOSTNAME + `:3000/chat/channel/leave/${channel.id}`, {
 				method: "DELETE",
 				headers: {
 					"content-type": "application/json",

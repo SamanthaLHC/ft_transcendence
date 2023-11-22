@@ -20,7 +20,7 @@ const WinsAndLoses: React.FC = () => {
 	}
     useEffect(() => {
         const getWinsAndLoses = async (id:string) => {
-            const req: Request = new Request('http://localhost:3000/users/id/' + id, {
+            const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/id/' + id, {
                 method: "GET",
                 headers: {
                     "Authorization": `Bearer ${cookies.access_token}`,

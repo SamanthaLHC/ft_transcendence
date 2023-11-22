@@ -19,6 +19,7 @@ import GameF from "../gamefriend/GameF";
 import ErrorCafe from "../errorcafe/Error";
 
 const App: React.FC = () => {
+	console.log(process.env.REACT_APP_HOSTNAME)
 
 	const params = useParams();
 	const imageUrl = params.imageUrl || '';
@@ -26,7 +27,7 @@ const App: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	// const [isLogged, setIslogged] = useState(false)
 	useEffect(() => {
-		const socket = io('http://localhost:3000/status', {
+		const socket = io('http://' + process.env.REACT_APP_HOSTNAME + ':3000/status', {
 			autoConnect: false,
 		});
 		if (cookies.access_token) {

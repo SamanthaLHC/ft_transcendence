@@ -3,12 +3,13 @@ import { OnGatewayConnection, OnGatewayDisconnect, WebSocketGateway, WebSocketSe
 import { Server, Socket } from "socket.io";
 import { PrismaService } from "./prisma/prisma.service";
 
-@WebSocketGateway({ cors: { origin: ['http://localhost:8000'] }, namespace: 'status' })
+@WebSocketGateway({ cors: true, namespace: 'status' })
 export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private jwtService: JwtService, private prisma: PrismaService) { }
   @WebSocketServer()
   server: Server
 
+  
   async handleConnection(socket: Socket) {
     try {
       const token = socket.handshake.auth.token;

@@ -39,7 +39,7 @@ const Friends: React.FC = () => {
 
 	useEffect(() => {
 		async function getFriend(): Promise<void> {
-			const req = new Request('http://localhost:3000/users/get_friend', {
+			const req = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/get_friend', {
 					method: "GET",
 					headers: {
 						"Authorization": `Bearer ${cookies.access_token}`,
@@ -64,7 +64,7 @@ const Friends: React.FC = () => {
 			}
 			async function getUsers() {
 				let uri_str: string
-				uri_str = 'http://localhost:3000/users/search?search=' + searchQuery
+				uri_str = 'http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/search?search=' + searchQuery
 				const req = new Request(uri_str, {
 					method: "GET",
 					headers: {

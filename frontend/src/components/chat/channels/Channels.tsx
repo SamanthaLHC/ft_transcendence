@@ -47,9 +47,9 @@ const Channels: React.FC = () => {
 		async function getChannels() {
 			let uri_str: string
 			if (searchQuery === '')
-				uri_str = 'http://localhost:3000/chat/channels/joined'
+				uri_str = 'http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channels/joined'
 			else
-				uri_str = 'http://localhost:3000/chat/channel?search=' + searchQuery
+				uri_str = 'http://' + process.env.REACT_APP_HOSTNAME + ':3000/chat/channel?search=' + searchQuery
 
 			const req = new Request(uri_str, {
 				method: "GET",
@@ -75,7 +75,7 @@ const Channels: React.FC = () => {
 
 		const id = getId()
 		if (id) {
-			const req = new Request("http://localhost:3000/chat/channel/private/create/" + id, {
+			const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/private/create/" + id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -122,7 +122,7 @@ const Channels: React.FC = () => {
 			privacy: privacy,
 			password: password,
 		};
-		const req = new Request("http://localhost:3000/chat/channel/create", {
+		const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/create", {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,

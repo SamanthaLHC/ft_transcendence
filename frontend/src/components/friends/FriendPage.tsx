@@ -39,7 +39,7 @@ const Profil: React.FC = () => {
 		const checkme = async (id: string) => {
 			try {
 				let id_num: number = +id
-				const req: Request = new Request('http://localhost:3000/users/me', {
+				const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/me', {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${cookies.access_token}`,
@@ -58,7 +58,7 @@ const Profil: React.FC = () => {
 		}
 		const initstatusfa = async (id: string) => {
 			try {
-				const req: Request = new Request('http://localhost:3000/users/status_relation?id=' + id, {
+				const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/status_relation?id=' + id, {
 					method: 'GET',
 					headers: {
 						Authorization: `Bearer ${cookies.access_token}`,
@@ -96,7 +96,7 @@ const Profil: React.FC = () => {
 
 	useEffect(() => {
 		async function getUserInfo(id: string) {
-			const req: Request = new Request('http://localhost:3000/users/id/' + id, {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/id/' + id, {
 				method: "GET",
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
@@ -125,7 +125,7 @@ const Profil: React.FC = () => {
 			target_id: id,
 			status: status
 		};
-		const req: Request = new Request('http://localhost:3000/users/addup_relation', {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/addup_relation', {
 			method: "POST",
 			headers: {
 				"content-type": "application/json",
@@ -148,7 +148,7 @@ const Profil: React.FC = () => {
 		const obj = {
 			target_id: id,
 		};
-		const req: Request = new Request('http://localhost:3000/users/rm_relation', {
+		const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/rm_relation', {
 			method: "DELETE",
 			headers: {
 				"content-type": "application/json",
@@ -217,7 +217,7 @@ const Profil: React.FC = () => {
 		const id = getId()
 		if (!id)
 			changeToHome()
-		const req = new Request("http://localhost:3000/chat/channel/private/game/" + id, {
+		const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/private/game/" + id, {
 			method: "POST",
 			headers: {
 				Authorization: `Bearer ${cookies.access_token}`,
