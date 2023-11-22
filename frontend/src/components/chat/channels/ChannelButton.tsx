@@ -1,4 +1,4 @@
-
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -6,7 +6,6 @@ import Divider from "@mui/material/Divider";
 import { useChatSocket } from '../../Context';
 import { useCookies } from "react-cookie";
 import PasswordDialog from "./PasswordDialog";
-import { useNavigate } from "react-router-dom";
 
 interface Channel {
 	id: number;
