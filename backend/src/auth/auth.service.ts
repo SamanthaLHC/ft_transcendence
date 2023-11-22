@@ -34,7 +34,7 @@ export class AuthService {
             const acces_token = await this.jwtService.signAsync(payload)
             throw new HttpException({
                 status: 302,
-                url: "http://localhost:8000/home",
+                url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
                 access_token: acces_token
               }, 302, {
               });
@@ -81,7 +81,7 @@ export class AuthService {
         const acces_token = await this.jwtService.signAsync(payload)
         throw new HttpException({
             status: 302,
-            url: "http://localhost:8000/home",
+            url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
             access_token: acces_token
           }, 302, {
           });
@@ -142,7 +142,7 @@ export class AuthService {
                 throw new HttpException({
                 status: 302,
                 clientId: usere.id,
-                url: "http://localhost:8000/2fa",
+                url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/2fa",
                 access_token: acces_token
               }, 302, {
               }); 
@@ -153,7 +153,7 @@ export class AuthService {
             res.cookie("access_token", acces_token)
             throw new HttpException({
                 status: 302,
-                url: "http://localhost:8000/home",
+                url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
                 access_token: acces_token
               }, 302, {
               });
@@ -203,7 +203,7 @@ export class AuthService {
             res.cookie("access_token", acces_token)
             throw new HttpException({
                 status: 302,
-                url: "http://localhost:8000/home",
+                url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
                 access_token: acces_token
               }, 302, {
               });
@@ -227,7 +227,7 @@ export class AuthService {
 		const acces_token = await this.jwtService.signAsync(payload);
 		throw new HttpException({
 			status: 302,
-			url: "http://localhost:8000/home",
+			url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
 			access_token: acces_token
 		}, 302, {
 		});

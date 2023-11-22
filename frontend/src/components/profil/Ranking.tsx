@@ -16,7 +16,7 @@ const Ranking: React.FC = () => {
 	useEffect(() => {
 		const getRanking = async () => {
 			try {
-				const req = new Request("http://localhost:3000/users/get_class", {
+				const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/users/get_class", {
 					method: "GET",
 					headers: {
 						Authorization: `Bearer ${cookies.access_token}`,

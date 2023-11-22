@@ -6,7 +6,7 @@ import { ChatService } from './chat.service';
 import { JwtService } from '@nestjs/jwt';
 import { find } from 'rxjs';
 
-@WebSocketGateway({ cors: { origin: ['http://localhost:8000'] }, namespace: 'chat' })
+@WebSocketGateway({ cors: true, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 	constructor(private jwtService: JwtService, private prisma: PrismaService) { }
 	sockets: [ChatSocketDto];

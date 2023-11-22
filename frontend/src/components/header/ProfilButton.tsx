@@ -62,7 +62,7 @@ const ProfilButton: React.FC = () => {
 	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
 		async function getUserInfo() {
-			const req: Request = new Request('http://localhost:3000/users/me', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/me', {
 				method: "GET",
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,

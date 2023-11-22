@@ -23,7 +23,7 @@ const AuthProcess: React.FC = () => {
 				const obj = {
 					code: codeP
 				};
-				const req = new Request('http://localhost:3000/auth/login', {
+				const req = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/auth/login', {
 					method: "POST",
 					headers: {
 						"content-type": "application/json",

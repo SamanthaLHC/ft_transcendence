@@ -27,7 +27,7 @@ const MatchHistory: React.FC = () => {
 			if (getId()) {
 
 				try {
-					const req = new Request(`http://localhost:3000/users/gameHistorique/${getId()}`, {
+					const req = new Request(`http://` + process.env.REACT_APP_HOSTNAME + `:3000/users/gameHistorique/${getId()}`, {
 						method: "GET",
 						headers: {
 							Authorization: `Bearer ${cookies.access_token}`,
@@ -56,7 +56,7 @@ const MatchHistory: React.FC = () => {
 
 		const getUserNameById = async (idUser: number) => {
 			try {
-				const req = new Request(`http://localhost:3000/users/id/${idUser}`, {
+				const req = new Request(`http://` + process.env.REACT_APP_HOSTNAME + `:3000/users/id/${idUser}`, {
 					method: "GET",
 					headers: {
 						Authorization: `Bearer ${cookies.access_token}`,

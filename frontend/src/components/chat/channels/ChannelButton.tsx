@@ -43,7 +43,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 			}
 		}
 		if (channel.joined === false) {
-			const req = new Request("http://localhost:3000/chat/channel/join/" + channel.id, {
+			const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/join/" + channel.id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
@@ -87,7 +87,7 @@ const ChannelButton: React.FC<ChannelButtonProps> = ({ channel }) => {
 	useEffect(() => {
 
 		const getnamedm = async (id: number) => {
-			const req = new Request("http://localhost:3000/chat/channel/private/getname/" + id, {
+			const req = new Request("http://" + process.env.REACT_APP_HOSTNAME + ":3000/chat/channel/private/getname/" + id, {
 				method: "POST",
 				headers: {
 					Authorization: `Bearer ${cookies.access_token}`,
