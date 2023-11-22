@@ -140,7 +140,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 		const roomid = this.getroombyuser(user)
 		if (roomid != -1 && this.rooms[roomid].data) {
 			if (!this.roomisfull(roomid) && this.rooms[roomid].data.jgscockid === socket.id) {
-				console.log("del room")
 				this.rooms.pop()
 			}
 		}
@@ -300,7 +299,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 			if (!user)
 				socket.disconnect
 			const id = this.getroombyuser(user)
-			console.log("ee", id)
 			if (socket.id == this.rooms[id].data.jdscockid) {
 				if (this.rooms[id].data.jdroite > 0)
 					this.rooms[id].data.jdroite = this.rooms[id].data.jdroite - 1

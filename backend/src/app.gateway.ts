@@ -50,7 +50,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
       );
       if (!payload || !payload.sub)
       {
-        console.log('in if not payload')
         return
       }
 
@@ -62,7 +61,6 @@ export class MasterGateway implements OnGatewayConnection, OnGatewayDisconnect {
       if (!user)
         socket.disconnect
       else {
-        console.log(`user disconnect : ${user.name}`)
         await this.prisma.user.update({
           where: { id: user.id },
           data: { status: "DISCONNECTED" },

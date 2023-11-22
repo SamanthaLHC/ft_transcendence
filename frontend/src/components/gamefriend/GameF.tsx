@@ -42,7 +42,6 @@ const GameF: React.FC = () => {
 		});
 		let token = cookies.access_token;
 		socket.auth = { token };
-		console.log("commect")
 		socket.connect()
 		// setSocket(socketInstance);
 
@@ -55,7 +54,6 @@ const GameF: React.FC = () => {
 		});
 
 		socket.on('connect_room', (data) => {
-			console.log(`Received conect room: ${data}`);
 			setData(data)
 		});
 		socket.on('update', (data) => {
