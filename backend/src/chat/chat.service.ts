@@ -57,7 +57,6 @@ export class ChatService {
 			}
 		});
 		if (!channel) {
-			Logger.log("Channel not found", channelId);
 			throw new NotFoundException("Channel not found");
 		}
 		return channel;
@@ -112,7 +111,6 @@ export class ChatService {
 				}
 			});
 			if (existingChannel) {
-				Logger.log("Channel already exists", "ChatService");
 				existingChannel["message"] = "This channel already exists";
 				return existingChannel;
 			}
@@ -141,12 +139,10 @@ export class ChatService {
 			throw new BadRequestException(`Invalid channel id (${channelId})`);
 
 		if (await this.isUserInChannel(channelId, userId)) {
-			Logger.log(`User [${userId}] already in channel [${channelId}]`, "ChatService");
 			return { message: "User already in channel" };
 		}
 
 		if (await this.isUserInChannelBanned(channelId, userId)) {
-			Logger.log(`User [${userId}] banned in channel [${channelId}]`, "ChatService");
 			return { message: "You are banned from channel" };
 		}
 
@@ -157,13 +153,11 @@ export class ChatService {
 		});
 		if (channel.privacy === "PASSWORD_PROTECTED") {
 			if (!password) {
-				Logger.log(`Password required for channel [${channelId}]`, "ChatService");
 				return { message: "Password required" };
 			}
 			const hashedPassword: string = channel["password"];
 			const passIsOk = await bcrypt.compare(password, hashedPassword);
 			if (!passIsOk) {
-				Logger.log(`Invalid password for channel [${channelId}]`, "ChatService");
 				return { message: "Invalid password", };
 			}
 		}
@@ -196,7 +190,6 @@ export class ChatService {
 			return ret;
 		}
 		catch (e) {
-			Logger.log(`No entry found for user [${userId}] in channel [${channelId}]`, "ChatService");
 			throw new NotFoundException(`No entry found for user [${userId}] in channel [${channelId}]`);
 		}
 	}
@@ -229,7 +222,6 @@ export class ChatService {
 				})
 			}
 			catch (e) {
-				Logger.log("Can't add msg");
 				return { message: "Can't add msg" }
 			}
 		}
@@ -272,7 +264,6 @@ export class ChatService {
 			return messages
 		}
 		catch (e) {
-			Logger.log("Can't get messages", "ChatService");
 			console.log(e)
 			return { message: "Can't get messages", "error": e }
 		}
@@ -631,11 +622,10 @@ export class ChatService {
 						status: "BANNED"
 					}
 				});
-				Logger.log(`User [${targetId}] banned channel [${channelId}]`, "ChatService");
+				Logger.log(`User [${targetId}] banned from channel [${channelId}]`, "ChatService");
 				return {};
 			}
 			catch (e) {
-				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
 				return { "message": "No entry found for user" + targetId + " in channel " + channelId };
 			}
 		}
@@ -661,11 +651,10 @@ export class ChatService {
 						}
 					}
 				});
-				Logger.log(`User [${targetId}] unbanned channel [${channelId}]`, "ChatService");
+				Logger.log(`User [${targetId}] unbanned from channel [${channelId}]`, "ChatService");
 				return {}
 			}
 			catch (e) {
-				Logger.log(`No entry found for user [${targetId}] in channel [${channelId}]`, "ChatService");
 				return { "message": "No entry found for user" + targetId + " in channel " + channelId };
 			}
 		}
