@@ -91,7 +91,6 @@ const Channels: React.FC = () => {
 						tochat()
 						socket.socket.emit('change_room', data.name);
 						socket.channel = data
-						socket.socket.emit('update', "coucou")
 						getChannels()
 					}
 					else
