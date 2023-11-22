@@ -7,12 +7,14 @@ import { useCookies } from 'react-cookie'
 import { useNavigate } from 'react-router-dom'
 import WinsAndLoses from './WinsAndLoses'
 import Statusconnect from './Statusconnect'
+import { useChatSocket } from '../Context';
 
 const Profil: React.FC = () => {
 	const [cookies] = useCookies(["access_token"]);
 	const [userInfos, setUserInfos] = useState<{ name: string, photo: string, status: string } | null>(null);
 	const [friend, setFriend] = useState<boolean>(false);
 	const [block, setblock] = useState<boolean>(false);
+	const socket = useChatSocket();
 
 	const navToHome = useNavigate();
 	const navToChat = useNavigate();
@@ -230,6 +232,7 @@ const Profil: React.FC = () => {
 				if (data) {
 					if (id)
 						changeToChat(id);
+						socket.socket.emit('update_otherchan', data.channelId)
 				}
 			})
 			.catch((error) => {
