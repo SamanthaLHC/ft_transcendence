@@ -1,4 +1,4 @@
-import { Socket, Server } from 'socket.io';
+import { Socket } from 'socket.io';
 
 export class ChatSocketDto {
 	socket: Socket

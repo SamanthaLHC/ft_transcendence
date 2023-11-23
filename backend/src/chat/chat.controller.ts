@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChannelDto, JoinChannelPasswordDTO } from './dto/create-channel.dto';
 import { PrismaPromise } from '@prisma/client';

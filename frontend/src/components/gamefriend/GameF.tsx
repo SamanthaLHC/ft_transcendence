@@ -48,7 +48,7 @@ const GameF: React.FC = () => {
 		// listen for events emitted by the server
 
 		socket.on('connect', () => {
-			console.log('Connected to server friend ', getId());
+			// console.log('Connected to server friend ', getId());
 			socket.emit('conection', getId())
 			id = socket.id
 		});

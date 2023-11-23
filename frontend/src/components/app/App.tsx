@@ -19,8 +19,6 @@ import GameF from "../gamefriend/GameF";
 import ErrorCafe from "../errorcafe/Error";
 
 const App: React.FC = () => {
-	console.log(process.env.REACT_APP_HOSTNAME)
-
 	const params = useParams();
 	const imageUrl = params.imageUrl || '';
 
@@ -69,5 +67,3 @@ const App: React.FC = () => {
 }
 
 export default App
-
-//HERE add <PrivateRoute> with a isLog ?
