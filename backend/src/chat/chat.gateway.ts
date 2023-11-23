@@ -2,9 +2,7 @@ import { SubscribeMessage, WebSocketGateway, OnGatewayConnection, OnGatewayDisco
 import { Socket, Server } from 'socket.io';
 import { ChatSocketDto } from './dto/chat_socket.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ChatService } from './chat.service';
 import { JwtService } from '@nestjs/jwt';
-import { find } from 'rxjs';
 
 @WebSocketGateway({ cors: true, namespace: 'chat' })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {

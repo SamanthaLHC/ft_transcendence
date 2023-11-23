@@ -1,11 +1,9 @@
 import { HttpException, Injectable, UnauthorizedException } from '@nestjs/common';
-import { User } from '@prisma/client'
 import { AuthDto, Auth2faDto } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Response, response } from 'express';
+import { Response } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { authenticator } from 'otplib';
-import { access } from 'fs';
 
 const formData = (body: { [key: string]: string }) => {
 	const form = new FormData()

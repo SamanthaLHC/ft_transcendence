@@ -1,12 +1,10 @@
-import { BadRequestException, Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaPromise, StatusModo } from '@prisma/client';
 import { PrismaService, } from 'src/prisma/prisma.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { ChatGateway } from './chat.gateway';
 import * as bcrypt from 'bcrypt';
 import { NewMessageDto } from './dto/new-message.dto';
-import { use } from 'passport';
-import { get } from 'http';
 import { editChannelDto } from './dto/editchannel.dto';
 
 @Injectable()
@@ -127,7 +125,6 @@ export class ChatService {
 		});
 		if (channel["message"])
 			return channel;
-		Logger.log(`Channel [${channel.name}] created`, "ChatService");
 		await this.joinChannel(channel.id, userId, newChannel.password);
 		if (channel.privacy != "PRIVATE")
 			this.setUserStatus(channel.id, userId, "OWNER")
@@ -168,7 +165,6 @@ export class ChatService {
 				userId: userId,
 			}
 		});
-		Logger.log(`User [${userId}] joined channel [${channelId}]`, "ChatService");
 		return ret;
 	}
 
@@ -186,7 +182,6 @@ export class ChatService {
 					}
 				}
 			});
-			Logger.log(`User [${userId}] left channel [${channelId}]`, "ChatService");
 			return ret;
 		}
 		catch (e) {
@@ -622,7 +617,6 @@ export class ChatService {
 						status: "BANNED"
 					}
 				});
-				Logger.log(`User [${targetId}] banned from channel [${channelId}]`, "ChatService");
 				return {};
 			}
 			catch (e) {
@@ -651,7 +645,6 @@ export class ChatService {
 						}
 					}
 				});
-				Logger.log(`User [${targetId}] unbanned from channel [${channelId}]`, "ChatService");
 				return {}
 			}
 			catch (e) {

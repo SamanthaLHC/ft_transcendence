@@ -1,4 +1,4 @@
-import { IsNotEmpty, MaxLength, IsString, Matches, IsEnum, MinLength, ValidateIf } from "class-validator";
+import { IsString, Matches, IsEnum, MinLength, ValidateIf } from "class-validator";
 import { Privacy } from "@prisma/client";
 
 export class editChannelDto {
