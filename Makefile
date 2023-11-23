@@ -39,6 +39,7 @@ clean_volumes: down
 
 .PHONY: fclean
 fclean: clean_images clean_volumes
+	rm -f backend/uploads/*
 
 .PHONY: re
 re: fclean

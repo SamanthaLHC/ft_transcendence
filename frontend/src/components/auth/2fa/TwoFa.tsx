@@ -14,13 +14,12 @@ const TwoFa = () => {
 	const navigate = useNavigate();
 	const [cookies, setCookie] = useCookies(["access_token"]);
 	const [otp, setOtp] = useState('');
-	const [showInvalidOTP, setShowInvalidOTP] = useState(false);
 
 	useEffect(() => {
 		if (!cookies.access_token) {
 			navigate("/");
 		}
-	}, [cookies.access_token]);
+	}, [cookies.access_token, navigate]);
 
 	const onChange = (value: string) => setOtp(value);
 
@@ -29,7 +28,7 @@ const TwoFa = () => {
 			const obj = {
 				code: otp
 			};
-			const req: Request = new Request('http://localhost:3000/auth/2fa', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/auth/2fa', {
 				method: "POST",
 				headers: {
 					"content-type": "application/json",
@@ -47,12 +46,13 @@ const TwoFa = () => {
 					navigate(tmp.pathname);
 				}
 				else {
-					setShowInvalidOTP(true);
+					alert("INVALID OTP");
 				}
 			} catch (error) {
 				console.error(error);
 			}
 		}
+
 	};
 
 	return (
@@ -60,12 +60,6 @@ const TwoFa = () => {
 			<h1 className='typo-friends yellow'>Enter the code provided by google authenticator</h1>
 			<OtpInput value={otp} valueLength={6} onChange={onChange} />
 			<button className='btn-size qr-image' onClick={handleClick}>validate</button>
-			{showInvalidOTP && (
-				<div className='popup'>
-					<p>Invalid code. Please try again</p>
-					<button className='btn-size qr-image' onClick={() => setShowInvalidOTP(false)}>Close</button>
-				</div>
-			)}
 		</div>
 	);
 }

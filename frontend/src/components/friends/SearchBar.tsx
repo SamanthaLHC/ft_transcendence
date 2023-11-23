@@ -2,32 +2,40 @@
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
 
-// function Search() {
-// 	const [searchText, setSearchText] = useState('');
+interface SearchBarProps {
+	onSearchChange: (query: string) => void;
+}
 
-const handleSearch = () => {
-	// Implement your search logic here
-	// console.log(`Searching for: ${searchText}`);
-};
+const SearchBar: React.FC<SearchBarProps> = ({ onSearchChange }) => {
+	const [searchText, setSearchText] = useState('');
 
+	const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const { value } = event.target;
+		setSearchText(value);
+		onSearchChange(value);
+	};
 
-const SearchBar: React.FC = () => {
+	const handleClick = () => {
+		onSearchChange(searchText);
+	}
 	return (
 		<div>
 			<TextField
 				label="Search"
 				variant="outlined"
 				fullWidth
-				// value={searchText}
-				// onChange={handleSearchChange}
+				value={searchText}
+				onChange={handleSearchChange}
 				style={{ backgroundColor: '#42464f' }}
+				inputProps={{ maxLength: 100 }}
 				InputProps={{
 					style: { color: '#ffc107' }, // Set la couleur du texte à #ffc107 (jaune)
 					endAdornment: (
 						<IconButton
 							style={{ color: '#ffc107' }}
-							onClick={handleSearch}
+							onClick={handleClick}
 						>
 							<SearchIcon />
 						</IconButton>

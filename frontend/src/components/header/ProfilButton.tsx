@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -7,10 +8,16 @@ import { Divider, Typography } from '@mui/material';
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useUser } from "../Context";
+
 
 const ProfilButton: React.FC = () => {
 
-	// console.log("Profil button call");
+	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+	const open = Boolean(anchorEl);
+	const [cookies, , removeCookie] = useCookies(["access_token"]);
+	const [userInfos, setUserInfos] = useState(null);
+	const { userData, updateUserData } = useUser();
 
 	//redirect on click_______________________________________________
 
@@ -34,8 +41,6 @@ const ProfilButton: React.FC = () => {
 
 	// handle dropdown menu _________________________________________
 
-	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-	const open = Boolean(anchorEl);
 
 	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
 		setAnchorEl(event.currentTarget);
@@ -48,20 +53,16 @@ const ProfilButton: React.FC = () => {
 	// handle log out __________________________________________________
 
 	const LogOut = () => {
-		//TODO clear datas !
+		removeCookie("access_token");
 		changeToLogin();
 	}
 
 	// handle bearer token cookie and set user datas______________________
 
-	const [cookies] = useCookies(["access_token"]);
-	const [userInfos, setUserInfos] = useState(null);
-
 	// console.warn(`Rendering Profile, cookie=${cookies.access_token}`);
 	useEffect(() => {
 		async function getUserInfo() {
-
-			const req: Request = new Request('http://localhost:3000/users/me', {
+			const req: Request = new Request('http://' + process.env.REACT_APP_HOSTNAME + ':3000/users/me', {
 				method: "GET",
 				headers: {
 					"Authorization": `Bearer ${cookies.access_token}`,
@@ -72,6 +73,11 @@ const ProfilButton: React.FC = () => {
 			const datas = await response.json();
 			if (response.status === 200 || response.status === 304) {
 				setUserInfos(datas);
+				if (userData.id !== datas.id
+					|| userData.name !== datas.name
+					|| userData.photo !== datas.photo) {
+					updateUserData(datas.id, datas.name, datas.photo);
+				}
 			}
 			else {
 				changeToLogin();
@@ -90,10 +96,10 @@ const ProfilButton: React.FC = () => {
 				aria-haspopup="true"
 				aria-expanded={open ? 'true' : undefined}
 				onClick={handleClick}>
-				<Avatar alt="profil picture" src={userInfos['photo']} />
+				<Avatar alt="profil picture" src={userData.photo} />
 				<Divider>
 					<Typography>
-						{userInfos['name']}
+						{userData.name}
 					</Typography>
 				</Divider>
 			</button>

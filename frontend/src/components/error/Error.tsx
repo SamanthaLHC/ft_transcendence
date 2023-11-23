@@ -1,5 +1,6 @@
 import React from 'react';
 import ducky from '../../assets/200w.gif'
+// import ducky from '../../assets/chiottes.png'
 
 const Error: React.FC = () => {
     return (
