@@ -17,9 +17,10 @@ export class AuthController {
         return this.authService.login(dto, res)
     }
 
+	@UseGuards(AuthGuard)
     @is2fa()
     @Post('2fa')
     login2fa(@Body() dto: Auth2faDto, @Res() res: Response, @Req() req) {
-        return this.authService.login2fa(dto, res, req.user.id)
+        return this.authService.login2fa(dto, res, req.user.sub)
     }
 }
