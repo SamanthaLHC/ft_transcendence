@@ -73,6 +73,8 @@ export class UsersService {
     }
 
     async searchUser(dto: string) {
+        if (/^[a-zA-Z0-9_-]*$/.test(dto) === false)
+            return []
         const userlist = await this.prisma.user.findMany({
             where: {
                 OR: [
@@ -96,12 +98,7 @@ export class UsersService {
                 status: true
             }
         })
-        if (userlist[0]) {
-
-            return userlist;
-        }
-        else
-            throw new NotFoundException(`Aucun user`)
+        return userlist;
     }
 
     async deleterelation(dto: rmRelationDto, source_id: number) {
