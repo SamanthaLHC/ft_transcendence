@@ -17,79 +17,8 @@ const formData = (body: { [key: string]: string }) => {
 export class AuthService {
     constructor(private prisma: PrismaService, 
         private jwtService: JwtService) {}
-    async get_test_account()
-    {
-        const login = "test"
-        const usere = await this.prisma.user.findFirst({
-            where: {
-                login: login,
-            },
-        })
-        if (usere)
-        {
-            const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-            const payload = { uuid: uuid, type: "acces", sub: usere.id, username: usere.login };
-            const acces_token = await this.jwtService.signAsync(payload)
-            throw new HttpException({
-                status: 302,
-                url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
-                access_token: acces_token
-              }, 302, {
-              });
-        }
-        let useret = await this.prisma.user.findFirst({
-            where: {
-                name: login,
-            },
-        })
-        let user
-        if (useret)
-        {
-            let randomName
-            while (useret)
-            {
-                randomName = Array(3).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-                randomName = `${login}${randomName}`
-                useret = await this.prisma.user.findFirst({
-                    where: {
-                        name: randomName,
-                    },
-                })
-            }
-            user = await this.prisma.user.create({
-                data: {
-                    login: login,
-                    photo: "https://media.tenor.com/uSaBVpTTjVoAAAAd/cap-duck.gif",
-                    name:  randomName,
-                },
-            });
-        }
-        else
-        {
-            user = await this.prisma.user.create({
-                data: {
-                    login: login,
-                    photo: "https://media.tenor.com/uSaBVpTTjVoAAAAd/cap-duck.gif",
-                    name:  login,
-                },
-            });
-        }
-        const uuid = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('')
-        const payload = { uuid: uuid, type: "acces", sub: user.id, username: user.login };
-        const acces_token = await this.jwtService.signAsync(payload)
-        throw new HttpException({
-            status: 302,
-            url: "http://" + process.env.REACT_APP_HOSTNAME + ":8000/home",
-            access_token: acces_token
-          }, 302, {
-          });
-    }
     async login(body: AuthDto, res: Response){
         var TOKEN = "coucou"
-        if (body.code == "test")
-        {
-            return this.get_test_account();
-        }
         const form = new FormData()
         form.append("grant_type", "authorization_code")
         form.append("client_id", process.env.API42_ID)
