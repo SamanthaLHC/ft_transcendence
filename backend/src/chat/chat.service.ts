@@ -62,6 +62,8 @@ export class ChatService {
 
 	// returns all channels that match the search term and a boolean indicating if the user is in the channel
 	async findChannelBySearch(searchTerm: string, userId: number): Promise<PrismaPromise<any>> {
+        if (/^[a-zA-Z0-9_-]*$/.test(searchTerm) === false)
+            return []
 		const channels = await this.prisma.channels.findMany({
 			where: {
 				name: {
