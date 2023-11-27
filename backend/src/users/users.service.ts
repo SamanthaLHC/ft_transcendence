@@ -73,6 +73,8 @@ export class UsersService {
     }
 
     async searchUser(dto: string) {
+        if (/^[a-zA-Z0-9_-]*$/.test(dto) === false)
+            return []
         const userlist = await this.prisma.user.findMany({
             where: {
                 OR: [
