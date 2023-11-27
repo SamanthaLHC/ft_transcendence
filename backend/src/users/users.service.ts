@@ -96,12 +96,7 @@ export class UsersService {
                 status: true
             }
         })
-        if (userlist[0]) {
-
-            return userlist;
-        }
-        else
-            throw new NotFoundException(`Aucun user`)
+        return userlist;
     }
 
     async deleterelation(dto: rmRelationDto, source_id: number) {
